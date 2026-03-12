@@ -742,6 +742,9 @@
       </nav>
     );
 
+    // TODO: Import @vercel/analytics/react when a bundler is added to the project
+    // import { Analytics } from '@vercel/analytics/react';
+
     // App
     function App() {
       const [view, setView] = useState("landing");
@@ -754,6 +757,8 @@
           {view === "quiz" && <Quiz setView={setView} setAnswers={setAnswers} />}
           {view === "results" && answers && <Results answers={answers} setView={setView} />}
           {view === "directory" && <Directory setView={setView} />}
+          {/* TODO: Render Vercel Analytics component once imported */}
+          {/* <Analytics /> */}
         </div>
       );
     }
