@@ -10,7 +10,755 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,500;0,700;1,300;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  CONTENT_TOO_LARGE_SEE_NOTE
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --jade: #1a6b5a;
+      --jade-light: #2a8f76;
+      --jade-dark: #0f4038;
+      --cream: #faf6ef;
+      --warm-white: #fffdf9;
+      --terracotta: #c4622d;
+      --amber: #e8a830;
+      --sand: #e8dcc8;
+      --sand-dark: #cfc0a6;
+      --text-primary: #1c1a17;
+      --text-secondary: #5c5649;
+      --text-muted: #9a9082;
+      --border: #e0d6c6;
+      --shadow-sm: 0 1px 4px rgba(28,26,23,0.08);
+      --shadow-md: 0 4px 20px rgba(28,26,23,0.12);
+      --shadow-lg: 0 12px 48px rgba(28,26,23,0.16);
+    }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--cream); color: var(--text-primary); }
+    h1, h2, h3 { font-family: 'Fraunces', serif; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeUp { animation: fadeUp 0.5s ease both; }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--jade); color: white; border: none; border-radius: 99px; padding: 14px 28px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .btn-primary:hover { background: var(--jade-light); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--jade); border: 1.5px solid var(--jade); border-radius: 99px; padding: 13px 24px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .btn-secondary:hover { background: rgba(26,107,90,0.06); }
+    .btn-ghost { background: transparent; border: none; color: var(--text-secondary); cursor: pointer; font-size: 14px; font-weight: 500; padding: 8px 12px; border-radius: 6px; transition: color 0.2s; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .btn-ghost:hover { color: var(--text-primary); }
+    .nav { position: sticky; top: 0; z-index: 100; background: rgba(250,246,239,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 24px; }
+    .nav-inner { max-width: 1120px; margin: 0 auto; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+    .tag { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 99px; font-size: 12px; font-weight: 600; }
+    .tag-green { background: rgba(26,107,90,0.1); color: var(--jade-dark); }
+    .tag-gray { background: var(--sand); color: var(--text-secondary); }
+    .input { width: 100%; background: var(--warm-white); border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 16px; font-size: 15px; color: var(--text-primary); font-family: 'Plus Jakarta Sans', sans-serif; outline: none; }
+    .input:focus { border-color: var(--jade); box-shadow: 0 0 0 3px rgba(26,107,90,0.1); }
+    .choice-card { border: 1.5px solid var(--border); border-radius: 10px; padding: 14px 18px; cursor: pointer; transition: all 0.2s ease; background: var(--warm-white); display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 500; }
+    .choice-card:hover { border-color: var(--jade); background: rgba(26,107,90,0.03); }
+    .choice-card.selected { border-color: var(--jade); background: rgba(26,107,90,0.07); color: var(--jade-dark); }
+    .choice-dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+    .choice-card.selected .choice-dot { border-color: var(--jade); background: var(--jade); }
+    .progress-track { width: 100%; height: 6px; background: var(--sand); border-radius: 99px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--jade), var(--jade-light)); border-radius: 99px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); }
+    .hero-bg { background: radial-gradient(ellipse 80% 60% at 60% -10%, rgba(26,107,90,0.12) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 0% 80%, rgba(232,168,48,0.1) 0%, transparent 50%), var(--cream); }
+    .stat-card { background: var(--warm-white); border: 1px solid var(--border); border-radius: 16px; padding: 20px; text-align: center; }
+    .stat-value { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 500; color: var(--text-primary); line-height: 1; margin-bottom: 4px; }
+    .stat-label { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+    .info-box { background: rgba(26,107,90,0.07); border: 1px solid rgba(26,107,90,0.2); border-radius: 10px; padding: 14px 16px; font-size: 13.5px; color: var(--jade-dark); line-height: 1.6; }
+    .disclaimer-box { background: rgba(232,168,48,0.08); border-left: 4px solid var(--amber); padding: 16px; border-radius: 8px; font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin: 24px 0; }
+    .disclaimer-title { font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+    .program-card { background: var(--warm-white); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--shadow-sm); transition: all 0.25s ease; display: flex; flex-direction: column; height: 100%; }
+    .program-card:hover { box-shadow: var(--shadow-md); transform: translateY(-4px); border-color: var(--jade); }
+    .program-card-icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(26,107,90,0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+    .program-card-title { font-weight: 700; font-size: 15px; margin-bottom: 8px; line-height: 1.3; }
+    .program-card-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 12px; flex-grow: 1; }
+    .program-card-cat { margin-bottom: 12px; }
+    .program-card-link { margin-top: auto; }
+    .filter-buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+    .filter-btn { background: var(--warm-white); color: var(--text-secondary); border: 1px solid var(--border); padding: 8px 16px; border-radius: 99px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .filter-btn:hover { border-color: var(--jade); background: rgba(26,107,90,0.03); }
+    .filter-btn.active { background: var(--jade); color: white; border-color: var(--jade); }
+    .results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .card { background: var(--warm-white); border: 1px solid var(--border); border-radius: 16px; padding: 24px; box-shadow: var(--shadow-sm); }
+    .card-hover { transition: all 0.2s ease; cursor: pointer; }
+    .card-hover:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: var(--jade); }
+  </style>
 </head>
-<body>Please update this file locally via git push.</body>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    const Icon = ({ name, size = 18, color = "currentColor" }) => {
+      const icons = {
+        leaf: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 22 16 8"/><path d="M8.5 2C4 2 2 6 2 10s2 8 8.5 8C16 18 22 14 22 7c0-5-4-5-6-5-2.5 0-5 1.5-7.5 0z"/></svg>,
+        home: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
+        heart: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>,
+        dollar: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>,
+        arrow: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>,
+        check: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
+        back: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>,
+        spark: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>,
+        file: <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/></svg>,
+      };
+      return icons[name] || null;
+    };
+
+    // All 73 programs from spreadsheet
+    const PROGRAMS = {
+      1: { id: 1, name: "CalFresh / Supplemental Nutrition Assistance Program (SNAP)", description: "Pre-loaded debit card for food purchases.", category: "food", icon: "leaf", link: "https://www.getcalfresh.org/" },
+      2: { id: 2, name: "Unemployment Benefits (EDD)", description: "Temporary income for people who are totally or partially unemployed.", category: "income", icon: "dollar", link: "https://edd.ca.gov/" },
+      3: { id: 3, name: "Supplemental Security Income (SSI)", description: "Income for people with limited income, limited resources, age 65+ or blind/disabled.", category: "income", icon: "dollar", link: "https://www.ssa.gov/benefits/ssi/" },
+      4: { id: 4, name: "Social Security Disability Insurance (SSDI)", description: "Income for workers unable to work due to disability or medical condition.", category: "income", icon: "dollar", link: "https://www.ssa.gov/benefits/disability/" },
+      5: { id: 5, name: "Medi-Cal (Medicaid)", description: "Health insurance coverage for low-income individuals and families.", category: "healthcare", icon: "heart", link: "https://www.medi-cal.ca.gov/" },
+      6: { id: 6, name: "Covered California", description: "Health insurance marketplace for California residents.", category: "healthcare", icon: "heart", link: "https://www.coveredca.com/" },
+      7: { id: 7, name: "California LifeLine", description: "Discount on electricity and natural gas bills for low-income households.", category: "utility", icon: "spark", link: "https://www.sdge.com/" },
+      8: { id: 8, name: "Federal Lifeline", description: "Reduced-cost or free phone service for eligible low-income individuals.", category: "utility", icon: "spark", link: "https://www.fcc.gov/lifeline" },
+      9: { id: 9, name: "California LifeLine Foster Program", description: "Utility assistance specifically for foster youth families.", category: "utility", icon: "spark", link: "https://www.sdge.com/" },
+      10: { id: 10, name: "California Alternative Rates for Energy (CARE)", description: "15% discount on utility bills for low-income seniors and disabled individuals.", category: "utility", icon: "spark", link: "https://www.sdge.com/" },
+      11: { id: 11, name: "Family Electric Rate Assistance (FERA)", description: "Electric bill assistance for low-income families.", category: "utility", icon: "spark", link: "https://www.sdge.com/" },
+      12: { id: 12, name: "Arrearage Management Payment (AMP) Plan", description: "Help paying past due utility bills.", category: "utility", icon: "spark", link: "https://www.sdge.com/" },
+      13: { id: 13, name: "San Diego County General Relief", description: "Emergency cash assistance for eligible individuals.", category: "income", icon: "dollar", link: "https://www.sandiegocounty.gov/" },
+      14: { id: 14, name: "Medicare - Part D (Prescription Coverage)", description: "Prescription drug coverage for Medicare beneficiaries.", category: "healthcare", icon: "heart", link: "https://www.medicare.gov/" },
+      15: { id: 15, name: "Medicare - Part A (Hospital Insurance)", description: "Hospital insurance for age 65+ or certain disabled individuals.", category: "healthcare", icon: "heart", link: "https://www.medicare.gov/" },
+      16: { id: 16, name: "Medicare - Part B (Medical Insurance)", description: "Medical insurance for age 65+ or certain disabled individuals.", category: "healthcare", icon: "heart", link: "https://www.medicare.gov/" },
+      17: { id: 17, name: "Medicare - Part C (Medicare Advantage Plans)", description: "Alternative Medicare plans offered by private insurers.", category: "healthcare", icon: "heart", link: "https://www.medicare.gov/" },
+      18: { id: 18, name: "Medicare - Supplemental Coverage (i.e. Medigap)", description: "Additional insurance to supplement Medicare coverage.", category: "healthcare", icon: "heart", link: "https://www.medicare.gov/" },
+      19: { id: 19, name: "AIDS Drug Assistance Program (ADAP)", description: "Free HIV medications and medical care for uninsured individuals.", category: "healthcare", icon: "heart", link: "https://www.cdph.ca.gov/" },
+      20: { id: 20, name: "San Diego County Medical Services (CMS)", description: "Medical services for low-income uninsured individuals.", category: "healthcare", icon: "heart", link: "https://www.sandiegocounty.gov/" },
+      21: { id: 21, name: "Low-Income Home Energy Assistance Program (LIHEAP)", description: "Assistance with heating and cooling costs for low-income households.", category: "utility", icon: "spark", link: "https://www.cdss.ca.gov/" },
+      22: { id: 22, name: "Energy Savings Assistance Program (ESA)", description: "Free energy conservation improvements for low-income homes.", category: "utility", icon: "spark", link: "https://www.cdss.ca.gov/" },
+      23: { id: 23, name: "Cash Assistance Program for Immigrants (CAPI)", description: "Cash assistance for low-income immigrants ineligible for other programs.", category: "income", icon: "dollar", link: "https://www.cdss.ca.gov/" },
+      24: { id: 24, name: "Women, Infants & Children (WIC)", description: "Nutrition program for pregnant women, new mothers, and young children.", category: "food", icon: "leaf", link: "https://www.cdph.ca.gov/wic" },
+      25: { id: 25, name: "Community-Based Adult Services (CBAS) / Adult Day Health Center (ADHC)", description: "Day programs for elderly and disabled adults.", category: "caretaker", icon: "heart", link: "https://www.sandiegocounty.gov/" },
+      26: { id: 26, name: "In-Home Supportive Service (IHSS)", description: "Paid in-home care for elderly, blind, or disabled individuals.", category: "caretaker", icon: "heart", link: "https://www.cdss.ca.gov/" },
+      27: { id: 27, name: "California Advanced Services Fund - Line Extension Program (LEP)", description: "Advanced energy services for low-income households.", category: "utility", icon: "spark", link: "https://www.sdge.com/" },
+      28: { id: 28, name: "California Work Opportunity and Responsibility to Kids (CalWORKs)", description: "Cash assistance and employment services for families with children.", category: "income", icon: "dollar", link: "https://www.cdss.ca.gov/calworks" },
+      29: { id: 29, name: "MTS Reduced Fares", description: "Half-price public transportation for seniors and disabled riders.", category: "transportation", icon: "spark", link: "https://www.sdmts.com/" },
+      30: { id: 30, name: "San Diego County Museums - Free or Reduced Admission", description: "Free or reduced-price admission to local museums.", category: "entertainment", icon: "spark", link: "https://www.sandiegocounty.gov/" },
+      31: { id: 31, name: "Older Californians Nutrition Program - County of San Diego", description: "Meals and nutrition services for seniors 60 and older.", category: "food", icon: "leaf", link: "https://www.cdss.ca.gov/" },
+      32: { id: 32, name: "Home-Delivered Meals - County of San Diego", description: "Delivered meals for seniors and disabled individuals unable to shop.", category: "food", icon: "leaf", link: "https://www.sandiegocounty.gov/" },
+      33: { id: 33, name: "Medical Baseline", description: "Discount on electricity for households with medical equipment.", category: "utility", icon: "spark", link: "https://www.sdge.com/" },
+      34: { id: 34, name: "Weatherization Assistance Program (WAP)", description: "Free home energy improvements for low-income households.", category: "utility", icon: "spark", link: "https://www.sandiegocap.org/" },
+      35: { id: 35, name: "National School Lunch Program (NSLP) and National School Breakfast Program (NSBP)", description: "Free or reduced-price school meals for eligible children.", category: "food", icon: "leaf", link: "https://www.fns.usda.gov/" },
+      36: { id: 36, name: "Summer EBT (SUN Bucks)", description: "Summer food benefits for low-income children during school break.", category: "food", icon: "leaf", link: "https://www.cdss.ca.gov/" },
+      37: { id: 37, name: "Section 8 Housing Choice Voucher", description: "Rental assistance vouchers for low-income families.", category: "housing", icon: "home", link: "https://www.sandiegocounty.gov/" },
+      38: { id: 38, name: "Public Housing", description: "Government-owned housing for low-income families.", category: "housing", icon: "home", link: "https://www.sandiegocounty.gov/" },
+      39: { id: 39, name: "California Children's Health Insurance Program (C-CHIP)", description: "Low-cost health insurance for children in low-income families.", category: "healthcare", icon: "heart", link: "https://benefitscal.com" },
+      40: { id: 40, name: "Medi-Cal (Medicaid) for Pregnant Individuals", description: "Health insurance for pregnant individuals regardless of immigration status.", category: "healthcare", icon: "heart", link: "https://www.medi-cal.ca.gov/" },
+      41: { id: 41, name: "Medi-Cal (Medicaid) Access Program for Pregnant Individuals", description: "Additional healthcare access for pregnant individuals.", category: "healthcare", icon: "heart", link: "https://www.medi-cal.ca.gov/" },
+      42: { id: 42, name: "Federal Lifeline - Domestic Violence Survivor Benefit", description: "Free phone service for domestic violence survivors.", category: "utility", icon: "spark", link: "https://www.fcc.gov/lifeline" },
+      43: { id: 43, name: "Early Head Start and Head Start", description: "Education and family services for low-income young children.", category: "day care", icon: "heart", link: "https://www.acf.hhs.gov/ohs" },
+      44: { id: 44, name: "California's Tribal Temporary Assistance for Needy Families (Tribal TANF)", description: "Cash assistance for tribal members.", category: "income", icon: "dollar", link: "https://www.cdss.ca.gov/" },
+      45: { id: 45, name: "BrightLife Kids", description: "Healthcare benefits expansion for low-income children.", category: "healthcare", icon: "heart", link: "https://www.cdph.ca.gov/" },
+      46: { id: 46, name: "Soluna", description: "Mental health and substance abuse program.", category: "healthcare", icon: "heart", link: "https://www.cdph.ca.gov/" },
+      47: { id: 47, name: "CalHope Red Line", description: "Mental health crisis line and support services.", category: "healthcare", icon: "heart", link: "https://www.cdph.ca.gov/" },
+      48: { id: 48, name: "Refugee Cash Assistance (RCA)", description: "Cash assistance for newly arrived refugees.", category: "income", icon: "dollar", link: "https://www.cdss.ca.gov/" },
+      49: { id: 49, name: "Federal Special Veterans Benefit (SVB) and California Veterans Cash Benefit (CVCB)", description: "Cash assistance for low-income veterans.", category: "income", icon: "dollar", link: "https://www.cdva.ca.gov/" },
+      50: { id: 50, name: "Trafficking and Crime Victim Assistance Program (TCVAP)", description: "Assistance for victims of trafficking and crime.", category: "income", icon: "dollar", link: "https://www.sandiegocounty.gov/" },
+      51: { id: 51, name: "Office of Military & Veterans Affairs - San Diego County", description: "Veteran services and benefits counseling.", category: "income", icon: "dollar", link: "https://www.sandiegocounty.gov/" },
+      52: { id: 52, name: "Solid Waste Management Fee Financial Assistance Program", description: "Assistance with garbage collection fees for low-income households.", category: "utility", icon: "spark", link: "https://www.sandiegocounty.gov/" },
+      53: { id: 53, name: "California Disability Insurance (EDD)", description: "Income for individuals unable to work due to disability.", category: "income", icon: "dollar", link: "https://edd.ca.gov/" },
+      54: { id: 54, name: "California State Supplementary Payment (SSP)", description: "State income supplement for SSI recipients.", category: "income", icon: "dollar", link: "https://www.cdss.ca.gov/" },
+      55: { id: 55, name: "Program of All-Inclusive Care for Elderly (PACE)", description: "Comprehensive healthcare and support for seniors.", category: "caretaker", icon: "heart", link: "https://www.cdss.ca.gov/" },
+      56: { id: 56, name: "Migrant and Seasonal Head Start", description: "Education for children of migrant and seasonal workers.", category: "day care", icon: "heart", link: "https://www.acf.hhs.gov/" },
+      57: { id: 57, name: "American Indian and Alaska Native (AIAN) Head Start/ Tribal Head Start", description: "Education for Native American children.", category: "day care", icon: "heart", link: "https://www.acf.hhs.gov/" },
+      58: { id: 58, name: "California Low Cost Automobile (CLCA) Insurance", description: "Affordable car insurance for low-income drivers.", category: "transportation", icon: "spark", link: "https://www.dmv.ca.gov/" },
+      59: { id: 59, name: "San Diego Public Library's Discover & Go", description: "Free admission passes to museums and cultural venues.", category: "entertainment", icon: "spark", link: "https://www.sdlibrary.org/" },
+      60: { id: 60, name: "CA State Library Parks Pass and CA State Parks Pass Backpack", description: "Free or discounted access to California state parks.", category: "entertainment", icon: "spark", link: "https://www.parks.ca.gov/" },
+      61: { id: 61, name: "Thomas Jefferson School of Law - Veterans' Legal Assistance Clinic", description: "Free legal services for veterans.", category: "legal", icon: "file", link: "https://www.tjsl.edu/" },
+      62: { id: 62, name: "Thomas Jefferson School of Law - Patent & Trademark Clinics", description: "Low-cost intellectual property legal services.", category: "legal", icon: "file", link: "https://www.tjsl.edu/" },
+      63: { id: 63, name: "Thomas Jefferson School of Law - Non-Profit & Small Business Law Clinic", description: "Legal assistance for nonprofits and small businesses.", category: "legal", icon: "file", link: "https://www.tjsl.edu/" },
+      64: { id: 64, name: "Cal Western School of Law - Innocence and Justice Clinics", description: "Legal representation in criminal cases.", category: "legal", icon: "file", link: "https://www.calwestern.edu/" },
+      65: { id: 65, name: "Cal Western School of Law - Community Law Project", description: "Legal services for underrepresented communities.", category: "legal", icon: "file", link: "https://www.calwestern.edu/" },
+      66: { id: 66, name: "Cal Western School of Law - New Media Rights", description: "Legal assistance for digital rights and internet issues.", category: "legal", icon: "file", link: "https://www.calwestern.edu/" },
+      67: { id: 67, name: "Cal Western School of Law - Trademark Clinic", description: "Low-cost trademark legal services.", category: "legal", icon: "file", link: "https://www.calwestern.edu/" },
+      68: { id: 68, name: "USD Law Legal Clinics", description: "Various legal clinics providing free services.", category: "legal", icon: "file", link: "https://www.sandiego.edu/law/" },
+      69: { id: 69, name: "San Diego Volunteer Lawyers of San Diego", description: "Pro bono legal services for low-income individuals.", category: "legal", icon: "file", link: "https://www.volunteerlawyers.org/" },
+      70: { id: 70, name: "Legal Aid of San Diego", description: "Free legal services for low-income individuals.", category: "legal", icon: "file", link: "https://www.lassd.org/" },
+      71: { id: 71, name: "Property Tax Postponement", description: "Postpone property tax payments for low-income seniors.", category: "housing", icon: "home", link: "https://www.cdtfa.ca.gov/" },
+      72: { id: 72, name: "California State Board of Equalization - Homeowners Exemption", description: "Property tax exemption for low-income homeowners.", category: "taxes", icon: "file", link: "https://www.cdtfa.ca.gov/" },
+      73: { id: 73, name: "California State Board of Equalization - Disabled Veterans Exemption", description: "Property tax exemption for disabled veterans.", category: "taxes", icon: "file", link: "https://www.cdtfa.ca.gov/" },
+    };
+
+    const quizSteps = [
+      { 
+        id: "age", 
+        title: "How old are you?", 
+        subtitle: "Age determines eligibility for many programs.", 
+        explanation: "Different programs serve different age groups - seniors get different benefits than families with children or working-age adults.",
+        type: "choice", 
+        options: ["Under 18", "18-59", "60-64", "65+"] 
+      },
+      { 
+        id: "household_size", 
+        title: "How many people are in your household?", 
+        subtitle: "Include everyone you live with and share resources with.", 
+        explanation: "Household size determines income limits and benefit amounts for most programs.",
+        type: "choice", 
+        options: ["1 person", "2 people", "3 people", "4 people", "5 people", "6 people", "7+ people"] 
+      },
+      { 
+        id: "monthly_income", 
+        title: "What is your total household monthly income?", 
+        subtitle: "Include all income before taxes—wages, benefits, child support, disability payments, etc.", 
+        explanation: "Income is the main factor for most benefit programs. This helps us find programs with income limits you qualify for.",
+        type: "choice", 
+        options: ["No income", "Under $500", "$500–$1,000", "$1,000–$2,000", "$2,000–$3,000", "$3,000–$4,500", "$4,500–$6,000", "Over $6,000"] 
+      },
+      { 
+        id: "employment", 
+        title: "What is your current employment status?", 
+        subtitle: "Select what best describes your situation.", 
+        explanation: "Employment status affects eligibility for unemployment benefits, job training, and work-related programs.",
+        type: "choice", 
+        options: ["Employed full-time", "Employed part-time", "Self-employed", "Unemployed (looking for work)", "Unable to work (disability/medical)"] 
+      },
+      { 
+        id: "special_status", 
+        title: "Do any of these apply to you? (Select all that apply)", 
+        subtitle: "These help us find additional programs you may qualify for.", 
+        explanation: "Veterans, refugees, foster youth, people with disabilities, and families with children have access to specialized programs.",
+        type: "choice", 
+        options: ["Veteran or military", "Refugee or recent immigrant", "Disability or chronic illness", "Foster youth or in foster care", "Pregnant or nursing", "Caring for children under 18", "None of these"] 
+      },
+    ];
+
+    // Quiz Component
+    const Quiz = ({ setView, setAnswers }) => {
+      const [step, setStep] = useState(0);
+      const [answers, setLocalAnswers] = useState({});
+      const [selected, setSelected] = useState(null);
+      const [selectedMultiple, setSelectedMultiple] = useState([]);
+
+      const current = quizSteps[step];
+      const progress = ((step + 1) / quizSteps.length) * 100;
+      const isMultiSelect = current.id === "special_status";
+
+      const handleOptionClick = (opt) => {
+        if (isMultiSelect) {
+          // Toggle multiple selection
+          setSelectedMultiple(prev => 
+            prev.includes(opt) 
+              ? prev.filter(item => item !== opt)
+              : [...prev, opt]
+          );
+        } else {
+          // Single selection
+          setSelected(opt);
+        }
+      };
+
+      const handleNext = () => {
+        const newAnswers = isMultiSelect 
+          ? { ...answers, [current.id]: selectedMultiple }
+          : { ...answers, [current.id]: selected };
+        
+        if (isMultiSelect && selectedMultiple.length === 0) return;
+        if (!isMultiSelect && !selected) return;
+        
+        setLocalAnswers(newAnswers);
+        
+        if (step < quizSteps.length - 1) {
+          setStep(step + 1);
+          setSelected(null);
+          setSelectedMultiple([]);
+        } else {
+          setAnswers(newAnswers);
+          setView("results");
+        }
+      };
+
+      const handleBack = () => {
+        if (step === 0) { setView("landing"); return; }
+        setStep(step - 1);
+        const prevAnswer = answers[quizSteps[step - 1].id];
+        if (quizSteps[step - 1].id === "special_status") {
+          setSelectedMultiple(Array.isArray(prevAnswer) ? prevAnswer : []);
+          setSelected(null);
+        } else {
+          setSelected(prevAnswer || null);
+          setSelectedMultiple([]);
+        }
+      };
+
+      return (
+        <div style={{ minHeight: "calc(100vh - 64px)", background: "var(--cream)", display: "flex", flexDirection: "column", alignItems: "center", padding: "40px 24px" }}>
+          <div style={{ width: "100%", maxWidth: 560, marginBottom: 40 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
+              <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text-muted)" }}>Step {step + 1} of {quizSteps.length}</span>
+              <span style={{ fontSize: 13, color: "var(--text-muted)" }}>{Math.round(progress)}% complete</span>
+            </div>
+            <div className="progress-track">
+              <div className="progress-fill" style={{ width: `${progress}%` }} />
+            </div>
+          </div>
+
+          <div className="animate-fadeUp" style={{ width: "100%", maxWidth: 560 }}>
+            <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 26, fontWeight: 500, lineHeight: 1.25, marginBottom: 8, letterSpacing: "-0.02em" }}>
+              {current.title}
+            </h2>
+            <p style={{ color: "var(--text-secondary)", fontSize: 14, marginBottom: 16, lineHeight: 1.6 }}>
+              {current.subtitle}
+            </p>
+            
+            <div className="info-box" style={{ marginBottom: 24 }}>
+              {current.explanation}
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {current.options.map((opt, i) => {
+                const isSelected = isMultiSelect 
+                  ? selectedMultiple.includes(opt)
+                  : selected === opt;
+                
+                return (
+                  <div
+                    key={opt}
+                    className={`choice-card animate-fadeUp ${isSelected ? "selected" : ""}`}
+                    style={{ animationDelay: `${Math.min(i * 0.08, 0.3)}s` }}
+                    onClick={() => handleOptionClick(opt)}
+                  >
+                    <div className="choice-dot">
+                      {isSelected && <Icon name="check" size={10} color="white" />}
+                    </div>
+                    {opt}
+                  </div>
+                );
+              })}
+            </div>
+
+            <div style={{ display: "flex", gap: 12, marginTop: 32, justifyContent: "space-between" }}>
+              <button className="btn-ghost" onClick={handleBack} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <Icon name="back" size={16} /> Back
+              </button>
+              <button
+                className="btn-primary"
+                onClick={handleNext}
+                style={{ opacity: isMultiSelect ? (selectedMultiple.length > 0 ? 1 : 0.5) : (selected ? 1 : 0.5), cursor: isMultiSelect ? (selectedMultiple.length > 0 ? "pointer" : "not-allowed") : (selected ? "pointer" : "not-allowed") }}
+                disabled={isMultiSelect ? selectedMultiple.length === 0 : !selected}
+              >
+                {step === quizSteps.length - 1 ? "See my results" : "Continue"} <Icon name="arrow" size={16} />
+              </button>
+            </div>
+          </div>
+
+          <div style={{ marginTop: 40, maxWidth: 560, width: "100%", textAlign: "center" }}>
+            <p style={{ fontSize: 12, color: "var(--text-muted)" }}>
+              🔒 Your answers are confidential and never shared.
+            </p>
+          </div>
+        </div>
+      );
+    };
+
+    // Results Component with intelligent matching
+    const Results = ({ answers, setView }) => {
+      const [selectedCategory, setSelectedCategory] = useState(null);
+
+      const getAge = (ans) => ans;
+      const getHouseholdSize = (ans) => {
+        const map = { "1 person": 1, "2 people": 2, "3 people": 3, "4 people": 4, "5 people": 5, "6 people": 6, "7+ people": 7 };
+        return map[ans] || 1;
+      };
+      const getMonthlyIncome = (ans) => {
+        const map = { "No income": 0, "Under $500": 250, "$500–$1,000": 750, "$1,000–$2,000": 1500, "$2,000–$3,000": 2500, "$3,000–$4,500": 3750, "$4,500–$6,000": 5250, "Over $6,000": 7000 };
+        return map[ans] || 0;
+      };
+
+      const age = getAge(answers.age);
+      const householdSize = getHouseholdSize(answers.household_size);
+      const monthlyIncome = getMonthlyIncome(answers.monthly_income);
+      const specialStatus = Array.isArray(answers.special_status) ? answers.special_status : [answers.special_status];
+      const isVeteran = specialStatus.some(s => s.includes("Veteran"));
+      const isRefugee = specialStatus.some(s => s.includes("Refugee"));
+      const isDisabled = specialStatus.some(s => s.includes("Disability"));
+      const isFosterCare = specialStatus.some(s => s.includes("Foster"));
+      const isPregnant = specialStatus.some(s => s.includes("Pregnant"));
+      const hasChildren = specialStatus.some(s => s.includes("children"));
+      const employment = answers.employment;
+
+      // Intelligent matching based on criteria
+      const eligiblePrograms = Object.values(PROGRAMS).filter(prog => {
+        // Senior-specific programs (65+)
+        if (age === "65+") {
+          const seniorProgIds = [3, 10, 15, 16, 17, 18, 25, 26, 31, 32, 55, 71];
+          if (!seniorProgIds.includes(prog.id)) {
+            // Can still get general programs if income is low enough
+            if (monthlyIncome > 4000) return false;
+          }
+        }
+        
+        // Exclude senior programs for non-seniors
+        if (age !== "65+" && [31, 32, 55, 71].includes(prog.id)) return false;
+        
+        // Child/family programs
+        if ((hasChildren || isPregnant) && [24, 28, 35, 36, 37, 38, 39, 40, 41, 43, 45, 56, 57].includes(prog.id)) {
+          // Keep these
+        } else if ((hasChildren || isPregnant) === false && [24, 28, 35, 36, 43, 56, 57].includes(prog.id)) {
+          return false;
+        }
+        
+        // Veteran programs
+        if (isVeteran && [49, 61, 73].includes(prog.id)) {
+          // Keep these
+        } else if (!isVeteran && [49, 61, 73].includes(prog.id)) {
+          return false;
+        }
+        
+        // Refugee programs
+        if (isRefugee && [8, 42, 48].includes(prog.id)) {
+          // Keep these
+        } else if (!isRefugee && [48].includes(prog.id)) {
+          return false;
+        }
+        
+        // Disability programs
+        if (isDisabled && [3, 4, 10, 25, 26, 29, 33, 39, 45, 46, 47, 53, 73].includes(prog.id)) {
+          // Keep these
+        } else if (!isDisabled && [26, 33, 53].includes(prog.id)) {
+          return false;
+        }
+        
+        // Income threshold checks
+        if (monthlyIncome > 6500) {
+          // Only high-income eligible programs
+          if ([1, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 21, 22, 23, 24, 31, 32, 34, 35, 36, 37, 39, 40, 41].includes(prog.id)) {
+            return false;
+          }
+        }
+        
+        // Unemployed programs
+        if (employment === "Unemployed (looking for work)" || employment === "Unable to work (disability/medical)") {
+          // These are good for unemployed
+          if ([2, 13, 23, 53].includes(prog.id)) return true;
+        } else if (employment.includes("Employed")) {
+          // Exclude strict unemployment programs
+          if ([2, 13].includes(prog.id) && monthlyIncome > 2500) return false;
+        }
+        
+        // General income-based filtering
+        if (monthlyIncome > 5500 && prog.category === "food") return false;
+        if (monthlyIncome > 5000 && prog.category === "utility") return false;
+        
+        return true;
+      });
+
+      const categories = [...new Set(eligiblePrograms.map(p => p.category))].sort();
+      const displayPrograms = selectedCategory 
+        ? eligiblePrograms.filter(p => p.category === selectedCategory)
+        : eligiblePrograms;
+
+      return (
+        <div style={{ background: "var(--cream)", minHeight: "calc(100vh - 64px)", padding: "40px 24px" }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+            <div className="animate-fadeUp" style={{ marginBottom: 32 }}>
+              <div className="tag tag-green" style={{ marginBottom: 12 }}><Icon name="check" size={12} /> Your results are ready</div>
+              <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 36, fontWeight: 500, letterSpacing: "-0.03em", lineHeight: 1.1, marginBottom: 8 }}>
+                You may qualify for <em style={{ color: "var(--jade)", fontStyle: "italic" }}>{eligiblePrograms.length} programs</em>
+              </h2>
+              <p style={{ color: "var(--text-secondary)", fontSize: 15 }}>
+                Based on your household of {householdSize} with monthly income of ${monthlyIncome.toLocaleString()}
+              </p>
+            </div>
+
+            {/* Disclaimer */}
+            <div className="disclaimer-box">
+              <div className="disclaimer-title">⚠️ Important Disclaimer</div>
+              These results are an estimate based on general eligibility criteria. Different programs define "household" and "income" differently and may have additional requirements. These results do not guarantee your eligibility. Please verify by contacting each program directly.
+            </div>
+
+            {/* Summary stats */}
+            <div className="animate-fadeUp delay-1" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 12, marginBottom: 32 }}>
+              {[
+                { label: "Household size", val: householdSize },
+                { label: "Monthly income", val: `$${monthlyIncome.toLocaleString()}` },
+                { label: "Eligible programs", val: eligiblePrograms.length },
+              ].map(s => (
+                <div key={s.label} className="stat-card animate-fadeUp">
+                  <div className="stat-value">{s.val}</div>
+                  <div className="stat-label">{s.label}</div>
+                </div>
+              ))}
+            </div>
+
+            <h3 style={{ fontFamily: "Fraunces, serif", fontSize: 20, fontWeight: 500, marginBottom: 20 }}>Your personalized recommendations</h3>
+
+            {eligiblePrograms.length === 0 ? (
+              <div className="card" style={{ textAlign: "center", padding: "40px" }}>
+                <p style={{ color: "var(--text-secondary)", marginBottom: 16 }}>Based on your answers, you may not currently qualify for these programs. However, you can:</p>
+                <button className="btn-primary" onClick={() => setView("directory")}>
+                  Browse all programs <Icon name="arrow" size={16} />
+                </button>
+              </div>
+            ) : (
+              <div>
+                {/* Category Filter */}
+                <div className="filter-buttons animate-fadeUp delay-1">
+                  <button 
+                    className={`filter-btn ${!selectedCategory ? 'active' : ''}`}
+                    onClick={() => setSelectedCategory(null)}
+                  >
+                    All ({eligiblePrograms.length})
+                  </button>
+                  {categories.map(cat => {
+                    const count = eligiblePrograms.filter(p => p.category === cat).length;
+                    return (
+                      <button
+                        key={cat}
+                        className={`filter-btn ${selectedCategory === cat ? 'active' : ''}`}
+                        onClick={() => setSelectedCategory(cat)}
+                      >
+                        {cat.charAt(0).toUpperCase() + cat.slice(1)} ({count})
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Programs Grid */}
+                <div className="results-grid animate-fadeUp delay-2">
+                  {displayPrograms.map((prog) => (
+                    <div key={prog.id} className="program-card">
+                      <div className="program-card-icon">
+                        <Icon name={prog.icon} size={24} color="var(--jade)" />
+                      </div>
+                      <div className="program-card-title">{prog.name}</div>
+                      <div className="program-card-desc">{prog.description}</div>
+                      <div className="program-card-cat">
+                        <span className="tag tag-green">{prog.category}</span>
+                      </div>
+                      <div className="program-card-link">
+                        <a href={prog.link} target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
+                          <button className="btn-primary" style={{ fontSize: 12, padding: "8px 16px", width: "100%" }}>
+                            Learn more <Icon name="arrow" size={12} />
+                          </button>
+                        </a>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div style={{ marginTop: 40, textAlign: "center" }}>
+              <button className="btn-secondary" onClick={() => setView("landing")}>
+                Start over
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // Landing Page
+    const LandingPage = ({ setView }) => {
+      const categories = [
+        { cat: "Food", icon: "leaf", count: 6 },
+        { cat: "Healthcare", icon: "heart", count: 15 },
+        { cat: "Income", icon: "dollar", count: 13 },
+        { cat: "Housing", icon: "home", count: 3 },
+        { cat: "Utility", icon: "spark", count: 13 },
+        { cat: "Transportation", icon: "spark", count: 2 },
+        { cat: "Legal", icon: "file", count: 10 },
+        { cat: "Day Care", icon: "heart", count: 3 },
+        { cat: "Caretaker", icon: "heart", count: 3 },
+        { cat: "Entertainment", icon: "spark", count: 3 },
+        { cat: "Taxes", icon: "file", count: 2 },
+      ];
+
+      const howItWorks = [
+        { n: "1", title: "Answer 5 quick questions", desc: "Tell us about your situation — about 3 minutes." },
+        { n: "2", title: "Get personalized results", desc: "We find programs that match your specific needs." },
+        { n: "3", title: "Apply today", desc: "Direct links to each program make applying easy." },
+      ];
+
+      return (
+        <div className="hero-bg" style={{ minHeight: "100%" }}>
+          {/* Hero Section */}
+          <section style={{ maxWidth: 1120, margin: "0 auto", padding: "80px 24px 64px" }}>
+            <div style={{ maxWidth: 640 }}>
+              <div className="animate-fadeUp" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(26,107,90,0.1)", border: "1px solid rgba(26,107,90,0.2)", borderRadius: 99, padding: "6px 14px", marginBottom: 24 }}>
+                <Icon name="spark" size={14} color="var(--jade)" />
+                <span style={{ fontSize: 13, fontWeight: 600, color: "var(--jade-dark)" }}>San Diego County • California</span>
+              </div>
+              <h1 className="animate-fadeUp delay-1" style={{ fontFamily: "Fraunces, serif", fontSize: "clamp(42px, 6vw, 72px)", fontWeight: 500, lineHeight: 1.05, letterSpacing: "-0.03em", marginBottom: 24 }}>
+                Find the benefits<br />
+                <em style={{ color: "var(--jade)", fontStyle: "italic" }}>you've earned.</em>
+              </h1>
+              <p className="animate-fadeUp delay-2" style={{ fontSize: 18, color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: 36, maxWidth: 500 }}>
+                Millions of eligible Americans miss out on public assistance because the system is overwhelming. We make it as simple as filing your taxes.
+              </p>
+              <div className="animate-fadeUp delay-3" style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                <button className="btn-primary" style={{ fontSize: 16, padding: "16px 32px" }} onClick={() => setView("quiz")}>
+                  Start quiz <Icon name="arrow" size={16} />
+                </button>
+                <button className="btn-secondary" onClick={() => setView("directory")}>
+                  Browse all 73 programs
+                </button>
+              </div>
+            </div>
+          </section>
+
+          {/* Disclaimer */}
+          <section style={{ maxWidth: 1120, margin: "0 auto", padding: "0 24px 40px" }}>
+            <div className="disclaimer-box">
+              <div className="disclaimer-title">Important: About These Results</div>
+              This tool provides an estimate of programs you may qualify for. Each program defines "household" and "income" differently and may have additional requirements. Results do not guarantee eligibility—verify directly with each program.
+            </div>
+          </section>
+
+          {/* Programs We Check Section */}
+          <section style={{ maxWidth: 1120, margin: "0 auto", padding: "0 24px 80px" }}>
+            <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 28, fontWeight: 500, marginBottom: 8 }}>Programs we check</h2>
+            <p style={{ color: "var(--text-muted)", marginBottom: 32, fontSize: 15 }}>We search across 73 assistance programs in San Diego County.</p>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 12 }}>
+              {categories.map((c, i) => (
+                <div key={c.cat} className="card card-hover animate-fadeUp" style={{ animationDelay: `${i * 0.06}s`, padding: 20, textAlign: "center" }}>
+                  <div style={{ width: 40, height: 40, borderRadius: 10, background: "rgba(26,107,90,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12, margin: "0 auto 12px" }}>
+                    <Icon name={c.icon} size={18} color="var(--jade)" />
+                  </div>
+                  <div style={{ fontWeight: 700, fontSize: 14 }}>{c.cat}</div>
+                  <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>{c.count} programs</div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* How It Works Section */}
+          <section style={{ background: "var(--warm-white)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
+            <div style={{ maxWidth: 1120, margin: "0 auto", padding: "72px 24px" }}>
+              <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 28, fontWeight: 500, marginBottom: 48, textAlign: "center" }}>How it works</h2>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 32 }}>
+                {howItWorks.map((s) => (
+                  <div key={s.n} style={{ display: "flex", gap: 20 }}>
+                    <div style={{ width: 44, height: 44, borderRadius: 12, background: "var(--jade)", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "Fraunces, serif", fontSize: 20, fontWeight: 500, flexShrink: 0 }}>{s.n}</div>
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 6 }}>{s.title}</div>
+                      <div style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.6 }}>{s.desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* CTA Section */}
+          <section style={{ maxWidth: 1120, margin: "0 auto", padding: "80px 24px", textAlign: "center" }}>
+            <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 40, fontWeight: 500, marginBottom: 16, letterSpacing: "-0.03em" }}>
+              Ready to discover your benefits?
+            </h2>
+            <p style={{ color: "var(--text-secondary)", fontSize: 16, marginBottom: 32 }}>Free, confidential, takes 3 minutes.</p>
+            <button className="btn-primary" style={{ fontSize: 16, padding: "16px 40px" }} onClick={() => setView("quiz")}>
+              Get started <Icon name="arrow" size={16} />
+            </button>
+            <p style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 16 }}>No account required. Your information is never sold.</p>
+          </section>
+        </div>
+      );
+    };
+
+    // Directory Component
+    const Directory = ({ setView }) => {
+      const [search, setSearch] = useState("");
+      const [selectedCategory, setSelectedCategory] = useState(null);
+
+      const categories = [...new Set(Object.values(PROGRAMS).map(p => p.category))].sort();
+      const filtered = Object.values(PROGRAMS).filter(p => {
+        const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) || p.description.toLowerCase().includes(search.toLowerCase());
+        const matchCat = !selectedCategory || p.category === selectedCategory;
+        return matchSearch && matchCat;
+      });
+
+      return (
+        <div style={{ minHeight: "calc(100vh - 64px)", background: "var(--cream)", padding: "40px 24px" }}>
+          <div style={{ maxWidth: 900, margin: "0 auto" }}>
+            <div className="animate-fadeUp" style={{ marginBottom: 32 }}>
+              <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 32, fontWeight: 500, marginBottom: 12 }}>Browse all 73 programs</h2>
+              <p style={{ color: "var(--text-secondary)", fontSize: 15 }}>Explore all assistance programs available in San Diego County.</p>
+            </div>
+
+            <div className="animate-fadeUp delay-1" style={{ marginBottom: 24 }}>
+              <input
+                className="input"
+                placeholder="Search programs..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                style={{ marginBottom: 16 }}
+              />
+            </div>
+
+            <div className="animate-fadeUp delay-2" style={{ marginBottom: 24, display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {categories.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)}
+                  style={{ background: selectedCategory === cat ? "var(--jade)" : "var(--warm-white)", color: selectedCategory === cat ? "white" : "var(--text-secondary)", border: selectedCategory === cat ? "none" : "1px solid var(--border)", padding: "8px 16px", borderRadius: 99, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "Plus Jakarta Sans" }}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            <div className="results-grid">
+              {filtered.map((prog, i) => (
+                <div key={prog.id} className="program-card animate-fadeUp" style={{ animationDelay: `${(i % 5) * 0.1}s` }}>
+                  <div className="program-card-icon">
+                    <Icon name={prog.icon} size={24} color="var(--jade)" />
+                  </div>
+                  <div className="program-card-title">{prog.name}</div>
+                  <div className="program-card-desc">{prog.description}</div>
+                  <div className="program-card-cat">
+                    <span className="tag tag-gray">{prog.category}</span>
+                  </div>
+                  <div className="program-card-link">
+                    <a href={prog.link} target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
+                      <button className="btn-primary" style={{ fontSize: 12, padding: "8px 16px", width: "100%" }}>
+                        Learn more <Icon name="arrow" size={12} />
+                      </button>
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // Nav
+    const Nav = ({ view, setView }) => (
+      <nav className="nav">
+        <div className="nav-inner">
+          <button onClick={() => setView("landing")} className="btn-ghost" style={{ padding: 0, display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ width: 32, height: 32, background: "var(--jade)", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Icon name="leaf" size={16} color="white" />
+            </div>
+            <span style={{ fontFamily: "Fraunces, serif", fontWeight: 500, fontSize: 17, color: "var(--text-primary)" }}>
+              Benefits <em style={{ fontStyle: "italic" }}>Navigator</em>
+            </span>
+          </button>
+        </div>
+      </nav>
+    );
+
+    // App
+    function App() {
+      const [view, setView] = useState("landing");
+      const [answers, setAnswers] = useState(null);
+
+      return (
+        <div>
+          <Nav view={view} setView={setView} />
+          {view === "landing" && <LandingPage setView={setView} />}
+          {view === "quiz" && <Quiz setView={setView} setAnswers={setAnswers} />}
+          {view === "results" && answers && <Results answers={answers} setView={setView} />}
+          {view === "directory" && <Directory setView={setView} />}
+        </div>
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById("root"));
+  </script>
+</body>
 </html>
