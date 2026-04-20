@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us — Benefits Navigator | Public Programs Foundation</title>
+  <meta name="description" content="Learn about Public Programs Foundation and the Benefits Navigator — a free tool connecting people with the programs they've earned.">
+  <link rel="canonical" href="https://public-programs.org/about">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,500;0,700;1,300;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://public-programs.org/about">
+  <meta property="og:title" content="About Us — Benefits Navigator | Public Programs Foundation">
+  <meta property="og:description" content="Learn about Public Programs Foundation and the Benefits Navigator — a free tool connecting people with the programs they've earned.">
+  <meta property="og:image" content="https://public-programs.org/assets/og-image.png">
+  <meta property="og:site_name" content="Public Programs Foundation">
+
+  <!-- Vercel Web Analytics -->
+  <script defer src="/_vercel/insights/script.js"></script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --jade: #1a6b5a;
+      --jade-light: #2a8f76;
+      --jade-dark: #0f4038;
+      --cream: #faf6ef;
+      --warm-white: #fffdf9;
+      --terracotta: #c4622d;
+      --amber: #e8a830;
+      --sand: #e8dcc8;
+      --text-primary: #1c1a17;
+      --text-secondary: #5c5649;
+      --text-muted: #9a9082;
+      --border: #e0d6c6;
+      --shadow-sm: 0 1px 4px rgba(28,26,23,0.08);
+      --shadow-md: 0 4px 20px rgba(28,26,23,0.12);
+    }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--cream); color: var(--text-primary); }
+    h1, h2, h3 { font-family: 'Fraunces', serif; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeUp { animation: fadeUp 0.5s ease both; }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .skip-link { position: absolute; top: -40px; left: 0; background: var(--jade); color: white; padding: 8px 16px; z-index: 9999; font-weight: 600; border-radius: 0 0 8px 0; transition: top 0.2s; text-decoration: none; }
+    .skip-link:focus { top: 0; }
+    button:focus-visible, a:focus-visible { outline: 3px solid var(--jade); outline-offset: 2px; border-radius: 4px; }
+    .site-header { position: sticky; top: 0; z-index: 100; background: rgba(250,246,239,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 24px; }
+    .header-inner { max-width: 1120px; margin: 0 auto; height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .wordmark { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .wordmark img { height: 96px; width: auto; }
+    .btn-back { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--jade); border: 1.5px solid var(--jade); border-radius: 99px; padding: 9px 20px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; font-family: 'Plus Jakarta Sans', sans-serif; text-decoration: none; }
+    .btn-back:hover { background: rgba(26,107,90,0.06); color: var(--jade); }
+    .btn-donate { display: inline-flex; align-items: center; gap: 6px; background: var(--terracotta); color: white; border: 1.5px solid var(--terracotta); border-radius: 99px; padding: 9px 18px; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; font-family: 'Plus Jakarta Sans', sans-serif; text-decoration: none; }
+    .btn-donate:hover { background: #b5561f; border-color: #b5561f; color: white; }
+    .back-arrow { font-size: 16px; line-height: 1; }
+    .hero { background: radial-gradient(ellipse 80% 60% at 60% -10%, rgba(26,107,90,0.12) 0%, transparent 60%), var(--cream); padding: 64px 24px 48px; text-align: center; border-bottom: 1px solid var(--border); }
+    .hero-inner { max-width: 680px; margin: 0 auto; }
+    .logo-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(26,107,90,0.1); border-radius: 99px; padding: 6px 16px; margin-bottom: 24px; }
+    .content-area { max-width: 760px; margin: 0 auto; padding: 56px 24px 80px; }
+    .section { margin-bottom: 40px; }
+    .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+    .section-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .card-white { background: var(--warm-white); border: 1px solid var(--border); border-radius: 16px; padding: 28px; line-height: 1.75; color: var(--text-secondary); font-size: 15px; }
+    .card-white p + p { margin-top: 16px; }
+    .privacy-card { background: rgba(232,168,48,0.06); border: 1px solid rgba(232,168,48,0.25); border-left: 4px solid var(--amber); border-radius: 12px; padding: 24px; font-size: 15px; line-height: 1.75; color: var(--text-secondary); }
+    .vision-mission-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 48px; }
+    .vm-card { border: 1px solid rgba(26,107,90,0.15); border-radius: 16px; padding: 28px; }
+    .vm-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .vm-icon { width: 36px; height: 36px; border-radius: 10px; background: rgba(26,107,90,0.15); display: flex; align-items: center; justify-content: center; }
+    .vm-label { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--jade-dark); }
+    .access-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+    .access-item { background: var(--warm-white); border: 1px solid var(--border); border-radius: 12px; padding: 18px; display: flex; gap: 14px; align-items: flex-start; }
+    .access-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(26,107,90,0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .help-list { background: var(--warm-white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+    .help-item { padding: 18px 22px; border-bottom: 1px solid var(--border); display: flex; gap: 14px; align-items: flex-start; }
+    .help-item:last-child { border-bottom: none; }
+    .help-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--jade); margin-top: 7px; flex-shrink: 0; }
+    .cta-block { background: linear-gradient(135deg, var(--jade-dark) 0%, var(--jade) 100%); border-radius: 20px; padding: 40px 36px; text-align: center; color: white; }
+    .cta-icon { width: 48px; height: 48px; border-radius: 14px; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+    .cta-link { display: inline-flex; align-items: center; gap: 8px; background: white; color: var(--jade-dark); border-radius: 99px; padding: 14px 28px; font-weight: 700; font-size: 15px; text-decoration: none; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .cta-link:hover { background: var(--cream); color: var(--jade-dark); }
+    .site-footer { border-top: 1px solid var(--border); padding: 16px 24px; text-align: center; }
+    a { color: var(--jade); }
+    a:hover { color: var(--jade-light); }
+    .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 48px; }
+    .team-card { background: var(--warm-white); border: 1px solid var(--border); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .team-photo { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 18px; background: rgba(26,107,90,0.15); flex-shrink: 0; }
+    .team-name { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 500; color: var(--text-primary); margin-bottom: 4px; }
+    .team-title { font-size: 14px; font-weight: 600; color: var(--jade); font-variant: small-caps; letter-spacing: 0.02em; margin-bottom: 16px; line-height: 1.4; }
+    .team-bio-container { width: 100%; border-top: 1px solid rgba(26,107,90,0.15); padding-top: 12px; margin-top: 12px; }
+    .team-bio-toggle { background: rgba(26,107,90,0.06); border: none; color: var(--jade); font-weight: 600; font-size: 15px; cursor: pointer; padding: 12px 16px; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; text-decoration: none; font-family: 'Plus Jakarta Sans', sans-serif; border-radius: 8px; }
+    .team-bio-toggle:hover { color: var(--jade-light); }
+    .team-bio-toggle:focus-visible { outline: 3px solid var(--jade); outline-offset: 2px; border-radius: 4px; }
+    .team-bio-text { font-size: 15px; color: var(--text-secondary); line-height: 1.7; margin-top: 12px; text-align: left; }
+    .team-bio-text p { margin-bottom: 12px; }
+    .team-bio-text p:last-child { margin-bottom: 0; }
+    @media (max-width: 600px) {
+      .wordmark img { height: 72px; }
+      .btn-back { font-size: 13px; padding: 8px 14px; }
+      .team-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <a href="/california/san-diego" class="wordmark" aria-label="Benefits Navigator by Public Programs Foundation — return to home">
+        <img src="/assets/ppf-logo.svg" alt="Public Programs Foundation logo">
+      </a>
+      <a href="/california/san-diego" class="btn-back" aria-label="Return to Benefits Navigator">
+        <span class="back-arrow" aria-hidden="true">←</span> Back to Benefits Navigator
+      </a>
+      <a href="https://givebutter.com/public-programs" target="_blank" rel="noopener noreferrer" class="btn-donate" aria-label="Donate to Public Programs Foundation">♥ Donate</a>
+    </div>
+  </header>
+
+  <main id="main-content">
+
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-inner animate-fadeUp">
+        <div class="logo-badge">
+          <img src="/assets/ppf-logo.svg" alt="Public Programs Foundation logo" style="height:24px;width:auto;">
+          <span style="font-size:14px;font-weight:600;color:var(--jade-dark);">™</span>
+        </div>
+        <h1 id="page-title" style="font-size:clamp(36px,6vw,54px);font-weight:500;line-height:1.1;letter-spacing:-0.03em;margin-bottom:20px;color:var(--text-primary);">
+          About <em style="font-style:italic;color:var(--jade);">Us</em>
+        </h1>
+        <p style="font-size:17px;color:var(--text-secondary);line-height:1.7;max-width:560px;margin:0 auto;">We build tools that connect people with the programs they've earned — freely, privately, and without barriers.</p>
+      </div>
+    </section>
+
+    <div class="content-area">
+
+      <!-- Vision & Mission -->
+      <div class="vision-mission-grid animate-fadeUp" role="region" aria-label="Vision and Mission">
+        <!-- Vision -->
+        <div class="vm-card" style="background:rgba(26,107,90,0.08);">
+          <div class="vm-card-header">
+            <div class="vm-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--jade)" stroke-width="2" aria-hidden="true" focusable="false"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+            </div>
+            <span class="vm-label">Vision</span>
+          </div>
+          <p style="font-size:15.5px;line-height:1.65;color:var(--text-primary);font-style:italic;font-family:'Fraunces',serif;font-weight:500;">Everyone receives the support they need.</p>
+        </div>
+        <!-- Mission -->
+        <div class="vm-card" style="background:rgba(26,107,90,0.06);">
+          <div class="vm-card-header">
+            <div class="vm-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--jade)" stroke-width="2" aria-hidden="true" focusable="false"><path d="M2 22 16 8"/><path d="M8.5 2C4 2 2 6 2 10s2 8 8.5 8C16 18 22 14 22 7c0-5-4-5-6-5-2.5 0-5 1.5-7.5 0z"/></svg>
+            </div>
+            <span class="vm-label">Mission</span>
+          </div>
+          <p style="font-size:15.5px;line-height:1.65;color:var(--text-primary);">The mission of Public Programs Foundation is to enrich the lives of children and adults by empowering users with access to information that secures equitable housing support, healthcare, and the prevention of food insecurity.</p>
+        </div>
+      </div>
+
+      <!-- Our Story -->
+      <section class="section animate-fadeUp delay-1" aria-labelledby="story-heading">
+        <div class="section-header">
+          <div class="section-icon" style="background:rgba(196,98,45,0.1);" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--terracotta)" stroke-width="2" aria-hidden="true" focusable="false"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/></svg>
+          </div>
+          <h2 id="story-heading" style="font-size:26px;font-weight:500;color:var(--text-primary);">Our Story</h2>
+        </div>
+        <div class="card-white">
+          <p>When Public Programs Foundation founder, <strong style="color:var(--text-primary);">Ashley L. Salas</strong>, looked for a list of programs that community members could rely on in their times of need, she didn't find it easily. She asked around, and no one knew of such a list. So she founded Public Programs Foundation to build it.</p>
+          <p>We know we are missing programs. If you know of programs that are not yet on the Benefits Navigator, please email us at <a href="mailto:info@public-programs.org" style="font-weight:600;text-decoration:none;">info@public-programs.org</a>, and we'll add them.</p>
+          <p>We are starting in <strong style="color:var(--text-primary);">San Diego, California, United States</strong>, because that is where we are, but our goal is for the Benefits Navigator to serve every county, state, and US territory.</p>
+        </div>
+      </section>
+
+      <!-- Meet Our Team -->
+      <section class="section animate-fadeUp delay-1" aria-labelledby="team-heading">
+        <div class="section-header">
+          <div class="section-icon" style="background:rgba(26,107,90,0.1);" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--jade)" stroke-width="2" aria-hidden="true" focusable="false"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h2 id="team-heading" style="font-size:26px;font-weight:500;color:var(--text-primary);">Meet Our Team</h2>
+        </div>
+        <div class="team-grid" role="list">
+          <!-- Team Member 1: Ashley L. Salas -->
+          <div class="team-card" role="listitem">
+            <img src="/assets/team/ashley.jpg" alt="Ashley L. Salas" class="team-photo" onerror="this.src='data:image/svg+xml,%3Csvg viewBox=\'0 0 120 120\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'120\' height=\'120\' fill=\'rgba(26,107,90,0.15)\'/%3E%3Ccircle cx=\'60\' cy=\'45\' r=\'22\' fill=\'%231a6b5a\'/%3E%3Cpath d=\'M 25 95 Q 25 70 60 70 Q 95 70 95 95\' fill=\'%231a6b5a\'/%3E%3C/svg%3E'">
+            <div class="team-name">Ashley L. Salas</div>
+            <div class="team-title">Founder, President &<br>CEO, Board Member</div>
+            <div class="team-bio-container">
+              <details>
+                <summary class="team-bio-toggle">More about Ashley</summary>
+                <div class="team-bio-text">
+                  <p>Raised in a single-parent household, Ashley grew up experiencing family, friends, and community members pitching in to provide the support she needed.</p>
+                  <p>Knowing how important it is to have help, especially at critical junctures in our lives, Ashley has dedicated her career to giving back to the community.</p>
+                  <p>As an attorney, she spent the first decade of her career advocating to remove systemic barriers for people to access affordable phone and internet services, services that are critical for modern living.</p>
+                  <p>As an adjunct law professor, she empowers her students with resources that will serve them throughout their law school and legal careers.</p>
+                  <p>She founded Public Programs Foundation because she saw a need to empower people with the knowledge of and access to public programs, some that have been in existence for decades but have low enrollment simply because people do not know those programs exist.</p>
+                  <p>Ashley earned a BA in Environmental Earth Science and Political Science from the University of California at Berkeley, AA in American Sign Language – English Interpretation from San Diego Mesa College, and a JD from Thomas Jefferson School of Law.</p>
+                  <p>She volunteers to serve on multiple boards, including Global Conservation Force, Thomas Jefferson School of Law Alumni Association, and Pan Asian Lawyers of San Diego.</p>
+                  <p>She reads at least one book per week and is a native bee hobbyist.</p>
+                </div>
+              </details>
+            </div>
+          </div>
+
+          <!-- Team Member 2: Matthew Van Nguyen -->
+          <div class="team-card" role="listitem">
+            <img src="/assets/team/matthew.jpg" alt="Matthew Van Nguyen" class="team-photo" onerror="this.src='data:image/svg+xml,%3Csvg viewBox=\'0 0 120 120\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'120\' height=\'120\' fill=\'rgba(26,107,90,0.15)\'/%3E%3Ccircle cx=\'60\' cy=\'45\' r=\'22\' fill=\'%231a6b5a\'/%3E%3Cpath d=\'M 25 95 Q 25 70 60 70 Q 95 70 95 95\' fill=\'%231a6b5a\'/%3E%3C/svg%3E'">
+            <div class="team-name">Matthew Van Nguyen</div>
+            <div class="team-title">Chief Technology Officer</div>
+            <div class="team-bio-container">
+              <details>
+                <summary class="team-bio-toggle">More about Matthew</summary>
+                <div class="team-bio-text">
+                  <p>Biography coming soon.</p>
+                </div>
+              </details>
+            </div>
+          </div>
+
+          <!-- Team Member 3: Tara Mallis -->
+          <div class="team-card" role="listitem">
+            <img src="/assets/team/tara.jpg" alt="Tara Mallis" class="team-photo" onerror="this.src='data:image/svg+xml,%3Csvg viewBox=\'0 0 120 120\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'120\' height=\'120\' fill=\'rgba(26,107,90,0.15)\'/%3E%3Ccircle cx=\'60\' cy=\'45\' r=\'22\' fill=\'%231a6b5a\'/%3E%3Cpath d=\'M 25 95 Q 25 70 60 70 Q 95 70 95 95\' fill=\'%231a6b5a\'/%3E%3C/svg%3E'">
+            <div class="team-name">Tara Mallis</div>
+            <div class="team-title">Secretary, Board Member</div>
+            <div class="team-bio-container">
+              <details>
+                <summary class="team-bio-toggle">More about Tara</summary>
+                <div class="team-bio-text">
+                  <p>Biography coming soon.</p>
+                </div>
+              </details>
+            </div>
+          </div>
+
+          <!-- Team Member 4: Ariel Javier -->
+          <div class="team-card" role="listitem">
+            <img src="/assets/team/ariel.jpg" alt="Ariel Javier" class="team-photo" onerror="this.src='data:image/svg+xml,%3Csvg viewBox=\'0 0 120 120\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'120\' height=\'120\' fill=\'rgba(26,107,90,0.15)\'/%3E%3Ccircle cx=\'60\' cy=\'45\' r=\'22\' fill=\'%231a6b5a\'/%3E%3Cpath d=\'M 25 95 Q 25 70 60 70 Q 95 70 95 95\' fill=\'%231a6b5a\'/%3E%3C/svg%3E'">
+            <div class="team-name">Ariel Javier</div>
+            <div class="team-title">Treasurer, Board Member</div>
+            <div class="team-bio-container">
+              <details>
+                <summary class="team-bio-toggle">More about Ariel</summary>
+                <div class="team-bio-text">
+                  <p>Biography coming soon.</p>
+                </div>
+              </details>
+            </div>
+          </div>
+
+          <!-- Team Member 5: Daniel Ku -->
+          <div class="team-card" role="listitem">
+            <img src="/assets/team/daniel.jpg" alt="Daniel Ku" class="team-photo" onerror="this.src='data:image/svg+xml,%3Csvg viewBox=\'0 0 120 120\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'120\' height=\'120\' fill=\'rgba(26,107,90,0.15)\'/%3E%3Ccircle cx=\'60\' cy=\'45\' r=\'22\' fill=\'%231a6b5a\'/%3E%3Cpath d=\'M 25 95 Q 25 70 60 70 Q 95 70 95 95\' fill=\'%231a6b5a\'/%3E%3C/svg%3E'">
+            <div class="team-name">Daniel Ku</div>
+            <div class="team-title">Board Member</div>
+            <div class="team-bio-container">
+              <details>
+                <summary class="team-bio-toggle">More about Daniel</summary>
+                <div class="team-bio-text">
+                  <p>As a Licensed Marriage and Family Therapist, Daniel has spent over 15 years working across clinical, forensic, and community-based settings.</p>
+                  <p>Throughout his career, Daniel has remained committed to bridging gaps in care for underserved populations, including individuals experiencing severe mental illness, those in the foster care system, and people re-entering society after incarceration.</p>
+                  <p>He has also provided training to law enforcement on recognizing mental illness and assessing suicide risk, helping to build stronger, more informed community responses to behavioral health crises.</p>
+                  <p>While Daniel is currently in private practice as a Marriage &amp; Family Therapist, he also makes time to participate in various hobbies with his three young children, including competitive video games, board games, and card games (mostly Pokemon).</p>
+                </div>
+              </details>
+            </div>
+          </div>
+
+          <!-- Team Member 6: Eman Payne -->
+          <div class="team-card" role="listitem">
+            <img src="/assets/team/eman.jpg" alt="Eman Payne" class="team-photo" onerror="this.src='data:image/svg+xml,%3Csvg viewBox=\'0 0 120 120\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'120\' height=\'120\' fill=\'rgba(26,107,90,0.15)\'/%3E%3Ccircle cx=\'60\' cy=\'45\' r=\'22\' fill=\'%231a6b5a\'/%3E%3Cpath d=\'M 25 95 Q 25 70 60 70 Q 95 70 95 95\' fill=\'%231a6b5a\'/%3E%3C/svg%3E'">
+            <div class="team-name">Eman Payne</div>
+            <div class="team-title">Board Member</div>
+            <div class="team-bio-container">
+              <details>
+                <summary class="team-bio-toggle">More about Eman</summary>
+                <div class="team-bio-text">
+                  <p>Biography coming soon.</p>
+                </div>
+              </details>
+            </div>
+          </div>
+
+          <!-- Team Member 7: Jonathan P. Salas -->
+          <div class="team-card" role="listitem">
+            <img src="/assets/team/jonathan.jpg" alt="Jonathan P. Salas" class="team-photo" onerror="this.src='data:image/svg+xml,%3Csvg viewBox=\'0 0 120 120\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'120\' height=\'120\' fill=\'rgba(26,107,90,0.15)\'/%3E%3Ccircle cx=\'60\' cy=\'45\' r=\'22\' fill=\'%231a6b5a\'/%3E%3Cpath d=\'M 25 95 Q 25 70 60 70 Q 95 70 95 95\' fill=\'%231a6b5a\'/%3E%3C/svg%3E'">
+            <div class="team-name">Jonathan P. Salas</div>
+            <div class="team-title">Board Member</div>
+            <div class="team-bio-container">
+              <details>
+                <summary class="team-bio-toggle">More about Jonathan</summary>
+                <div class="team-bio-text">
+                  <p>Biography coming soon.</p>
+                </div>
+              </details>
+            </div>
+          </div>
+
+          <!-- Team Member 8: Julie T. Houth -->
+          <div class="team-card" role="listitem">
+            <img src="/assets/team/julie.jpg" alt="Julie T. Houth" class="team-photo" onerror="this.src='data:image/svg+xml,%3Csvg viewBox=\'0 0 120 120\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'120\' height=\'120\' fill=\'rgba(26,107,90,0.15)\'/%3E%3Ccircle cx=\'60\' cy=\'45\' r=\'22\' fill=\'%231a6b5a\'/%3E%3Cpath d=\'M 25 95 Q 25 70 60 70 Q 95 70 95 95\' fill=\'%231a6b5a\'/%3E%3C/svg%3E'">
+            <div class="team-name">Julie T. Houth</div>
+            <div class="team-title">Board Member</div>
+            <div class="team-bio-container">
+              <details>
+                <summary class="team-bio-toggle">More about Julie</summary>
+                <div class="team-bio-text">
+                  <p>Julie T. Houth grew up in Southern California, where she continues to be active in the community.</p>
+                  <p>As an attorney, she has represented consumers in class actions and mass tort cases.</p>
+                  <p>Julie is also an Adjunct Law Professor at Thomas Jefferson School of Law, where she teaches Legal Writing I and II online.</p>
+                  <p>She holds a Bachelor of Arts in History from the University of California, Irvine, with a minor in Sociology, and earned her Juris Doctor (J.D.) from Thomas Jefferson School of Law.</p>
+                  <p>Additionally, she holds a Master of Laws (LL.M.) in Taxation from the University of San Diego School of Law.</p>
+                  <p>Julie is an active participant in bar leadership roles and is deeply involved in the legal community.</p>
+                  <p>She serves as the Editor-in-Chief of both the ABA GPSolo Division's magazine and the ABA Young Lawyers Division's The Young Lawyer (TYL) magazine, as well as After the Bar (ATB) publications.</p>
+                  <p>She is a past Chair of the New York State Bar Association's Young Lawyers Section, a member of the American Bar Association's Standing Committee on the Law Library of Congress, and the Alternate Regional Governor for the Southern California Region of the National Asian Pacific American Bar Association (NAPABA).</p>
+                  <p>Additionally, she is the immediate past Co-Editor of the San Diego County Bar Association's (SDCBA) San Diego Lawyer magazine and the President of the Pan Asian Lawyers of San Diego (PALSD).</p>
+                  <p>In her free time, Julie enjoys staying active, being outdoors, and exploring new food to eat.</p>
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Your Privacy -->
+      <section class="section animate-fadeUp delay-1" aria-labelledby="privacy-heading">
+        <div class="section-header">
+          <div class="section-icon" style="background:rgba(232,168,48,0.12);" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" aria-hidden="true" focusable="false"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h2 id="privacy-heading" style="font-size:26px;font-weight:500;color:var(--text-primary);">Your Privacy</h2>
+        </div>
+        <div class="privacy-card">
+          Your information is <strong style="color:var(--text-primary);">confidential and never stored, shared, or sold.</strong> We use your answers only to show you matching programs in this session. No data is collected or retained after you leave the Benefits Navigator.
+        </div>
+      </section>
+
+      <!-- Accessibility -->
+      <section class="section animate-fadeUp delay-1" aria-labelledby="accessibility-heading">
+        <div class="section-header">
+          <div class="section-icon" style="background:rgba(26,107,90,0.1);" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--jade)" stroke-width="2" aria-hidden="true" focusable="false"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <h2 id="accessibility-heading" style="font-size:26px;font-weight:500;color:var(--text-primary);">Accessibility</h2>
+        </div>
+        <p style="font-size:15px;color:var(--text-secondary);margin-bottom:16px;line-height:1.6;">The Benefits Navigator is designed to be accessible to everyone:</p>
+        <div class="access-grid" role="list">
+          <div class="access-item" role="listitem">
+            <div class="access-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--jade)" stroke-width="2" aria-hidden="true" focusable="false"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div>
+              <div style="font-weight:700;font-size:14px;color:var(--text-primary);margin-bottom:3px;">Free to use</div>
+              <div style="font-size:14px;color:var(--text-secondary);line-height:1.5;">No cost, no account required</div>
+            </div>
+          </div>
+          <div class="access-item" role="listitem">
+            <div class="access-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--jade)" stroke-width="2" aria-hidden="true" focusable="false"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <div>
+              <div style="font-weight:700;font-size:14px;color:var(--text-primary);margin-bottom:3px;">Mobile-friendly</div>
+              <div style="font-size:14px;color:var(--text-secondary);line-height:1.5;">Works on phones, tablets, and computers</div>
+            </div>
+          </div>
+          <div class="access-item" role="listitem">
+            <div class="access-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--jade)" stroke-width="2" aria-hidden="true" focusable="false"><path d="M2 22 16 8"/><path d="M8.5 2C4 2 2 6 2 10s2 8 8.5 8C16 18 22 14 22 7c0-5-4-5-6-5-2.5 0-5 1.5-7.5 0z"/></svg>
+            </div>
+            <div>
+              <div style="font-weight:700;font-size:14px;color:var(--text-primary);margin-bottom:3px;">Available in English</div>
+              <div style="font-size:14px;color:var(--text-secondary);line-height:1.5;">With plans to add more languages</div>
+            </div>
+          </div>
+          <div class="access-item" role="listitem">
+            <div class="access-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--jade)" stroke-width="2" aria-hidden="true" focusable="false"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+            </div>
+            <div>
+              <div style="font-weight:700;font-size:14px;color:var(--text-primary);margin-bottom:3px;">Comprehensive</div>
+              <div style="font-size:14px;color:var(--text-secondary);line-height:1.5;">80+ programs and growing</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- How You Can Help -->
+      <section class="section animate-fadeUp delay-2" aria-labelledby="help-heading">
+        <div class="section-header">
+          <div class="section-icon" style="background:rgba(26,107,90,0.1);" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--jade)" stroke-width="2" aria-hidden="true" focusable="false"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </div>
+          <h2 id="help-heading" style="font-size:26px;font-weight:500;color:var(--text-primary);">How You Can Help</h2>
+        </div>
+        <p style="font-size:15px;color:var(--text-secondary);margin-bottom:16px;line-height:1.6;">There are several ways you can support our mission:</p>
+        <div class="help-list" role="list">
+          <div class="help-item" role="listitem">
+            <div class="help-dot" aria-hidden="true"></div>
+            <div><span style="font-weight:700;font-size:14px;color:var(--text-primary);">Share the tool</span><span style="font-size:14px;color:var(--text-secondary);"> — Tell someone in your community who might benefit</span></div>
+          </div>
+          <div class="help-item" role="listitem">
+            <div class="help-dot" aria-hidden="true"></div>
+            <div><span style="font-weight:700;font-size:14px;color:var(--text-primary);">Report missing programs</span><span style="font-size:14px;color:var(--text-secondary);"> — Email us at <a href="mailto:info@public-programs.org" style="font-weight:600;text-decoration:none;">info@public-programs.org</a> with programs we should include</span></div>
+          </div>
+          <div class="help-item" role="listitem">
+            <div class="help-dot" aria-hidden="true"></div>
+            <div><span style="font-weight:700;font-size:14px;color:var(--text-primary);">Share feedback</span><span style="font-size:14px;color:var(--text-secondary);"> — Let us know how we can improve — <a href="https://forms.gle/rdkBfhabyRp7Mf5Y9" target="_blank" rel="noopener noreferrer" style="font-weight:600;text-decoration:none;border-bottom:1.5px solid rgba(26,107,90,0.3);padding-bottom:1px;" aria-label="Fill out our feedback form, opens in a new tab">fill out our feedback form</a></span></div>
+          </div>
+          <div class="help-item" role="listitem">
+            <div class="help-dot" aria-hidden="true"></div>
+            <div><span style="font-weight:700;font-size:14px;color:var(--text-primary);">Support us</span><span style="font-size:14px;color:var(--text-secondary);"> — Help us reach more people who need this resource — make a donation at <a href="https://givebutter.com/public-programs" target="_blank" rel="noopener noreferrer" style="font-weight:600;text-decoration:none;border-bottom:1.5px solid rgba(26,107,90,0.3);padding-bottom:1px;" aria-label="Donate through GiveButter, opens in a new tab">https://givebutter.com/public-programs</a></span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Get in Touch -->
+      <div class="animate-fadeUp delay-3">
+        <div class="cta-block" role="complementary" aria-labelledby="contact-heading">
+          <div class="cta-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" aria-hidden="true" focusable="false"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+          </div>
+          <h2 id="contact-heading" style="font-size:28px;font-weight:500;margin-bottom:12px;letter-spacing:-0.02em;">Get in Touch</h2>
+          <p style="font-size:15px;opacity:0.85;line-height:1.65;max-width:440px;margin:0 auto 28px;">Have questions or want to contribute? We would love to hear from you.</p>
+          <a href="mailto:info@public-programs.org" class="cta-link" aria-label="Email us at info@public-programs.org">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--jade-dark)" stroke-width="2" aria-hidden="true" focusable="false"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            info@public-programs.org
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <p style="font-size:12px;color:var(--text-muted);">
+      Public Programs Foundation is a 501(c)(3) organization.&nbsp;&nbsp;EIN 93-4712731.
+    </p>
+  </footer>
+
+</body>
+</html>
