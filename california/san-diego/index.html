@@ -978,7 +978,7 @@
       );
     };
 
-    const Quiz = ({ setView, setAnswers }) => {
+    const Quiz = ({ setView, setAnswers, onStepChange }) => {
       const [step, setStep] = useState(0);
       const [answers, setLocalAnswers] = useState({});
       const [selected, setSelected] = useState(null);
@@ -986,6 +986,11 @@
       const current = quizSteps[step];
       const progress = ((step + 1) / quizSteps.length) * 100;
       const isMultiSelect = current.id === "age" || current.id === "special_status" || current.id === "enrolled_programs";
+      React.useEffect(() => {
+        const handler = () => track('quiz_abandon', { step: step + 1, trigger: 'unload' });
+        window.addEventListener('beforeunload', handler);
+        return () => window.removeEventListener('beforeunload', handler);
+      }, [step]);
       const handleOptionClick = (opt) => {
         if (isMultiSelect) setSelectedMultiple(prev => prev.includes(opt) ? prev.filter(item => item !== opt) : [...prev, opt]);
         else setSelected(opt);
@@ -995,12 +1000,14 @@
         if (isMultiSelect && selectedMultiple.length === 0) return;
         if (!isMultiSelect && !selected) return;
         setLocalAnswers(newAnswers);
-        if (step < quizSteps.length - 1) { track('quiz_step', { step: current.id }); setStep(step + 1); setSelected(null); setSelectedMultiple([]); }
+        if (step < quizSteps.length - 1) { track('quiz_step', { step: current.id }); setStep(step + 1); onStepChange(step + 1); setSelected(null); setSelectedMultiple([]); }
         else { track('quiz_complete'); setAnswers(newAnswers); setView("results"); }
       };
       const handleBack = () => {
-        if (step === 0) { setView("landing"); return; }
+        if (step === 0) { track('quiz_abandon', { step: 1 }); setView("landing"); return; }
+        track('quiz_back', { from_step: step + 1 });
         setStep(step - 1);
+        onStepChange(step - 1);
         const prevAnswer = answers[quizSteps[step - 1].id];
         const prevIsMulti = ["age", "special_status", "enrolled_programs"].includes(quizSteps[step - 1].id);
         if (prevIsMulti) { setSelectedMultiple(Array.isArray(prevAnswer) ? prevAnswer : []); setSelected(null); }
@@ -1079,6 +1086,9 @@
       const filterProgs = (list) => selectedCategory ? list.filter(p => p.category === selectedCategory) : list;
       const displayLikely = filterProgs(likelyPrograms);
       const displayMay = filterProgs(mayPrograms);
+      React.useEffect(() => {
+        track('results_shown', { likely_count: likelyPrograms.length, maybe_count: mayPrograms.length, total: tieredPrograms.length, zero_results: tieredPrograms.length === 0 });
+      }, []);
       const SectionHeader = ({ tier, count }) => (
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '36px 0 20px', paddingBottom: 14, borderBottom: `2px solid ${tier === 'likely' ? 'var(--jade)' : 'var(--amber)'}` }}>
           <div style={{ width: 32, height: 32, borderRadius: 8, flexShrink: 0, background: tier === 'likely' ? 'var(--jade)' : 'var(--amber)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -1119,7 +1129,7 @@
             {tieredPrograms.length === 0 ? (
               <div className="card" style={{ textAlign: "center", padding: "40px" }}>
                 <p style={{ color: "var(--text-secondary)", marginBottom: 16 }}>Based on your answers, you may not currently qualify. However, you can:</p>
-                <button className="btn-primary" onClick={() => { track('browse_directory'); setView("directory"); }}>Browse all programs <Icon name="arrow" size={16} /></button>
+                <button className="btn-primary" onClick={() => { track('results_to_directory'); track('browse_directory'); setView("directory"); }}>Browse all programs <Icon name="arrow" size={16} /></button>
               </div>
             ) : (
               <div>
@@ -1137,7 +1147,7 @@
                     <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 20, lineHeight: 1.6 }}>You may still find helpful programs in other categories, or explore the full directory for more options.</p>
                     <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
                       <button className="btn-secondary" onClick={() => setSelectedCategory(null)}>View all my results</button>
-                      <button className="btn-primary" onClick={() => { track('browse_directory'); setView('directory'); }}>Browse full directory <Icon name="arrow" size={14} aria-hidden="true" /></button>
+                      <button className="btn-primary" onClick={() => { track('results_to_directory'); track('browse_directory'); setView('directory'); }}>Browse full directory <Icon name="arrow" size={14} aria-hidden="true" /></button>
                     </div>
                   </div>
                 )}
@@ -1174,9 +1184,9 @@
               </div>
             )}
             <div style={{ marginTop: 40, display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }} className="no-print">
-              <button className="btn-secondary" onClick={() => setView("landing")}>Start over</button>
+              <button className="btn-secondary" onClick={() => { track('results_start_over'); setView("landing"); }}>Start over</button>
               {tieredPrograms.length > 0 && <button className="btn-primary" onClick={() => { track('results_print'); window.print(); }} aria-label="Download or print your results" style={{ gap: 8 }}><svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>Download / Print results</button>}
-              {tieredPrograms.length > 0 && <button className="btn-secondary" onClick={() => { track('browse_directory'); setView('directory'); }} aria-label="Browse all programs in the full directory">Explore full directory</button>}
+              {tieredPrograms.length > 0 && <button className="btn-secondary" onClick={() => { track('results_to_directory'); track('browse_directory'); setView('directory'); }} aria-label="Browse all programs in the full directory">Explore full directory</button>}
             </div>
           </div>
         </div>
@@ -1416,26 +1426,26 @@
       );
     };
 
-    const Nav = ({ view, setView }) => (
+    const Nav = ({ view, setView, quizStep }) => (
       <nav className="nav">
         <div className="nav-inner" style={{ justifyContent: "space-between" }}>
-          <button onClick={() => setView("landing")} className="btn-ghost" aria-label="Benefits Navigator home" style={{ padding: 0 }}>
+          <button onClick={() => { track('nav_click', { target: 'home' }); if (view === 'quiz') track('quiz_abandon', { step: quizStep + 1 }); setView("landing"); }} className="btn-ghost" aria-label="Benefits Navigator home" style={{ padding: 0 }}>
             <img src="../../assets/ppf-logo.svg" alt="Public Programs Foundation" style={{ height: 96, width: "auto" }} />
           </button>
           <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-            <a href="https://forms.gle/rdkBfhabyRp7Mf5Y9" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(26,107,90,0.08)", color: "var(--jade)", border: "1.5px solid rgba(26,107,90,0.2)", borderRadius: 99, padding: "7px 16px", fontSize: 13.5, fontWeight: 600, textDecoration: "none", fontFamily: "Plus Jakarta Sans, sans-serif", transition: "all 0.2s ease" }}
+            <a href="https://forms.gle/rdkBfhabyRp7Mf5Y9" target="_blank" rel="noopener noreferrer" onClick={() => { track('nav_click', { target: 'feedback' }); if (view === 'quiz') track('quiz_abandon', { step: quizStep + 1 }); }} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(26,107,90,0.08)", color: "var(--jade)", border: "1.5px solid rgba(26,107,90,0.2)", borderRadius: 99, padding: "7px 16px", fontSize: 13.5, fontWeight: 600, textDecoration: "none", fontFamily: "Plus Jakarta Sans, sans-serif", transition: "all 0.2s ease" }}
               onMouseOver={e => { e.currentTarget.style.background = "rgba(26,107,90,0.14)"; e.currentTarget.style.borderColor = "var(--jade)"; }}
               onMouseOut={e => { e.currentTarget.style.background = "rgba(26,107,90,0.08)"; e.currentTarget.style.borderColor = "rgba(26,107,90,0.2)"; }}
               aria-label="Share feedback via Google Form">
               Share Feedback
             </a>
-            <a href="https://givebutter.com/public-programs" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--terracotta)", color: "white", border: "1.5px solid var(--terracotta)", borderRadius: 99, padding: "7px 16px", fontSize: 13.5, fontWeight: 600, textDecoration: "none", fontFamily: "Plus Jakarta Sans, sans-serif", transition: "all 0.2s ease" }}
+            <a href="https://givebutter.com/public-programs" target="_blank" rel="noopener noreferrer" onClick={() => track('nav_click', { target: 'donate' })} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--terracotta)", color: "white", border: "1.5px solid var(--terracotta)", borderRadius: 99, padding: "7px 16px", fontSize: 13.5, fontWeight: 600, textDecoration: "none", fontFamily: "Plus Jakarta Sans, sans-serif", transition: "all 0.2s ease" }}
               onMouseOver={e => { e.currentTarget.style.background = "#b5561f"; e.currentTarget.style.borderColor = "#b5561f"; }}
               onMouseOut={e => { e.currentTarget.style.background = "var(--terracotta)"; e.currentTarget.style.borderColor = "var(--terracotta)"; }}
               aria-label="Donate to Public Programs Foundation">
               ♥ Donate
             </a>
-            <a href="/about" className="btn-ghost" style={{ fontSize: 14, fontWeight: 600, color: "var(--text-secondary)", textDecoration: "none" }} aria-label="About Us page">
+            <a href="/about" onClick={() => { track('nav_click', { target: 'about' }); if (view === 'quiz') track('quiz_abandon', { step: quizStep + 1 }); }} className="btn-ghost" style={{ fontSize: 14, fontWeight: 600, color: "var(--text-secondary)", textDecoration: "none" }} aria-label="About Us page">
               About Us
             </a>
           </div>
@@ -1455,12 +1465,13 @@
       const [view, setView] = useState("landing");
       const [answers, setAnswers] = useState(null);
       const [directoryCategory, setDirectoryCategory] = useState(null);
+      const [quizStep, setQuizStep] = useState(0);
       const goToDirectory = (category = null) => { setDirectoryCategory(category); setView("directory"); };
       return (
         <div>
-          <Nav view={view} setView={setView} />
+          <Nav view={view} setView={setView} quizStep={quizStep} />
           {view === "landing" && <LandingPage setView={setView} goToDirectory={goToDirectory} />}
-          {view === "quiz" && <Quiz setView={setView} setAnswers={setAnswers} />}
+          {view === "quiz" && <Quiz setView={setView} setAnswers={setAnswers} onStepChange={setQuizStep} />}
           {view === "results" && answers && <Results answers={answers} setView={setView} />}
           {view === "directory" && <Directory key={directoryCategory} setView={setView} initialCategory={directoryCategory} />}
           {view === "about" && <AboutUs setView={setView} />}
