@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>San Diego County Benefits Navigator — 86 Programs | Free Eligibility Tool</title>
-  <meta name="description" content="Find San Diego County benefits you qualify for. Free tool covering 86 programs — food, healthcare, income, utilities, housing, and more.">
+  <title>San Diego County Benefits Navigator — 165 Programs | Free Eligibility Tool</title>
+  <meta name="description" content="Find San Diego County benefits you qualify for. Free tool covering 165 programs — food, healthcare, income, utilities, housing, and more.">
   <link rel="canonical" href="https://public-programs.org/california/san-diego">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://public-programs.org/california/san-diego">
-  <meta property="og:title" content="San Diego County Benefits Navigator — 86 Programs">
-  <meta property="og:description" content="Find San Diego County benefits you qualify for. Free tool covering 86 programs — food, healthcare, income, utilities, housing, and more.">
+  <meta property="og:title" content="San Diego County Benefits Navigator — 165 Programs">
+  <meta property="og:description" content="Find San Diego County benefits you qualify for. Free tool covering 165 programs — food, healthcare, income, utilities, housing, and more.">
   <meta property="og:image" content="https://public-programs.org/assets/og-image.png"><!-- TODO: replace with real 1200x630 image -->
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -19,8 +19,8 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="San Diego County Benefits Navigator — 86 Programs">
-  <meta name="twitter:description" content="Find San Diego County benefits you qualify for. Free tool covering 86 programs — food, healthcare, income, utilities, housing, and more.">
+  <meta name="twitter:title" content="San Diego County Benefits Navigator — 165 Programs">
+  <meta name="twitter:description" content="Find San Diego County benefits you qualify for. Free tool covering 165 programs — food, healthcare, income, utilities, housing, and more.">
   <meta name="twitter:image" content="https://public-programs.org/assets/og-image.png"><!-- TODO: replace with real 1200x630 image -->
 
   <!-- Schema.org JSON-LD -->
@@ -32,7 +32,7 @@
         "@type": "WebApplication",
         "@id": "https://public-programs.org/california/san-diego",
         "name": "San Diego County Benefits Navigator",
-        "description": "Free eligibility tool covering 86 public assistance programs in San Diego County, California — food, healthcare, income, utilities, housing, legal, and more.",
+        "description": "Free eligibility tool covering 165 public assistance programs in San Diego County, California — food, healthcare, income, utilities, housing, legal, and more.",
         "url": "https://public-programs.org/california/san-diego",
         "applicationCategory": "GovernmentApplication",
         "operatingSystem": "Any",
@@ -1594,7 +1594,7 @@
               </p>
               <div className="animate-fadeUp delay-3" style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
                 <button className="btn-primary" style={{ fontSize: 16, padding: "16px 32px" }} onClick={() => { track('quiz_start'); setView("quiz"); }}>Start quiz <Icon name="arrow" size={16} /></button>
-                <button className="btn-secondary" onClick={() => { track('browse_directory'); setView("directory"); }}>Browse all 86 programs</button>
+                <button className="btn-secondary" onClick={() => { track('browse_directory'); setView("directory"); }}>Browse all 165 programs</button>
               </div>
             </div>
           </section>
@@ -1606,7 +1606,7 @@
           </section>
           <section style={{ maxWidth: 1120, margin: "0 auto", padding: "0 24px 80px" }}>
             <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 28, fontWeight: 500, marginBottom: 8 }}>Programs we check</h2>
-            <p style={{ color: "var(--text-muted)", marginBottom: 32, fontSize: 15 }}>We search across 86 assistance programs in San Diego County.</p>
+            <p style={{ color: "var(--text-muted)", marginBottom: 32, fontSize: 15 }}>We search across 165 assistance programs in San Diego County.</p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 12 }}>
               {categories.map((c, i) => (
                 <div key={c.cat} className="card card-hover animate-fadeUp" onClick={() => goToDirectory(c.cat.toLowerCase())} style={{ animationDelay: `${i * 0.06}s`, padding: 20, textAlign: "center", cursor: "pointer" }}>
@@ -1664,8 +1664,8 @@
         <div style={{ minHeight: "calc(100vh - 64px)", background: "var(--cream)", padding: "40px 24px" }}>
           <div style={{ maxWidth: 900, margin: "0 auto" }}>
             <div className="animate-fadeUp" style={{ marginBottom: 32 }}>
-              <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 32, fontWeight: 500, marginBottom: 12 }}>Browse all 86 programs</h2>
-              <p style={{ color: "var(--text-secondary)", fontSize: 15 }}>Explore all 86 assistance programs available in San Diego County.</p>
+              <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 32, fontWeight: 500, marginBottom: 12 }}>Browse all 165 programs</h2>
+              <p style={{ color: "var(--text-secondary)", fontSize: 15 }}>Explore all 165 assistance programs available in San Diego County.</p>
             </div>
             <div className="animate-fadeUp delay-1" style={{ marginBottom: 24 }}>
               <input className="input" placeholder="Search programs..." value={search} onChange={e => { setSearch(e.target.value); if (e.target.value.trim()) { clearTimeout(searchTimer.current); searchTimer.current = setTimeout(() => track('search_used', { term_length: e.target.value.length }), 1000); } }} style={{ marginBottom: 16 }} />
@@ -1856,8 +1856,8 @@
 
   <!-- Static content for search engine crawlers that don't execute JavaScript -->
   <noscript>
-    <h1>San Diego County Benefits Navigator — 86 Programs</h1>
-    <p>Free eligibility tool covering 86 public assistance programs in San Diego County, California.</p>
+    <h1>San Diego County Benefits Navigator — 165 Programs</h1>
+    <p>Free eligibility tool covering 165 public assistance programs in San Diego County, California.</p>
     <h2>Food Assistance</h2>
     <ul>
       <li><strong>CalFresh / SNAP</strong> — Pre-loaded debit card for food purchases.</li>
