@@ -1565,14 +1565,19 @@
     };
 
     const LandingPage = ({ setView, goToDirectory }) => {
-      const categories = [
-        { cat: "Food", icon: "leaf", count: 6 }, { cat: "Healthcare", icon: "heart", count: 15 },
-        { cat: "Income", icon: "dollar", count: 13 }, { cat: "Housing", icon: "home", count: 3 },
-        { cat: "Utility", icon: "spark", count: 13 }, { cat: "Transportation", icon: "spark", count: 2 },
-        { cat: "Legal", icon: "file", count: 10 }, { cat: "Day Care", icon: "heart", count: 3 },
-        { cat: "Caretaker", icon: "heart", count: 3 }, { cat: "Entertainment", icon: "spark", count: 16 },
-        { cat: "Taxes", icon: "file", count: 2 },
-      ];
+      const CATEGORY_ICONS = {
+        food: "leaf", healthcare: "heart", "mental healthcare": "heart", "health necessities": "heart",
+        income: "dollar", housing: "home", utility: "spark", transportation: "spark",
+        legal: "file", "day care": "heart", caretaker: "heart", entertainment: "spark",
+        taxes: "file", technology: "spark", education: "spark",
+      };
+      const categories = Object.entries(
+        Object.values(PROGRAMS).reduce((acc, p) => { acc[p.category] = (acc[p.category] || 0) + 1; return acc; }, {})
+      ).sort(([a], [b]) => a.localeCompare(b)).map(([cat, count]) => ({
+        cat: cat.charAt(0).toUpperCase() + cat.slice(1),
+        icon: CATEGORY_ICONS[cat] || "spark",
+        count,
+      }));
       const howItWorks = [
         { n: "1", title: "Answer 6 quick questions", desc: "Tell us about your situation — about 3 minutes." },
         { n: "2", title: "Get personalized results", desc: "We find programs that match your specific needs." },
