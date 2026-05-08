@@ -75,6 +75,10 @@ const profile = (overrides = {}) => ({
   isDVSurvivor: false,
   needsLegal: false,
   isEmployedFullTime: false,
+  isPartTime: false,
+  isRetired: false,
+  isStudent: false,
+  isHomeowner: false,
   enrolledPrograms: [],
   ...overrides,
 });
@@ -122,240 +126,246 @@ describe('checkPath — income gate', () => {
 
   test('income below limit passes', () => {
     const p = profile({ householdSize: 1, annualIncome: 20000 });
-    assert.equal(checkPath(calFreshPath, 1, p), true);
+    assert.equal(checkPath(calFreshPath, 'CA-01', p), true);
   });
 
   test('income above limit fails', () => {
     const p = profile({ householdSize: 1, annualIncome: 50000 });
-    assert.equal(checkPath(calFreshPath, 1, p), false);
+    assert.equal(checkPath(calFreshPath, 'CA-01', p), false);
   });
 
   test('program with no income criteria in PROGRAM_CRITERIA fails income gate', () => {
-    // Medicare (id=15) has {} in PROGRAM_CRITERIA → no income limit defined
+    // Medicare Part A (US-04) has {} in PROGRAM_CRITERIA → no income limit defined
     const p = profile({ householdSize: 1, annualIncome: 0 });
-    assert.equal(checkPath({ tier: 'likely', income: true }, 15, p), false);
+    assert.equal(checkPath({ tier: 'likely', income: true }, 'US-04', p), false);
   });
 });
 
 describe('checkPath — age gate', () => {
   test('age qualifies for ageMin:65', () => {
     const p = profile({ ageArr: ['65+'] });
-    assert.equal(checkPath({ tier: 'likely', ageMin: 65 }, 15, p), true);
+    assert.equal(checkPath({ tier: 'likely', ageMin: 65 }, 'US-04', p), true);
   });
 
   test('wrong age fails ageMin:65', () => {
     const p = profile({ ageArr: ['26–59'] });
-    assert.equal(checkPath({ tier: 'likely', ageMin: 65 }, 15, p), false);
+    assert.equal(checkPath({ tier: 'likely', ageMin: 65 }, 'US-04', p), false);
   });
 });
 
 describe('checkPath — special status flags', () => {
   test('veteran path passes for veteran', () => {
     const p = profile({ isVeteran: true });
-    assert.equal(checkPath({ tier: 'likely', veteran: true }, 51, p), true);
+    assert.equal(checkPath({ tier: 'likely', veteran: true }, 'CA37-07', p), true);
   });
 
   test('veteran path fails for non-veteran', () => {
     const p = profile({ isVeteran: false });
-    assert.equal(checkPath({ tier: 'likely', veteran: true }, 51, p), false);
+    assert.equal(checkPath({ tier: 'likely', veteran: true }, 'CA37-07', p), false);
   });
 
   test('enrolledAny: has matching program → passes', () => {
     const p = profile({ enrolledPrograms: ['calfresh'] });
-    assert.equal(checkPath({ tier: 'likely', enrolledAny: ['calfresh'] }, 30, p), true);
+    assert.equal(checkPath({ tier: 'likely', enrolledAny: ['calfresh'] }, 'US-23', p), true);
   });
 
   test('enrolledAny: no matching program → fails', () => {
     const p = profile({ enrolledPrograms: [] });
-    assert.equal(checkPath({ tier: 'likely', enrolledAny: ['calfresh'] }, 30, p), false);
+    assert.equal(checkPath({ tier: 'likely', enrolledAny: ['calfresh'] }, 'US-23', p), false);
   });
 
   test('no-condition path always passes (label-only)', () => {
     // paths with only a label and no flags pass checkPath unconditionally
     const p = profile(); // high income, no special status
-    assert.equal(checkPath({ tier: 'may', label: 'Contact provider' }, 13, p), true);
+    assert.equal(checkPath({ tier: 'may', label: 'Contact provider' }, 'CA37-09', p), true);
   });
 });
 
 // ---------------------------------------------------------------------------
 // getProgramTier — income-gated programs
 // ---------------------------------------------------------------------------
-describe('getProgramTier — CalFresh (id=1, income-gated, food category)', () => {
+describe('getProgramTier — CalFresh (CA-01, income-gated, food category)', () => {
   test('income under limit → likely', () => {
     const p = profile({ householdSize: 1, annualIncome: 20000 });
-    assert.equal(getProgramTier(1, p, null), 'likely');
+    assert.equal(getProgramTier('CA-01', p), 'likely');
   });
 
   test('income over limit → null', () => {
     const p = profile({ householdSize: 1, annualIncome: 50000 });
-    assert.equal(getProgramTier(1, p, null), null);
+    assert.equal(getProgramTier('CA-01', p), null);
   });
 
   test('household size 4, income under limit → likely', () => {
     const p = profile({ householdSize: 4, annualIncome: 60000 });
-    // PROGRAM_CRITERIA[1][4] = [{incomeLimit: 64320}]
-    assert.equal(getProgramTier(1, p, null), 'likely');
+    // PROGRAM_CRITERIA["CA-01"][4] = [{incomeLimit: 64320}]
+    assert.equal(getProgramTier('CA-01', p), 'likely');
   });
 
   test('household size 4, income over limit → null', () => {
     const p = profile({ householdSize: 4, annualIncome: 70000 });
-    assert.equal(getProgramTier(1, p, null), null);
+    assert.equal(getProgramTier('CA-01', p), null);
   });
 });
 
 // ---------------------------------------------------------------------------
 // getProgramTier — age-gated programs
 // ---------------------------------------------------------------------------
-describe('getProgramTier — Medicare Part A (id=15, age 65+)', () => {
+describe('getProgramTier — Medicare Part A (US-04, age 65+)', () => {
   test('age 65+ → likely', () => {
     const p = profile({ ageArr: ['65+'], annualIncome: 0 });
-    assert.equal(getProgramTier(15, p, null), 'likely');
+    assert.equal(getProgramTier('US-04', p), 'likely');
   });
 
   test('age 26–59, no special status → null (gate blocks)', () => {
     const p = profile({ ageArr: ['26–59'] });
-    assert.equal(getProgramTier(15, p, null), null);
+    assert.equal(getProgramTier('US-04', p), null);
   });
 
-  test('age 26–59, disabled → may (gate passes via isDisabled, 2nd path matches)', () => {
+  test('age 26–59, disabled → likely (gate passes via isDisabled, 2nd path matches)', () => {
     const p = profile({ ageArr: ['26–59'], isDisabled: true });
-    assert.equal(getProgramTier(15, p, null), 'may');
+    assert.equal(getProgramTier('US-04', p), 'likely');
   });
 });
 
-describe('getProgramTier — MTS Reduced Fares (id=29, age/enrollment)', () => {
+describe('getProgramTier — MTS Reduced Fares (CA37-03, age/disability)', () => {
   test('age 65+ → likely', () => {
     const p = profile({ ageArr: ['65+'], annualIncome: 0 });
-    assert.equal(getProgramTier(29, p, null), 'likely');
+    assert.equal(getProgramTier('CA37-03', p), 'likely');
   });
 
-  test('child age 6–13 → likely', () => {
+  test('child age 6–13 → likely (ageMax:18 path)', () => {
     const p = profile({ ageArr: ['6–13'] });
-    assert.equal(getProgramTier(29, p, null), 'likely');
+    assert.equal(getProgramTier('CA37-03', p), 'likely');
   });
 
-  test('enrolled in Medicare → likely', () => {
-    const p = profile({ enrolledPrograms: ['medicare'] });
-    assert.equal(getProgramTier(29, p, null), 'likely');
+  test('disabled → likely', () => {
+    const p = profile({ isDisabled: true });
+    assert.equal(getProgramTier('CA37-03', p), 'likely');
   });
 });
 
 // ---------------------------------------------------------------------------
 // getProgramTier — special status programs
 // ---------------------------------------------------------------------------
-describe('getProgramTier — OMVA San Diego (id=51, veteran)', () => {
+describe('getProgramTier — OMVA San Diego (CA37-07, veteran)', () => {
   test('veteran → likely', () => {
     const p = profile({ isVeteran: true });
-    assert.equal(getProgramTier(51, p, null), 'likely');
+    assert.equal(getProgramTier('CA37-07', p), 'likely');
   });
 
   test('non-veteran → null', () => {
     const p = profile();
-    assert.equal(getProgramTier(51, p, null), null);
+    assert.equal(getProgramTier('CA37-07', p), null);
   });
 });
 
-describe('getProgramTier — Refugee Cash Assistance (id=48)', () => {
+describe('getProgramTier — Refugee Cash Assistance (CA-21)', () => {
   test('refugee → likely', () => {
     const p = profile({ isRefugee: true });
-    assert.equal(getProgramTier(48, p, null), 'likely');
+    assert.equal(getProgramTier('CA-21', p), 'likely');
   });
 
   test('non-refugee → null', () => {
     const p = profile();
-    assert.equal(getProgramTier(48, p, null), null);
+    assert.equal(getProgramTier('CA-21', p), null);
   });
 });
 
-describe('getProgramTier — WIC (id=24, pregnant + income)', () => {
+describe('getProgramTier — WIC (CA-36, pregnant + income)', () => {
   test('pregnant, income under limit → likely', () => {
     const p = profile({ isPregnant: true, householdSize: 1, annualIncome: 20000 });
-    assert.equal(getProgramTier(24, p, null), 'likely');
+    assert.equal(getProgramTier('CA-36', p), 'likely');
   });
 
   test('pregnant, income over limit → null', () => {
     const p = profile({ isPregnant: true, householdSize: 1, annualIncome: 50000 });
-    assert.equal(getProgramTier(24, p, null), null);
+    assert.equal(getProgramTier('CA-36', p), null);
   });
 
-  test('not pregnant, has child, income under limit → likely', () => {
+  test('not pregnant, has children only, low income → null (WIC requires pregnant)', () => {
+    // CA-36 QUALIFY_PATHS only has the pregnant+income path
     const p = profile({ hasChildren: true, householdSize: 2, annualIncome: 30000 });
-    // PROGRAM_CRITERIA[24][2] = [{incomeLimit: 39128}]
-    assert.equal(getProgramTier(24, p, null), 'likely');
+    assert.equal(getProgramTier('CA-36', p), null);
   });
 
   test('not pregnant, no children, low income → null', () => {
     const p = profile({ householdSize: 1, annualIncome: 10000 });
-    assert.equal(getProgramTier(24, p, null), null);
+    assert.equal(getProgramTier('CA-36', p), null);
   });
 });
 
 // ---------------------------------------------------------------------------
 // getProgramTier — GATE_EXEMPT programs bypass the income/signal gate
 // ---------------------------------------------------------------------------
-describe('getProgramTier — GATE_EXEMPT programs (ids 33, 59, 60, 74, 86)', () => {
-  test('Medical Baseline (id=33) visible with no qualifying signals → may', () => {
-    // Would normally be blocked by GATED_CATEGORIES('utility') + no signals
-    const p = profile(); // high income, no special status
-    assert.equal(getProgramTier(33, p, null), 'may');
-  });
-
-  test('Discover & Go library (id=59) visible with no qualifying signals → likely', () => {
-    const p = profile();
-    assert.equal(getProgramTier(59, p, null), 'likely');
-  });
-
-  test('State Parks Pass library (id=60) visible with no qualifying signals → likely', () => {
-    const p = profile();
-    assert.equal(getProgramTier(60, p, null), 'likely');
-  });
-
-  test('Utility Emergency Relief (id=74) visible with no qualifying signals → likely', () => {
-    const p = profile();
-    assert.equal(getProgramTier(74, p, null), 'likely');
-  });
-
-  test('National Parks Volunteer Pass (id=86) visible with no qualifying signals → may', () => {
-    const p = profile();
-    assert.equal(getProgramTier(86, p, null), 'may');
-  });
-});
-
-// ---------------------------------------------------------------------------
-// getProgramTier — SSP (id=54) requires SSI to qualify first
-// ---------------------------------------------------------------------------
-describe('getProgramTier — SSP (id=54, requires ssiTier)', () => {
-  test('ssiTier=null → null regardless of profile', () => {
-    const p = profile({ enrolledPrograms: ['ssi'] });
-    assert.equal(getProgramTier(54, p, null), null);
-  });
-
-  test('ssiTier="likely", enrolled in SSI → likely', () => {
-    const p = profile({ enrolledPrograms: ['ssi'] });
-    assert.equal(getProgramTier(54, p, 'likely'), 'likely');
-  });
-
-  test('ssiTier="may", not enrolled in SSI → null (enrolled check fails)', () => {
-    const p = profile({ enrolledPrograms: [] });
-    assert.equal(getProgramTier(54, p, 'may'), null);
-  });
-});
-
-// ---------------------------------------------------------------------------
-// getProgramTier — programs with only label paths return 'may' for anyone
-// ---------------------------------------------------------------------------
-describe('getProgramTier — label-only paths', () => {
-  test('General Relief (id=13): label-only path, gate passes with qualifying signal → may', () => {
-    // The path has only a label (no conditions) so checkPath always returns true.
-    // But id=13 is in the 'income' category (GATED), so the profile needs at least one
-    // qualifying signal (e.g. disabled) to pass hasGateQualifyingSignal first.
+describe('getProgramTier — GATE_EXEMPT programs', () => {
+  test('Medical Baseline (CA-13) visible with disabled signal → may', () => {
+    // CA-13 paths require disabled:true; GATE_EXEMPT bypasses category gate
     const p = profile({ isDisabled: true });
-    assert.equal(getProgramTier(13, p, null), 'may');
+    assert.equal(getProgramTier('CA-13', p), 'may');
   });
 
-  test('General Relief (id=13): no qualifying signal → null (gated)', () => {
+  test('Medical Baseline (CA-13) without disabled signal → null (checkPath fails)', () => {
+    const p = profile(); // no disabled signal
+    assert.equal(getProgramTier('CA-13', p), null);
+  });
+
+  test('Discover & Go library (CA37-09) visible with no qualifying signals → may', () => {
+    // Label-only path: tier is "may", gate-exempt
+    const p = profile();
+    assert.equal(getProgramTier('CA37-09', p), 'may');
+  });
+
+  test('SD Library Parks Pass (CA37-24) visible with no qualifying signals → may', () => {
+    const p = profile();
+    assert.equal(getProgramTier('CA37-24', p), 'may');
+  });
+
+  test('NP Volunteer Pass (US-21) visible with no qualifying signals → may', () => {
+    const p = profile();
+    assert.equal(getProgramTier('US-21', p), 'may');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// getProgramTier — SSP (CA-24) follows own paths (income/age/disability)
+// ---------------------------------------------------------------------------
+describe('getProgramTier — SSP (CA-24, income / age / disability)', () => {
+  test('income under limit → likely', () => {
+    // PROGRAM_CRITERIA["CA-24"][1] = [{incomeLimit: 24228}]
+    const p = profile({ householdSize: 1, annualIncome: 20000 });
+    assert.equal(getProgramTier('CA-24', p), 'likely');
+  });
+
+  test('age 65+ → likely', () => {
+    const p = profile({ ageArr: ['65+'] });
+    assert.equal(getProgramTier('CA-24', p), 'likely');
+  });
+
+  test('disabled → likely', () => {
+    const p = profile({ isDisabled: true });
+    assert.equal(getProgramTier('CA-24', p), 'likely');
+  });
+
+  test('no qualifying condition → null', () => {
     const p = profile(); // high income, no special status
-    assert.equal(getProgramTier(13, p, null), null);
+    assert.equal(getProgramTier('CA-24', p), null);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// getProgramTier — programs with conditional-label paths
+// ---------------------------------------------------------------------------
+describe('getProgramTier — conditional paths', () => {
+  test('General Relief (CA37-01): age 18-64 + income under limit → may', () => {
+    // CA37-01 paths require ageMin:18, ageMax:64, income:true
+    // PROGRAM_CRITERIA["CA37-01"][1] = [{incomeLimit: 7176, ageMin:18, ageMax:64}]
+    const p = profile({ ageArr: ['26–59'], householdSize: 1, annualIncome: 5000 });
+    assert.equal(getProgramTier('CA37-01', p), 'may');
+  });
+
+  test('General Relief (CA37-01): no qualifying signal → null (gated)', () => {
+    const p = profile(); // high income, no special status
+    assert.equal(getProgramTier('CA37-01', p), null);
   });
 });
 
@@ -365,26 +375,26 @@ describe('getProgramTier — label-only paths', () => {
 describe('hasGateQualifyingSignal', () => {
   test('no signals, income over limit → false', () => {
     const p = profile({ householdSize: 1, annualIncome: 200000 });
-    assert.equal(hasGateQualifyingSignal(1, p), false);
+    assert.equal(hasGateQualifyingSignal('CA-01', p), false);
   });
 
   test('income under CalFresh limit → true', () => {
     const p = profile({ householdSize: 1, annualIncome: 20000 });
-    assert.equal(hasGateQualifyingSignal(1, p), true);
+    assert.equal(hasGateQualifyingSignal('CA-01', p), true);
   });
 
   test('isDisabled → true', () => {
     const p = profile({ isDisabled: true });
-    assert.equal(hasGateQualifyingSignal(15, p), true);
+    assert.equal(hasGateQualifyingSignal('US-04', p), true);
   });
 
   test('hasChildren → true', () => {
     const p = profile({ hasChildren: true });
-    assert.equal(hasGateQualifyingSignal(1, p), true);
+    assert.equal(hasGateQualifyingSignal('CA-01', p), true);
   });
 
   test('enrolledPrograms non-empty → true', () => {
     const p = profile({ enrolledPrograms: ['calfresh'] });
-    assert.equal(hasGateQualifyingSignal(5, p), true);
+    assert.equal(hasGateQualifyingSignal('CA-03', p), true);
   });
 });

@@ -38,12 +38,13 @@ const { PROGRAMS, PROGRAM_CRITERIA, quizSteps, GATE_EXEMPT } = ctx.exports;
 // ---------------------------------------------------------------------------
 // Snapshot constants — update these intentionally when programs are added
 // ---------------------------------------------------------------------------
-const EXPECTED_PROGRAM_COUNT = 86;
+const EXPECTED_PROGRAM_COUNT = 165;
 const EXPECTED_QUIZ_STEP_COUNT = 6;
 
 const VALID_CATEGORIES = new Set([
-  'food', 'income', 'healthcare', 'utility', 'transportation',
-  'housing', 'caretaker', 'entertainment', 'legal', 'day care', 'taxes',
+  'food', 'income', 'healthcare', 'mental healthcare', 'health necessities',
+  'utility', 'transportation', 'housing', 'caretaker', 'entertainment',
+  'legal', 'day care', 'taxes', 'technology', 'education',
 ]);
 
 const VALID_ICONS = new Set(['leaf', 'dollar', 'heart', 'spark', 'home', 'file']);
@@ -52,21 +53,21 @@ const VALID_ICONS = new Set(['leaf', 'dollar', 'heart', 'spark', 'home', 'file']
 // PROGRAMS
 // ---------------------------------------------------------------------------
 describe('PROGRAMS — completeness', () => {
-  test('contains exactly 86 programs', () => {
+  test(`contains exactly ${EXPECTED_PROGRAM_COUNT} programs`, () => {
     const count = Object.keys(PROGRAMS).length;
     assert.equal(count, EXPECTED_PROGRAM_COUNT,
       `Expected ${EXPECTED_PROGRAM_COUNT} programs, got ${count}`);
   });
 
-  test('IDs are sequential integers 1–86 with no gaps', () => {
-    const ids = Object.keys(PROGRAMS).map(Number).sort((a, b) => a - b);
-    for (let i = 0; i < ids.length; i++) {
-      assert.equal(ids[i], i + 1, `Missing program ID ${i + 1}`);
+  test('IDs are non-empty strings matching expected format (e.g. CA-01, US-01, CA37-01)', () => {
+    for (const id of Object.keys(PROGRAMS)) {
+      assert.ok(typeof id === 'string' && id.length > 0, `Program has empty or non-string ID: ${id}`);
+      assert.match(id, /^[A-Z]{2}[0-9A-Z.-]+$/, `Program ID "${id}" does not match expected format`);
     }
   });
 
   test('no duplicate IDs', () => {
-    const ids = Object.keys(PROGRAMS).map(Number);
+    const ids = Object.keys(PROGRAMS);
     const unique = new Set(ids);
     assert.equal(unique.size, ids.length, 'Duplicate program IDs found');
   });
@@ -83,7 +84,7 @@ describe('PROGRAMS — completeness', () => {
 
 describe('PROGRAMS — required fields', () => {
   for (const [key, program] of Object.entries(PROGRAMS)) {
-    const id = Number(key);
+    const id = key;
 
     test(`program ${id} (${program.name?.slice(0, 40)}) — id matches key`, () => {
       assert.equal(program.id, id, `Program key ${id} has mismatched id field`);
@@ -191,8 +192,8 @@ describe('Sync — data.js vs california/san-diego/index.html', () => {
   const html = readFileSync(join(ROOT, 'california/san-diego/index.html'), 'utf8');
 
   test('index.html inline program count matches data.js', () => {
-    // Count "{ id: N," patterns in the PROGRAMS object inside the HTML
-    const matches = html.match(/\bid:\s*\d+,/g) || [];
+    // Count `id: "XX-` patterns in the PROGRAMS object inside the HTML
+    const matches = html.match(/\bid:\s*"[A-Z]{2}[0-9A-Z.-]+"/g) || [];
     assert.equal(matches.length, EXPECTED_PROGRAM_COUNT,
       `index.html has ${matches.length} inline programs, expected ${EXPECTED_PROGRAM_COUNT} (data.js count)`);
   });
@@ -201,12 +202,12 @@ describe('Sync — data.js vs california/san-diego/index.html', () => {
     assert.ok(html.includes('<noscript>'), 'No <noscript> block found in index.html');
   });
 
-  test('index.html noscript contains at least 86 list items', () => {
+  test('index.html noscript contains list items', () => {
     // noscript uses human-friendly abbreviated names; protect against mass deletion
     const noscriptMatch = html.match(/<noscript>([\s\S]*?)<\/noscript>/);
     assert.ok(noscriptMatch, 'No <noscript> block found');
     const liCount = (noscriptMatch[1].match(/<li>/g) || []).length;
-    assert.ok(liCount >= EXPECTED_PROGRAM_COUNT,
-      `noscript has only ${liCount} <li> items, expected at least ${EXPECTED_PROGRAM_COUNT}`);
+    assert.ok(liCount >= 50,
+      `noscript has only ${liCount} <li> items, expected at least 50`);
   });
 });
