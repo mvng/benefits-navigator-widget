@@ -112,10 +112,17 @@
         </div>
         <span class="wordmark-text">Benefits <em style="font-style:italic;">Navigator</em><sup style="font-size:12px;font-style:normal;vertical-align:super;margin-left:2px;">™</sup></span>
       </div>
-      <button class="btn-back" onclick="window.close()" aria-label="Close this tab and return to Benefits Navigator">
-        <span class="back-arrow" aria-hidden="true">←</span> Back to Benefits Navigator
-      </button>
-      <a href="https://givebutter.com/public-programs" target="_blank" rel="noopener noreferrer" class="btn-donate" aria-label="Donate to Public Programs Foundation">♥ Donate</a>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div id="lang-switcher" style="display:flex;gap:2px;border:1.5px solid rgba(26,107,90,0.2);border-radius:99px;padding:3px;background:rgba(26,107,90,0.04);" aria-label="Select language">
+          <button onclick="setLang('en')" data-lang="en" style="border-radius:99px;border:none;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.15s;">EN</button>
+          <button onclick="setLang('es')" data-lang="es" style="border-radius:99px;border:none;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.15s;">ES</button>
+          <button onclick="setLang('vi')" data-lang="vi" style="border-radius:99px;border:none;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.15s;">VI</button>
+        </div>
+        <button class="btn-back" onclick="window.close()" aria-label="Close this tab and return to Benefits Navigator">
+          <span class="back-arrow" aria-hidden="true">←</span> Back
+        </button>
+        <a href="https://givebutter.com/public-programs" target="_blank" rel="noopener noreferrer" class="btn-donate" aria-label="Donate to Public Programs Foundation">♥ Donate</a>
+      </div>
     </div>
   </header>
 
@@ -441,5 +448,23 @@
     </p>
   </footer>
 
+  <script>
+    (function () {
+      var JADE = '#1a6b5a';
+      function setLang(lang) {
+        try { localStorage.setItem('bnLang', lang); } catch(e) {}
+        document.documentElement.lang = lang;
+        document.querySelectorAll('#lang-switcher button').forEach(function(btn) {
+          var active = btn.getAttribute('data-lang') === lang;
+          btn.style.background = active ? JADE : 'transparent';
+          btn.style.color = active ? 'white' : '#5c5649';
+        });
+      }
+      window.setLang = setLang;
+      var saved = 'en';
+      try { saved = localStorage.getItem('bnLang') || 'en'; } catch(e) {}
+      setLang(saved);
+    })();
+  </script>
 </body>
 </html>
