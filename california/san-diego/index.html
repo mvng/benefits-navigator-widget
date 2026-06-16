@@ -97,7 +97,7 @@
 
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.26.4/babel.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,500;0,700;1,300;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -200,9 +200,390 @@
   <a href="#main-content" class="skip-link">Skip to main content</a>
   <div id="root"></div>
 
+  <script src="../../prog_translations.js"></script>
   <script type="text/babel">
-    const { useState, useRef } = React;
+    const { useState, useRef, useEffect, useContext, createContext } = React;
     const track = (name, data) => window.va && window.va('event', { name, ...(data && { data }) });
+
+    // ── Language Infrastructure ──────────────────────────────────────────────
+    const LangContext = createContext('en');
+
+    const useT = () => {
+      const lang = useContext(LangContext);
+      return (key) => TRANSLATIONS[lang]?.[key] ?? TRANSLATIONS.en[key] ?? key;
+    };
+
+    const useProgText = () => {
+      const lang = useContext(LangContext);
+      return {
+        name: (prog) => (lang !== 'en' && prog[`name_${lang}`]) || prog.name,
+        desc: (prog) => (lang !== 'en' && (window.PROG_TRANSLATIONS?.[prog.id]?.[`desc_${lang}`] || prog[`desc_${lang}`])) || prog.description,
+      };
+    };
+
+    const TRANSLATIONS = {
+      en: {
+        nav_feedback: "Share Feedback", nav_donate: "♥ Donate", nav_about: "About Us",
+        hero_location: "San Diego County • California",
+        hero_heading: "Find the benefits", hero_italic: "you've earned.",
+        hero_sub: "Millions of eligible Americans miss out on public assistance because the system is overwhelming. We make it as simple as filing your taxes.",
+        hero_start: "Start quiz", hero_browse: "Browse all 165 programs",
+        landing_disclaimer_title: "Important: About These Results",
+        landing_disclaimer_body: "This tool provides an estimate of programs you may qualify for. Each program defines \"household\" and \"income\" differently and may have additional requirements. Results do not guarantee eligibility—verify directly with each program.",
+        programs_heading: "Programs we check",
+        programs_sub: "We search across 165 assistance programs in San Diego County.",
+        programs_count: "programs",
+        how_heading: "How it works",
+        how_1_title: "Answer 6 quick questions", how_1_desc: "Tell us about your situation — about 3 minutes.",
+        how_2_title: "Get personalized results", how_2_desc: "We find programs that match your specific needs.",
+        how_3_title: "Apply today", how_3_desc: "Direct links to each program make applying easy.",
+        cta_heading: "Ready to discover your benefits?", cta_sub: "Free, confidential, takes 3 minutes.",
+        cta_btn: "Get started", cta_note: "No account required. Your information is never sold.",
+        landing_feedback: "Found this helpful?", landing_feedback_link: "Share your feedback →",
+        quiz_step: "Step", quiz_of: "of", quiz_pct: "% complete",
+        quiz_back: "Back", quiz_continue: "Continue", quiz_finish: "See my results",
+        quiz_confidential: "🔒 Your answers are confidential and never shared.",
+        q1_title: "How many people are in your household?",
+        q1_sub: "Include family members and others you share finances with — typically the people you'd include on a joint tax return. Do not count roommates who manage their finances separately.",
+        q1_exp: "Household size determines income limits and benefit amounts for most programs.",
+        q1_opt_1: "1 person", q1_opt_2: "2 people", q1_opt_3: "3 people", q1_opt_4: "4 people",
+        q1_opt_5: "5 people", q1_opt_6: "6 people", q1_opt_7: "7+ people",
+        q2_title: "What are the ages of people in your household?",
+        q2_sub: "Select all age ranges that apply to everyone in your household.",
+        q2_exp: "Different programs serve different age groups - seniors get different benefits than families with children or working-age adults.",
+        q2_opt_1: "Under 6", q2_opt_2: "6–13", q2_opt_3: "13–17", q2_opt_4: "18",
+        q2_opt_5: "19–25", q2_opt_6: "26–59", q2_opt_7: "60–61", q2_opt_8: "62–64", q2_opt_9: "65+",
+        q3_title: "What is your total household annual income?",
+        q3_sub: "Include all income before taxes—wages, self-employment, benefits, child support, disability payments, etc. (yearly total)",
+        q3_exp: "Income is the main factor for most benefit programs. This helps us find programs with income limits you qualify for.",
+        q3_opt_1: "No income", q3_opt_2: "Under $20,000", q3_opt_3: "$20,000–$40,000",
+        q3_opt_4: "$40,000–$60,000", q3_opt_5: "$60,000–$80,000", q3_opt_6: "$80,000–$120,000",
+        q3_opt_7: "$120,000–$180,000", q3_opt_8: "Over $180,000",
+        q4_title: "What is your current employment status?",
+        q4_sub: "Select what best describes your situation.",
+        q4_exp: "Employment status affects eligibility for unemployment benefits, job training, and work-related programs.",
+        q4_opt_1: "Employed full-time", q4_opt_2: "Employed part-time", q4_opt_3: "Self-employed",
+        q4_opt_4: "Unemployed (looking for work)", q4_opt_5: "Unable to work (disability/medical)",
+        q5_title: "Do any of these apply to you? (Select all that apply)",
+        q5_sub: "These help us find additional programs you may qualify for.",
+        q5_exp: "Veterans, refugees, foster youth, people with disabilities, and families with children have access to specialized programs.",
+        q5_opt_1: "Veteran or military", q5_opt_2: "Refugee or recent immigrant", q5_opt_3: "Tribal member",
+        q5_opt_4: "Disabled, blind, or have a chronic illness", q5_opt_5: "Foster youth or in foster care",
+        q5_opt_6: "Pregnant or nursing", q5_opt_7: "Caring for children under 18",
+        q5_opt_8: "Domestic violence survivor", q5_opt_9: "Need legal assistance", q5_opt_10: "None of these",
+        q6_title: "Are you currently enrolled in any of these programs? (Select all that apply)",
+        q6_sub: "Enrollment in some programs can qualify you for others.",
+        q6_exp: "Many benefit programs extend eligibility to people already enrolled in related programs — selecting what you're currently enrolled in helps us find more programs you qualify for.",
+        q6_opt_1: "CalFresh or Supplemental Nutrition Assistance Program (SNAP)",
+        q6_opt_2: "Medi-Cal (Medicaid)", q6_opt_3: "Medicare",
+        q6_opt_4: "Supplemental Security Income (SSI) and State Supplementary Program (SSP)",
+        q6_opt_5: "CalWORKs or Temporary Assistance for Needy Families (TANF)",
+        q6_opt_6: "Low Income Home Energy Assistance Program (LIHEAP)",
+        q6_opt_7: "California Alternate Rates for Energy (CARE) or Family Electric Rate Assistance Program (FERA)",
+        q6_opt_8: "Section 8 / Federal Public Housing",
+        q6_opt_9: "Women, Infants, and Children (WIC)",
+        q6_opt_10: "San Diego County General Relief", q6_opt_11: "None of the above",
+        results_ready: "Your results are ready",
+        results_heading_prefix: "You may qualify for", results_heading_suffix: "programs",
+        results_check: "to check",
+        results_based_on: "Based on your household of", results_with_income: "with annual income of",
+        results_disclaimer_title: "⚠️ Important Disclaimer",
+        results_disclaimer_body: "These results are an estimate based on general eligibility criteria. Different programs define \"household\" and \"income\" differently and may have additional requirements. These results do not guarantee your eligibility. Please verify by contacting each program directly. Results are intentionally over-inclusive — we would rather show you a program you may not qualify for than miss one you do.",
+        results_stat_household: "Household size", results_stat_income: "Annual income",
+        results_stat_likely: "Likely eligible", results_stat_check: "Worth checking",
+        results_likely: "Likely Eligible", results_may: "May Also Qualify",
+        results_likely_desc: "Based on your answers, you appear to meet the eligibility criteria for these programs.",
+        results_may_desc: "You may qualify through criteria the quiz couldn't fully verify. Contact each program to confirm.",
+        results_program: "program", results_programs: "programs",
+        results_no_match_sub: "You may still find helpful programs in other categories, or explore the full directory for more options.",
+        results_view_all: "View all my results", results_browse_full: "Browse full directory",
+        results_empty: "Based on your answers, you may not currently qualify. However, you can:",
+        results_browse: "Browse all programs",
+        results_start_over: "Start over", results_print: "Download / Print results",
+        results_directory: "Explore full directory",
+        dir_heading: "Browse all 165 programs",
+        dir_sub: "Explore all 165 assistance programs available in San Diego County.",
+        dir_search: "Search programs...",
+        income_max: "Maximum Annual Income",
+        income_person: "person", income_people: "people",
+        income_your_household: "Your household",
+        income_hide: "Hide all household sizes", income_show: "Show all household sizes",
+        income_highlighted: "Your household size is highlighted",
+        income_hardship: "CMS Hardship Evaluation",
+        income_hardship_sub: "May request a CMS Hardship Evaluation for households with incomes between:",
+        prog_apply: "Apply / Learn more",
+        about_tagline: "We build tools that connect people with the programs they've earned — freely, privately, and without barriers.",
+        about_vision: "Vision", about_mission: "Mission",
+        about_story_heading: "Our Story",
+        about_story_1: "When Public Programs Foundation founder, Ashley L. Salas, looked for a list of programs that community members could rely on in their times of need, she didn't find it easily. She asked around, and no one knew of such a list. So she founded Public Programs Foundation to build it.",
+        about_story_2: "We know we are missing programs. If you know of programs that are not yet on the Benefits Navigator, please email us at info@public-programs.org, and we'll add them.",
+        about_story_3: "We are starting in San Diego, California, United States, because that is where we are, but our goal is for the Benefits Navigator to serve every county, state, and US territory.",
+        about_privacy_heading: "Your Privacy",
+        about_privacy_body: "Your information is confidential and never stored, shared, or sold. We use your answers only to show you matching programs in this session. No data is collected or retained after you leave the Benefits Navigator.",
+        about_access_heading: "Accessibility",
+        about_access_sub: "The Benefits Navigator is designed to be accessible to everyone:",
+        about_card_free: "Free to use", about_card_free_desc: "No cost, no account required",
+        about_card_mobile: "Mobile-friendly", about_card_mobile_desc: "Works on phones, tablets, and computers",
+        about_card_lang: "3 languages", about_card_lang_desc: "English, Spanish, and Vietnamese",
+        about_card_comp: "Comprehensive", about_card_comp_desc: "165+ programs and growing",
+        about_help_heading: "How You Can Help",
+        about_help_sub: "There are several ways you can support our mission:",
+        about_help_share: "Share the tool", about_help_share_desc: "Tell someone in your community who might benefit",
+        about_help_report: "Report missing programs",
+        about_help_feedback: "Share feedback",
+        about_help_spread: "Spread the word", about_help_spread_desc: "Help us reach more people who need this resource",
+        about_contact_heading: "Get in Touch",
+        about_contact_sub: "Have questions or want to contribute? We would love to hear from you.",
+        footer_ein: "Public Programs Foundation is a 501(c)(3) organization.\u00a0\u00a0EIN 93-4712731.",
+        cat_food: "Food", cat_healthcare: "Healthcare", cat_mental_healthcare: "Mental Health",
+        cat_health_necessities: "Health Necessities", cat_income: "Income", cat_housing: "Housing",
+        cat_utility: "Utilities", cat_transportation: "Transportation", cat_legal: "Legal",
+        cat_day_care: "Day Care", cat_caretaker: "Caretaker", cat_entertainment: "Entertainment",
+        cat_taxes: "Taxes", cat_technology: "Technology", cat_education: "Education", cat_all: "All",
+      },
+      es: {
+        nav_feedback: "Compartir comentarios", nav_donate: "♥ Donar", nav_about: "Sobre nosotros",
+        hero_location: "Condado de San Diego • California",
+        hero_heading: "Encuentra los beneficios", hero_italic: "que te mereces.",
+        hero_sub: "Millones de estadounidenses elegibles no acceden a la asistencia pública porque el sistema es abrumador. Lo hacemos tan fácil como declarar impuestos.",
+        hero_start: "Iniciar cuestionario", hero_browse: "Ver los 165 programas",
+        landing_disclaimer_title: "Importante: Sobre estos resultados",
+        landing_disclaimer_body: "Esta herramienta proporciona una estimación de los programas para los que puede calificar. Cada programa define «hogar» e «ingresos» de manera diferente y puede tener requisitos adicionales. Los resultados no garantizan la elegibilidad; verifique directamente con cada programa.",
+        programs_heading: "Programas que verificamos",
+        programs_sub: "Buscamos en 165 programas de asistencia en el Condado de San Diego.",
+        programs_count: "programas",
+        how_heading: "Cómo funciona",
+        how_1_title: "Responda 6 preguntas rápidas", how_1_desc: "Cuéntenos sobre su situación — aproximadamente 3 minutos.",
+        how_2_title: "Obtenga resultados personalizados", how_2_desc: "Encontramos programas que se adaptan a sus necesidades específicas.",
+        how_3_title: "Solicite hoy", how_3_desc: "Los enlaces directos a cada programa facilitan la solicitud.",
+        cta_heading: "¿Listo para descubrir sus beneficios?", cta_sub: "Gratis, confidencial, toma 3 minutos.",
+        cta_btn: "Comenzar", cta_note: "No se requiere cuenta. Su información nunca se vende.",
+        landing_feedback: "¿Le resultó útil?", landing_feedback_link: "Comparte tu opinión →",
+        quiz_step: "Paso", quiz_of: "de", quiz_pct: "% completado",
+        quiz_back: "Atrás", quiz_continue: "Continuar", quiz_finish: "Ver mis resultados",
+        quiz_confidential: "🔒 Sus respuestas son confidenciales y nunca se comparten.",
+        q1_title: "¿Cuántas personas hay en su hogar?",
+        q1_sub: "Incluya a los miembros de la familia y otras personas con quienes comparte finanzas — generalmente las personas que incluiría en una declaración de impuestos conjunta. No cuente a los compañeros de habitación que manejan sus finanzas por separado.",
+        q1_exp: "El tamaño del hogar determina los límites de ingresos y los montos de beneficios para la mayoría de los programas.",
+        q1_opt_1: "1 persona", q1_opt_2: "2 personas", q1_opt_3: "3 personas", q1_opt_4: "4 personas",
+        q1_opt_5: "5 personas", q1_opt_6: "6 personas", q1_opt_7: "7+ personas",
+        q2_title: "¿Cuáles son las edades de las personas en su hogar?",
+        q2_sub: "Seleccione todos los rangos de edad que correspondan a todos en su hogar.",
+        q2_exp: "Diferentes programas atienden a diferentes grupos de edad: los adultos mayores reciben beneficios diferentes a las familias con hijos o adultos en edad laboral.",
+        q2_opt_1: "Menor de 6", q2_opt_2: "6–13", q2_opt_3: "13–17", q2_opt_4: "18",
+        q2_opt_5: "19–25", q2_opt_6: "26–59", q2_opt_7: "60–61", q2_opt_8: "62–64", q2_opt_9: "65+",
+        q3_title: "¿Cuál es el ingreso anual total de su hogar?",
+        q3_sub: "Incluya todos los ingresos antes de impuestos: salarios, trabajo independiente, beneficios, manutención de hijos, pagos por discapacidad, etc. (total anual)",
+        q3_exp: "El ingreso es el factor principal para la mayoría de los programas de beneficios. Esto nos ayuda a encontrar programas con límites de ingresos para los que califica.",
+        q3_opt_1: "Sin ingresos", q3_opt_2: "Menos de $20,000", q3_opt_3: "$20,000–$40,000",
+        q3_opt_4: "$40,000–$60,000", q3_opt_5: "$60,000–$80,000", q3_opt_6: "$80,000–$120,000",
+        q3_opt_7: "$120,000–$180,000", q3_opt_8: "Más de $180,000",
+        q4_title: "¿Cuál es su situación laboral actual?",
+        q4_sub: "Seleccione lo que mejor describe su situación.",
+        q4_exp: "El estado laboral afecta la elegibilidad para beneficios de desempleo, capacitación laboral y programas relacionados con el trabajo.",
+        q4_opt_1: "Empleado a tiempo completo", q4_opt_2: "Empleado a tiempo parcial",
+        q4_opt_3: "Trabajador independiente", q4_opt_4: "Desempleado (en busca de trabajo)",
+        q4_opt_5: "No puede trabajar (discapacidad/médico)",
+        q5_title: "¿Alguna de estas situaciones le aplica? (Seleccione todas las que correspondan)",
+        q5_sub: "Estas nos ayudan a encontrar programas adicionales para los que puede calificar.",
+        q5_exp: "Veteranos, refugiados, jóvenes en acogimiento familiar, personas con discapacidades y familias con hijos tienen acceso a programas especializados.",
+        q5_opt_1: "Veterano o militar", q5_opt_2: "Refugiado o inmigrante reciente",
+        q5_opt_3: "Miembro tribal", q5_opt_4: "Discapacitado, ciego o con enfermedad crónica",
+        q5_opt_5: "Joven en acogimiento familiar", q5_opt_6: "Embarazada o lactando",
+        q5_opt_7: "Cuidando niños menores de 18 años", q5_opt_8: "Sobreviviente de violencia doméstica",
+        q5_opt_9: "Necesita asistencia legal", q5_opt_10: "Ninguna de estas",
+        q6_title: "¿Está actualmente inscrito en alguno de estos programas? (Seleccione todos los que correspondan)",
+        q6_sub: "La inscripción en algunos programas puede calificarlo para otros.",
+        q6_exp: "Muchos programas de beneficios extienden la elegibilidad a personas ya inscritas en programas relacionados — seleccionar en qué está inscrito actualmente nos ayuda a encontrar más programas para los que califica.",
+        q6_opt_1: "CalFresh o Programa de Asistencia Nutricional Suplementaria (SNAP)",
+        q6_opt_2: "Medi-Cal (Medicaid)", q6_opt_3: "Medicare",
+        q6_opt_4: "Ingreso de Seguridad Suplementario (SSI) y Programa Suplementario Estatal (SSP)",
+        q6_opt_5: "CalWORKs o Asistencia Temporal para Familias Necesitadas (TANF)",
+        q6_opt_6: "Programa de Asistencia para la Energía del Hogar de Bajos Ingresos (LIHEAP)",
+        q6_opt_7: "Tarifas Alternativas de California para la Energía (CARE) o Asistencia de Tarifas Eléctricas para Familias (FERA)",
+        q6_opt_8: "Sección 8 / Vivienda Pública Federal",
+        q6_opt_9: "Mujeres, Bebés y Niños (WIC)",
+        q6_opt_10: "Alivio General del Condado de San Diego", q6_opt_11: "Ninguno de los anteriores",
+        results_ready: "Sus resultados están listos",
+        results_heading_prefix: "Puede calificar para", results_heading_suffix: "programas",
+        results_check: "para verificar",
+        results_based_on: "Basado en su hogar de", results_with_income: "con ingreso anual de",
+        results_disclaimer_title: "⚠️ Aviso importante",
+        results_disclaimer_body: "Estos resultados son una estimación basada en criterios generales de elegibilidad. Diferentes programas definen «hogar» e «ingresos» de manera diferente y pueden tener requisitos adicionales. Estos resultados no garantizan su elegibilidad. Verifique contactando directamente a cada programa. Los resultados son intencionalmente inclusivos — preferimos mostrarle un programa para el que podría no calificar a perder uno para el que sí califica.",
+        results_stat_household: "Tamaño del hogar", results_stat_income: "Ingreso anual",
+        results_stat_likely: "Probablemente elegible", results_stat_check: "Vale la pena verificar",
+        results_likely: "Probablemente elegible", results_may: "También puede calificar",
+        results_likely_desc: "Según sus respuestas, parece cumplir con los criterios de elegibilidad para estos programas.",
+        results_may_desc: "Puede calificar a través de criterios que el cuestionario no pudo verificar completamente. Comuníquese con cada programa para confirmar.",
+        results_program: "programa", results_programs: "programas",
+        results_no_match_sub: "Es posible que encuentre programas útiles en otras categorías o explore el directorio completo para más opciones.",
+        results_view_all: "Ver todos mis resultados", results_browse_full: "Explorar directorio completo",
+        results_empty: "Según sus respuestas, es posible que no califique actualmente. Sin embargo, puede:",
+        results_browse: "Ver todos los programas",
+        results_start_over: "Comenzar de nuevo", results_print: "Descargar / Imprimir resultados",
+        results_directory: "Explorar directorio completo",
+        dir_heading: "Ver los 165 programas",
+        dir_sub: "Explore los 165 programas de asistencia disponibles en el Condado de San Diego.",
+        dir_search: "Buscar programas...",
+        income_max: "Ingreso Anual Máximo",
+        income_person: "persona", income_people: "personas",
+        income_your_household: "Su hogar",
+        income_hide: "Ocultar todos los tamaños del hogar", income_show: "Mostrar todos los tamaños del hogar",
+        income_highlighted: "El tamaño de su hogar está resaltado",
+        income_hardship: "Evaluación de Dificultades CMS",
+        income_hardship_sub: "Puede solicitar una Evaluación de Dificultades CMS para hogares con ingresos entre:",
+        prog_apply: "Solicitar / Más información",
+        about_tagline: "Construimos herramientas que conectan a las personas con los programas que se han ganado — de forma gratuita, privada y sin barreras.",
+        about_vision: "Visión", about_mission: "Misión",
+        about_story_heading: "Nuestra historia",
+        about_story_1: "Cuando la fundadora de Public Programs Foundation, Ashley L. Salas, buscó una lista de programas en los que los miembros de la comunidad pudieran confiar en tiempos de necesidad, no la encontró fácilmente. Preguntó a su alrededor y nadie conocía tal lista. Así que fundó Public Programs Foundation para crearla.",
+        about_story_2: "Sabemos que nos faltan programas. Si conoce programas que aún no están en el Navegador de Beneficios, envíenos un correo electrónico a info@public-programs.org y los agregaremos.",
+        about_story_3: "Estamos comenzando en San Diego, California, Estados Unidos, porque ahí es donde estamos, pero nuestro objetivo es que el Navegador de Beneficios sirva a cada condado, estado y territorio de EE.UU.",
+        about_privacy_heading: "Su privacidad",
+        about_privacy_body: "Su información es confidencial y nunca se almacena, comparte ni vende. Usamos sus respuestas únicamente para mostrarle programas que coinciden durante esta sesión. No se recopilan ni retienen datos después de que abandone el Navegador de Beneficios.",
+        about_access_heading: "Accesibilidad",
+        about_access_sub: "El Navegador de Beneficios está diseñado para ser accesible para todos:",
+        about_card_free: "Gratis", about_card_free_desc: "Sin costo, sin necesidad de cuenta",
+        about_card_mobile: "Compatible con móviles", about_card_mobile_desc: "Funciona en teléfonos, tabletas y computadoras",
+        about_card_lang: "3 idiomas", about_card_lang_desc: "Inglés, español y vietnamita",
+        about_card_comp: "Completo", about_card_comp_desc: "Más de 165 programas y en crecimiento",
+        about_help_heading: "Cómo puede ayudar",
+        about_help_sub: "Hay varias formas de apoyar nuestra misión:",
+        about_help_share: "Comparte la herramienta", about_help_share_desc: "Díselo a alguien en tu comunidad que pueda beneficiarse",
+        about_help_report: "Reportar programas faltantes",
+        about_help_feedback: "Compartir comentarios",
+        about_help_spread: "Difunde la palabra", about_help_spread_desc: "Ayúdanos a llegar a más personas que necesitan este recurso",
+        about_contact_heading: "Contáctenos",
+        about_contact_sub: "¿Tiene preguntas o quiere contribuir? Nos encantaría saber de usted.",
+        footer_ein: "Public Programs Foundation es una organización 501(c)(3).\u00a0\u00a0EIN 93-4712731.",
+        cat_food: "Alimentos", cat_healthcare: "Salud", cat_mental_healthcare: "Salud mental",
+        cat_health_necessities: "Necesidades de salud", cat_income: "Ingresos", cat_housing: "Vivienda",
+        cat_utility: "Servicios públicos", cat_transportation: "Transporte", cat_legal: "Legal",
+        cat_day_care: "Cuidado infantil", cat_caretaker: "Cuidador", cat_entertainment: "Entretenimiento",
+        cat_taxes: "Impuestos", cat_technology: "Tecnología", cat_education: "Educación", cat_all: "Todos",
+      },
+      vi: {
+        nav_feedback: "Chia sẻ phản hồi", nav_donate: "♥ Quyên góp", nav_about: "Về chúng tôi",
+        hero_location: "Quận San Diego • California",
+        hero_heading: "Tìm kiếm các phúc lợi", hero_italic: "bạn xứng đáng nhận được.",
+        hero_sub: "Hàng triệu người Mỹ đủ điều kiện bỏ lỡ hỗ trợ công cộng vì hệ thống quá phức tạp. Chúng tôi làm cho nó đơn giản như khai thuế.",
+        hero_start: "Bắt đầu khảo sát", hero_browse: "Xem tất cả 165 chương trình",
+        landing_disclaimer_title: "Quan trọng: Về kết quả này",
+        landing_disclaimer_body: "Công cụ này cung cấp ước tính về các chương trình bạn có thể đủ điều kiện. Mỗi chương trình định nghĩa \"hộ gia đình\" và \"thu nhập\" khác nhau và có thể có các yêu cầu bổ sung. Kết quả không đảm bảo tư cách hưởng — xác minh trực tiếp với từng chương trình.",
+        programs_heading: "Các chương trình chúng tôi kiểm tra",
+        programs_sub: "Chúng tôi tìm kiếm trong 165 chương trình hỗ trợ tại Quận San Diego.",
+        programs_count: "chương trình",
+        how_heading: "Cách thức hoạt động",
+        how_1_title: "Trả lời 6 câu hỏi nhanh", how_1_desc: "Cho chúng tôi biết về tình huống của bạn — khoảng 3 phút.",
+        how_2_title: "Nhận kết quả cá nhân hóa", how_2_desc: "Chúng tôi tìm các chương trình phù hợp với nhu cầu cụ thể của bạn.",
+        how_3_title: "Đăng ký ngay hôm nay", how_3_desc: "Liên kết trực tiếp đến từng chương trình giúp việc đăng ký dễ dàng.",
+        cta_heading: "Sẵn sàng khám phá phúc lợi của bạn?", cta_sub: "Miễn phí, bảo mật, mất 3 phút.",
+        cta_btn: "Bắt đầu", cta_note: "Không cần tài khoản. Thông tin của bạn không bao giờ được bán.",
+        landing_feedback: "Thấy hữu ích?", landing_feedback_link: "Chia sẻ phản hồi của bạn →",
+        quiz_step: "Bước", quiz_of: "trong", quiz_pct: "% hoàn thành",
+        quiz_back: "Quay lại", quiz_continue: "Tiếp tục", quiz_finish: "Xem kết quả của tôi",
+        quiz_confidential: "🔒 Câu trả lời của bạn là bí mật và không bao giờ được chia sẻ.",
+        q1_title: "Có bao nhiêu người trong hộ gia đình của bạn?",
+        q1_sub: "Bao gồm các thành viên gia đình và những người khác mà bạn chia sẻ tài chính — thường là những người bạn sẽ khai chung trong một tờ khai thuế. Không tính những người thuê phòng quản lý tài chính riêng.",
+        q1_exp: "Quy mô hộ gia đình xác định giới hạn thu nhập và mức phúc lợi cho hầu hết các chương trình.",
+        q1_opt_1: "1 người", q1_opt_2: "2 người", q1_opt_3: "3 người", q1_opt_4: "4 người",
+        q1_opt_5: "5 người", q1_opt_6: "6 người", q1_opt_7: "7+ người",
+        q2_title: "Các thành viên trong hộ gia đình của bạn bao nhiêu tuổi?",
+        q2_sub: "Chọn tất cả các nhóm tuổi áp dụng cho mọi người trong hộ gia đình của bạn.",
+        q2_exp: "Các chương trình khác nhau phục vụ các nhóm tuổi khác nhau — người cao tuổi nhận được phúc lợi khác với gia đình có con nhỏ hoặc người trong độ tuổi lao động.",
+        q2_opt_1: "Dưới 6 tuổi", q2_opt_2: "6–13", q2_opt_3: "13–17", q2_opt_4: "18",
+        q2_opt_5: "19–25", q2_opt_6: "26–59", q2_opt_7: "60–61", q2_opt_8: "62–64", q2_opt_9: "65+",
+        q3_title: "Tổng thu nhập hàng năm của hộ gia đình bạn là bao nhiêu?",
+        q3_sub: "Bao gồm tất cả thu nhập trước thuế — tiền lương, tự kinh doanh, phúc lợi, tiền cấp dưỡng con cái, thanh toán tàn tật, v.v. (tổng hàng năm)",
+        q3_exp: "Thu nhập là yếu tố chính cho hầu hết các chương trình phúc lợi. Điều này giúp chúng tôi tìm các chương trình có giới hạn thu nhập mà bạn đủ điều kiện.",
+        q3_opt_1: "Không có thu nhập", q3_opt_2: "Dưới $20,000", q3_opt_3: "$20,000–$40,000",
+        q3_opt_4: "$40,000–$60,000", q3_opt_5: "$60,000–$80,000", q3_opt_6: "$80,000–$120,000",
+        q3_opt_7: "$120,000–$180,000", q3_opt_8: "Trên $180,000",
+        q4_title: "Tình trạng việc làm hiện tại của bạn là gì?",
+        q4_sub: "Chọn điều mô tả tốt nhất tình huống của bạn.",
+        q4_exp: "Tình trạng việc làm ảnh hưởng đến tư cách nhận trợ cấp thất nghiệp, đào tạo nghề và các chương trình liên quan đến công việc.",
+        q4_opt_1: "Làm toàn thời gian", q4_opt_2: "Làm bán thời gian", q4_opt_3: "Tự kinh doanh",
+        q4_opt_4: "Thất nghiệp (đang tìm việc)", q4_opt_5: "Không thể làm việc (tàn tật/y tế)",
+        q5_title: "Bạn có thuộc bất kỳ trường hợp nào dưới đây không? (Chọn tất cả các mục áp dụng)",
+        q5_sub: "Những điều này giúp chúng tôi tìm thêm các chương trình bạn có thể đủ điều kiện.",
+        q5_exp: "Cựu chiến binh, người tị nạn, thanh thiếu niên trong chăm sóc nuôi dưỡng, người khuyết tật và gia đình có con cái có quyền truy cập vào các chương trình chuyên biệt.",
+        q5_opt_1: "Cựu chiến binh hoặc quân nhân", q5_opt_2: "Người tị nạn hoặc người nhập cư mới",
+        q5_opt_3: "Thành viên bộ lạc", q5_opt_4: "Khuyết tật, mù hoặc có bệnh mãn tính",
+        q5_opt_5: "Thanh thiếu niên trong chăm sóc nuôi dưỡng", q5_opt_6: "Đang mang thai hoặc cho con bú",
+        q5_opt_7: "Chăm sóc trẻ em dưới 18 tuổi", q5_opt_8: "Nạn nhân bạo lực gia đình",
+        q5_opt_9: "Cần hỗ trợ pháp lý", q5_opt_10: "Không có điều nào ở trên",
+        q6_title: "Bạn có đang đăng ký bất kỳ chương trình nào dưới đây không? (Chọn tất cả các mục áp dụng)",
+        q6_sub: "Đăng ký một số chương trình có thể khiến bạn đủ điều kiện cho các chương trình khác.",
+        q6_exp: "Nhiều chương trình phúc lợi mở rộng điều kiện hưởng cho những người đã đăng ký các chương trình liên quan — chọn những gì bạn đang đăng ký giúp chúng tôi tìm thêm chương trình bạn đủ điều kiện.",
+        q6_opt_1: "CalFresh hoặc Chương trình Hỗ trợ Dinh dưỡng Bổ sung (SNAP)",
+        q6_opt_2: "Medi-Cal (Medicaid)", q6_opt_3: "Medicare",
+        q6_opt_4: "Thu nhập An sinh Bổ sung (SSI) và Chương trình Bổ sung Tiểu bang (SSP)",
+        q6_opt_5: "CalWORKs hoặc Hỗ trợ Tạm thời cho Gia đình Khó khăn (TANF)",
+        q6_opt_6: "Chương trình Hỗ trợ Năng lượng Gia đình Thu nhập Thấp (LIHEAP)",
+        q6_opt_7: "Giá Điện Thay thế California (CARE) hoặc Hỗ trợ Điện Gia đình (FERA)",
+        q6_opt_8: "Mục 8 / Nhà ở Công cộng Liên bang",
+        q6_opt_9: "Phụ nữ, Trẻ sơ sinh và Trẻ em (WIC)",
+        q6_opt_10: "Cứu trợ Chung Quận San Diego", q6_opt_11: "Không có điều nào ở trên",
+        results_ready: "Kết quả của bạn đã sẵn sàng",
+        results_heading_prefix: "Bạn có thể đủ điều kiện cho", results_heading_suffix: "chương trình",
+        results_check: "cần kiểm tra",
+        results_based_on: "Dựa trên hộ gia đình của bạn gồm", results_with_income: "với thu nhập hàng năm",
+        results_disclaimer_title: "⚠️ Tuyên bố từ chối quan trọng",
+        results_disclaimer_body: "Những kết quả này là ước tính dựa trên các tiêu chí hưởng quyền chung. Các chương trình khác nhau định nghĩa \"hộ gia đình\" và \"thu nhập\" khác nhau và có thể có các yêu cầu bổ sung. Những kết quả này không đảm bảo tư cách hưởng của bạn. Vui lòng xác minh bằng cách liên hệ trực tiếp với từng chương trình. Kết quả cố ý bao gồm rộng — chúng tôi muốn cho bạn thấy một chương trình bạn có thể không đủ điều kiện hơn là bỏ lỡ một chương trình bạn có.",
+        results_stat_household: "Quy mô hộ gia đình", results_stat_income: "Thu nhập hàng năm",
+        results_stat_likely: "Có khả năng đủ điều kiện", results_stat_check: "Đáng kiểm tra",
+        results_likely: "Có khả năng đủ điều kiện", results_may: "Cũng có thể đủ điều kiện",
+        results_likely_desc: "Dựa trên câu trả lời của bạn, bạn có vẻ đáp ứng các tiêu chí hưởng quyền cho các chương trình này.",
+        results_may_desc: "Bạn có thể đủ điều kiện thông qua các tiêu chí mà cuộc khảo sát không thể xác minh đầy đủ. Liên hệ từng chương trình để xác nhận.",
+        results_program: "chương trình", results_programs: "chương trình",
+        results_no_match_sub: "Bạn vẫn có thể tìm thấy các chương trình hữu ích trong các danh mục khác hoặc khám phá thư mục đầy đủ để biết thêm tùy chọn.",
+        results_view_all: "Xem tất cả kết quả của tôi", results_browse_full: "Duyệt thư mục đầy đủ",
+        results_empty: "Dựa trên câu trả lời của bạn, bạn có thể hiện không đủ điều kiện. Tuy nhiên, bạn có thể:",
+        results_browse: "Duyệt tất cả chương trình",
+        results_start_over: "Bắt đầu lại", results_print: "Tải xuống / In kết quả",
+        results_directory: "Khám phá thư mục đầy đủ",
+        dir_heading: "Duyệt tất cả 165 chương trình",
+        dir_sub: "Khám phá tất cả 165 chương trình hỗ trợ có sẵn tại Quận San Diego.",
+        dir_search: "Tìm kiếm chương trình...",
+        income_max: "Thu nhập Hàng năm Tối đa",
+        income_person: "người", income_people: "người",
+        income_your_household: "Hộ gia đình của bạn",
+        income_hide: "Ẩn tất cả quy mô hộ gia đình", income_show: "Hiển thị tất cả quy mô hộ gia đình",
+        income_highlighted: "Quy mô hộ gia đình của bạn được đánh dấu",
+        income_hardship: "Đánh giá Khó khăn CMS",
+        income_hardship_sub: "Có thể yêu cầu Đánh giá Khó khăn CMS cho các hộ gia đình có thu nhập giữa:",
+        prog_apply: "Đăng ký / Tìm hiểu thêm",
+        about_tagline: "Chúng tôi xây dựng các công cụ kết nối mọi người với các chương trình họ đã kiếm được — miễn phí, riêng tư và không có rào cản.",
+        about_vision: "Tầm nhìn", about_mission: "Sứ mệnh",
+        about_story_heading: "Câu chuyện của chúng tôi",
+        about_story_1: "Khi người sáng lập Public Programs Foundation, Ashley L. Salas, tìm kiếm một danh sách các chương trình mà các thành viên cộng đồng có thể dựa vào trong thời điểm khó khăn, bà không tìm thấy dễ dàng. Bà hỏi xung quanh và không ai biết về danh sách đó. Vì vậy, bà thành lập Public Programs Foundation để xây dựng nó.",
+        about_story_2: "Chúng tôi biết rằng chúng tôi đang thiếu các chương trình. Nếu bạn biết các chương trình chưa có trong Trình điều hướng phúc lợi, vui lòng gửi email cho chúng tôi tại info@public-programs.org và chúng tôi sẽ thêm chúng vào.",
+        about_story_3: "Chúng tôi đang bắt đầu ở San Diego, California, Hoa Kỳ, vì đó là nơi chúng tôi đang ở, nhưng mục tiêu của chúng tôi là Trình điều hướng phúc lợi phục vụ mọi quận, tiểu bang và lãnh thổ Hoa Kỳ.",
+        about_privacy_heading: "Quyền riêng tư của bạn",
+        about_privacy_body: "Thông tin của bạn được bảo mật và không bao giờ được lưu trữ, chia sẻ hoặc bán. Chúng tôi chỉ sử dụng câu trả lời của bạn để hiển thị các chương trình phù hợp trong phiên này. Không có dữ liệu nào được thu thập hoặc lưu giữ sau khi bạn rời khỏi Trình điều hướng phúc lợi.",
+        about_access_heading: "Khả năng tiếp cận",
+        about_access_sub: "Trình điều hướng phúc lợi được thiết kế để mọi người đều có thể tiếp cận:",
+        about_card_free: "Miễn phí", about_card_free_desc: "Không mất phí, không cần tài khoản",
+        about_card_mobile: "Thân thiện với di động", about_card_mobile_desc: "Hoạt động trên điện thoại, máy tính bảng và máy tính",
+        about_card_lang: "3 ngôn ngữ", about_card_lang_desc: "Tiếng Anh, tiếng Tây Ban Nha và tiếng Việt",
+        about_card_comp: "Toàn diện", about_card_comp_desc: "Hơn 165 chương trình và đang phát triển",
+        about_help_heading: "Bạn có thể giúp như thế nào",
+        about_help_sub: "Có một số cách bạn có thể hỗ trợ sứ mệnh của chúng tôi:",
+        about_help_share: "Chia sẻ công cụ", about_help_share_desc: "Nói với ai đó trong cộng đồng của bạn có thể được hưởng lợi",
+        about_help_report: "Báo cáo chương trình còn thiếu",
+        about_help_feedback: "Chia sẻ phản hồi",
+        about_help_spread: "Lan truyền thông tin", about_help_spread_desc: "Giúp chúng tôi tiếp cận nhiều người hơn cần tài nguyên này",
+        about_contact_heading: "Liên hệ",
+        about_contact_sub: "Có câu hỏi hoặc muốn đóng góp? Chúng tôi rất muốn nghe từ bạn.",
+        footer_ein: "Public Programs Foundation là tổ chức 501(c)(3).\u00a0\u00a0EIN 93-4712731.",
+        cat_food: "Thực phẩm", cat_healthcare: "Chăm sóc sức khỏe", cat_mental_healthcare: "Sức khỏe tâm thần",
+        cat_health_necessities: "Nhu yếu phẩm y tế", cat_income: "Thu nhập", cat_housing: "Nhà ở",
+        cat_utility: "Tiện ích", cat_transportation: "Giao thông", cat_legal: "Pháp lý",
+        cat_day_care: "Chăm sóc trẻ", cat_caretaker: "Người chăm sóc", cat_entertainment: "Giải trí",
+        cat_taxes: "Thuế", cat_technology: "Công nghệ", cat_education: "Giáo dục", cat_all: "Tất cả",
+      },
+    };
+    // ── End Language Infrastructure ──────────────────────────────────────────
 
     const Icon = ({ name, size = 18, color = "currentColor", ariaHidden = true }) => {
       const icons = {
@@ -1204,14 +1585,7 @@
       return null;
     };
 
-    const quizSteps = [
-      { id: "household_size", title: "How many people are in your household?", subtitle: "Include family members and others you share finances with — typically the people you'd include on a joint tax return. Do not count roommates who manage their finances separately.", explanation: "Household size determines income limits and benefit amounts for most programs.", type: "choice", options: ["1 person", "2 people", "3 people", "4 people", "5 people", "6 people", "7+ people"] },
-      { id: "age", title: "What are the ages of people in your household?", subtitle: "Select all age ranges that apply to everyone in your household.", explanation: "Different programs serve different age groups - seniors get different benefits than families with children or working-age adults.", type: "choice", options: ["Under 6", "6–13", "13–17", "18", "19–25", "26–59", "60–61", "62–64", "65+"] },
-      { id: "annual_income", title: "What is your total household annual income?", subtitle: "Include all income before taxes—wages, self-employment, benefits, child support, disability payments, etc. (yearly total)", explanation: "Income is the main factor for most benefit programs. This helps us find programs with income limits you qualify for.", type: "choice", options: ["No income", "Under $20,000", "$20,000–$40,000", "$40,000–$60,000", "$60,000–$80,000", "$80,000–$120,000", "$120,000–$180,000", "Over $180,000"] },
-      { id: "employment", title: "What is your current employment status?", subtitle: "Select what best describes your situation.", explanation: "Employment status affects eligibility for unemployment benefits, job training, and work-related programs.", type: "choice", options: ["Employed full-time", "Employed part-time", "Self-employed", "Unemployed (looking for work)", "Unable to work (disability/medical)"] },
-      { id: "special_status", title: "Do any of these apply to you? (Select all that apply)", subtitle: "These help us find additional programs you may qualify for.", explanation: "Veterans, refugees, foster youth, people with disabilities, and families with children have access to specialized programs.", type: "choice", options: ["Veteran or military", "Refugee or recent immigrant", "Tribal member", "Disabled, blind, or have a chronic illness", "Foster youth or in foster care", "Pregnant or nursing", "Caring for children under 18", "Domestic violence survivor", "Need legal assistance", "None of these"] },
-      { id: "enrolled_programs", title: "Are you currently enrolled in any of these programs? (Select all that apply)", subtitle: "Enrollment in some programs can qualify you for others.", explanation: "Many benefit programs extend eligibility to people already enrolled in related programs — selecting what you're currently enrolled in helps us find more programs you qualify for.", type: "choice", options: ["CalFresh or Supplemental Nutrition Assistance Program (SNAP)", "Medi-Cal (Medicaid)", "Medicare", "Supplemental Security Income (SSI) and State Supplementary Program (SSP)", "CalWORKs or Temporary Assistance for Needy Families (TANF)", "Low Income Home Energy Assistance Program (LIHEAP)", "California Alternate Rates for Energy (CARE) or Family Electric Rate Assistance Program (FERA)", "Section 8 / Federal Public Housing", "Women, Infants, and Children (WIC)", "San Diego County General Relief", "None of the above"] },
-    ];
+    // quizSteps moved inside Quiz component (needs t() for translations)
 
     const CATEGORY_LABELS = {
       food: 'Food', healthcare: 'Healthcare', 'mental healthcare': 'Mental Health', 'health necessities': 'Health Necessities', income: 'Income', housing: 'Housing', utility: 'Utilities',
@@ -1245,6 +1619,7 @@
     };
 
     const IncomeLimitsTable = ({ programId, householdSize }) => {
+      const t = useT();
       const [mobileOpen, setMobileOpen] = React.useState(false);
       const incomeLimits = [];
       for (let sz = 1; sz <= 7; sz++) {
@@ -1261,7 +1636,7 @@
             const isUser = householdSize && size === householdSize;
             return (
               <div key={size} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 8px', borderRadius: 6, fontSize: 12, background: isUser ? 'var(--jade)' : 'rgba(0,0,0,0.03)', color: isUser ? 'white' : 'var(--text-secondary)', fontWeight: isUser ? 700 : 400, border: isUser ? 'none' : '1px solid transparent' }}>
-                <span>{size === 7 ? '7+' : size} {size === 1 ? 'person' : 'people'}</span>
+                <span>{size === 7 ? '7+' : size} {size === 1 ? t('income_person') : t('income_people')}</span>
                 <span>${limit.toLocaleString()}</span>
               </div>
             );
@@ -1276,7 +1651,7 @@
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '3px 8px' }}>
           {hardshipRanges.map(({ size, low, high }) => (
             <div key={size} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 8px', borderRadius: 6, fontSize: 12, background: 'rgba(0,0,0,0.03)', color: 'var(--text-secondary)', border: '1px solid transparent' }}>
-              <span>{size === 7 ? '7+' : size} {size === 1 ? 'person' : 'people'}</span>
+              <span>{size === 7 ? '7+' : size} {size === 1 ? t('income_person') : t('income_people')}</span>
               <span>${low.toLocaleString()} – ${high.toLocaleString()}</span>
             </div>
           ))}
@@ -1284,16 +1659,16 @@
       );
       return (
         <div style={{ margin: '12px 0', padding: '12px', background: 'rgba(26,107,90,0.04)', borderRadius: 10, border: '1px solid rgba(26,107,90,0.12)' }}>
-          <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--jade-dark)', marginBottom: 10 }}>Maximum Annual Income</div>
+          <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--jade-dark)', marginBottom: 10 }}>{t('income_max')}</div>
           <div className="income-table-desktop"><TableContent /></div>
-          {userLimit && <div style={{ fontSize: 12, color: 'var(--jade-dark)', marginBottom: 6, fontWeight: 600 }}>Your household ({userLimit.size}): <span style={{ color: 'var(--jade)' }}>${userLimit.limit.toLocaleString()}/yr max</span></div>}
-          <button className="income-toggle-btn" onClick={() => setMobileOpen(o => !o)} aria-expanded={mobileOpen} aria-controls={`income-table-${programId}`}>{mobileOpen ? 'Hide' : 'Show'} all household sizes</button>
+          {userLimit && <div style={{ fontSize: 12, color: 'var(--jade-dark)', marginBottom: 6, fontWeight: 600 }}>{t('income_your_household')} ({userLimit.size}): <span style={{ color: 'var(--jade)' }}>${userLimit.limit.toLocaleString()}/yr max</span></div>}
+          <button className="income-toggle-btn" onClick={() => setMobileOpen(o => !o)} aria-expanded={mobileOpen} aria-controls={`income-table-${programId}`}>{mobileOpen ? t('income_hide') : t('income_show')}</button>
           <div id={`income-table-${programId}`} className={mobileOpen ? 'income-table-mobile-open' : ''} style={{ display: 'none' }}><TableContent /></div>
-          {householdSize && <div style={{ fontSize: 11, color: 'var(--jade)', marginTop: 8, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}><span aria-hidden="true">▲</span> Your household size is highlighted</div>}
+          {householdSize && <div style={{ fontSize: 11, color: 'var(--jade)', marginTop: 8, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}><span aria-hidden="true">▲</span> {t('income_highlighted')}</div>}
           {hardshipRanges.length > 0 && (
             <div style={{ marginTop: 14, paddingTop: 12, borderTop: '1px solid rgba(26,107,90,0.15)' }}>
-              <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--jade-dark)', marginBottom: 6 }}>CMS Hardship Evaluation</div>
-              <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8, lineHeight: 1.5 }}>May request a CMS Hardship Evaluation for households with incomes between:</div>
+              <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--jade-dark)', marginBottom: 6 }}>{t('income_hardship')}</div>
+              <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8, lineHeight: 1.5 }}>{t('income_hardship_sub')}</div>
               <HardshipTableContent />
             </div>
           )}
@@ -1323,24 +1698,28 @@
     };
 
     const ProgramCard = ({ prog, householdSize, tagVariant }) => {
-      const catLabel = CATEGORY_LABELS[prog.category] || prog.category;
+      const t = useT();
+      const progText = useProgText();
+      const catLabel = t('cat_' + prog.category.replace(/\s+/g, '_')) || CATEGORY_LABELS[prog.category] || prog.category;
       const tagClass = tagVariant === 'gray' ? 'tag tag-gray' : 'tag tag-green';
       const isContactLink = prog.link && prog.link.startsWith('Contact');
+      const displayName = progText.name(prog);
+      const displayDesc = progText.desc(prog);
       return (
         <div className="program-card" style={{ display: 'flex', flexDirection: 'column' }}>
           <div style={{ marginBottom: 12 }}>
             <span className={tagClass} style={{ fontSize: 11, letterSpacing: '0.04em', textTransform: 'uppercase', fontWeight: 700 }}>{catLabel}</span>
           </div>
-          <div style={{ marginBottom: 10, flex: 1 }}><DescLines text={prog.description} /></div>
+          <div style={{ marginBottom: 10, flex: 1 }}><DescLines text={displayDesc} /></div>
           <EligibilityFlags programId={prog.id} />
           <IncomeLimitsTable programId={prog.id} householdSize={householdSize} />
           <div style={{ marginTop: 16, paddingTop: 14, borderTop: '1px solid var(--border)' }}>
-            <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: 15, fontWeight: 500, lineHeight: 1.35, marginBottom: 12, color: 'var(--text-primary)' }}>{prog.name}</h3>
+            <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: 15, fontWeight: 500, lineHeight: 1.35, marginBottom: 12, color: 'var(--text-primary)' }}>{displayName}</h3>
             {isContactLink ? (
               <div style={{ background: 'rgba(26,107,90,0.06)', border: '1px solid rgba(26,107,90,0.15)', borderRadius: 8, padding: '8px 12px', fontSize: 12, color: 'var(--jade-dark)', fontWeight: 500 }}>{prog.link}</div>
             ) : (
-              <a href={prog.link} target="_blank" rel="noreferrer" onClick={() => track('program_link_click', { program: prog.name, category: prog.category })} aria-label={`Apply or learn more about ${prog.name} (opens in new tab)`} className="btn-primary" style={{ fontSize: 12, padding: '9px 16px', width: '100%', justifyContent: 'center', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8, boxSizing: 'border-box' }}>
-                Apply / Learn more <Icon name="arrow" size={12} aria-hidden="true" />
+              <a href={prog.link} target="_blank" rel="noreferrer" onClick={() => track('program_link_click', { program: prog.name, category: prog.category })} aria-label={`Apply or learn more about ${displayName} (opens in new tab)`} className="btn-primary" style={{ fontSize: 12, padding: '9px 16px', width: '100%', justifyContent: 'center', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8, boxSizing: 'border-box' }}>
+                {t('prog_apply')} <Icon name="arrow" size={12} aria-hidden="true" />
               </a>
             )}
           </div>
@@ -1349,12 +1728,33 @@
     };
 
     const Quiz = ({ setView, setAnswers, onStepChange }) => {
+      const t = useT();
+      // quizSteps options are kept as English strings (internal values stored in answers)
+      // so that Results parsing (householdSizeMap, incomeMap, special_status checks) works correctly.
+      // Translated labels are derived separately via t() for display only.
+      const quizStepDefs = [
+        { id: "household_size", type: "choice", options: ["1 person","2 people","3 people","4 people","5 people","6 people","7+ people"] },
+        { id: "age", type: "choice", options: ["Under 6","6\u201313","13\u201317","18","19\u201325","26\u201359","60\u201361","62\u201364","65+"] },
+        { id: "annual_income", type: "choice", options: ["No income","Under $20,000","$20,000\u2013$40,000","$40,000\u2013$60,000","$60,000\u2013$80,000","$80,000\u2013$120,000","$120,000\u2013$180,000","Over $180,000"] },
+        { id: "employment", type: "choice", options: ["Employed full-time","Employed part-time","Self-employed","Unemployed (looking for work)","Unable to work (disability/medical)"] },
+        { id: "special_status", type: "choice", options: ["Veteran or military","Refugee or recent immigrant","Tribal member","Disabled, blind, or have a chronic illness","Foster youth or in foster care","Pregnant or nursing","Caring for children under 18","Domestic violence survivor","Need legal assistance","None of these"] },
+        { id: "enrolled_programs", type: "choice", options: ["CalFresh or Supplemental Nutrition Assistance Program (SNAP)","Medi-Cal (Medicaid)","Medicare","Supplemental Security Income (SSI) and State Supplementary Program (SSP)","CalWORKs or Temporary Assistance for Needy Families (TANF)","Low Income Home Energy Assistance Program (LIHEAP)","California Alternate Rates for Energy (CARE) or Family Electric Rate Assistance Program (FERA)","Section 8 / Federal Public Housing","Women, Infants, and Children (WIC)","San Diego County General Relief","None of the above"] },
+      ];
+      const stepTitles = [
+        { title: t('q1_title'), subtitle: t('q1_sub'), explanation: t('q1_exp'), labels: [t('q1_opt_1'),t('q1_opt_2'),t('q1_opt_3'),t('q1_opt_4'),t('q1_opt_5'),t('q1_opt_6'),t('q1_opt_7')] },
+        { title: t('q2_title'), subtitle: t('q2_sub'), explanation: t('q2_exp'), labels: [t('q2_opt_1'),t('q2_opt_2'),t('q2_opt_3'),t('q2_opt_4'),t('q2_opt_5'),t('q2_opt_6'),t('q2_opt_7'),t('q2_opt_8'),t('q2_opt_9')] },
+        { title: t('q3_title'), subtitle: t('q3_sub'), explanation: t('q3_exp'), labels: [t('q3_opt_1'),t('q3_opt_2'),t('q3_opt_3'),t('q3_opt_4'),t('q3_opt_5'),t('q3_opt_6'),t('q3_opt_7'),t('q3_opt_8')] },
+        { title: t('q4_title'), subtitle: t('q4_sub'), explanation: t('q4_exp'), labels: [t('q4_opt_1'),t('q4_opt_2'),t('q4_opt_3'),t('q4_opt_4'),t('q4_opt_5')] },
+        { title: t('q5_title'), subtitle: t('q5_sub'), explanation: t('q5_exp'), labels: [t('q5_opt_1'),t('q5_opt_2'),t('q5_opt_3'),t('q5_opt_4'),t('q5_opt_5'),t('q5_opt_6'),t('q5_opt_7'),t('q5_opt_8'),t('q5_opt_9'),t('q5_opt_10')] },
+        { title: t('q6_title'), subtitle: t('q6_sub'), explanation: t('q6_exp'), labels: [t('q6_opt_1'),t('q6_opt_2'),t('q6_opt_3'),t('q6_opt_4'),t('q6_opt_5'),t('q6_opt_6'),t('q6_opt_7'),t('q6_opt_8'),t('q6_opt_9'),t('q6_opt_10'),t('q6_opt_11')] },
+      ];
       const [step, setStep] = useState(0);
       const [answers, setLocalAnswers] = useState({});
       const [selected, setSelected] = useState(null);
       const [selectedMultiple, setSelectedMultiple] = useState([]);
-      const current = quizSteps[step];
-      const progress = ((step + 1) / quizSteps.length) * 100;
+      const current = quizStepDefs[step];
+      const currentT = stepTitles[step];
+      const progress = ((step + 1) / quizStepDefs.length) * 100;
       const isMultiSelect = current.id === "age" || current.id === "special_status" || current.id === "enrolled_programs";
       React.useEffect(() => {
         const handler = () => track('quiz_abandon', { step: step + 1, trigger: 'unload' });
@@ -1370,7 +1770,7 @@
         if (isMultiSelect && selectedMultiple.length === 0) return;
         if (!isMultiSelect && !selected) return;
         setLocalAnswers(newAnswers);
-        if (step < quizSteps.length - 1) { track('quiz_step', { step: current.id }); setStep(step + 1); onStepChange(step + 1); setSelected(null); setSelectedMultiple([]); }
+        if (step < quizStepDefs.length - 1) { track('quiz_step', { step: current.id }); setStep(step + 1); onStepChange(step + 1); setSelected(null); setSelectedMultiple([]); }
         else { track('quiz_complete'); setAnswers(newAnswers); setView("results"); }
       };
       const handleBack = () => {
@@ -1378,8 +1778,8 @@
         track('quiz_back', { from_step: step + 1 });
         setStep(step - 1);
         onStepChange(step - 1);
-        const prevAnswer = answers[quizSteps[step - 1].id];
-        const prevIsMulti = ["age", "special_status", "enrolled_programs"].includes(quizSteps[step - 1].id);
+        const prevAnswer = answers[quizStepDefs[step - 1].id];
+        const prevIsMulti = ["age", "special_status", "enrolled_programs"].includes(quizStepDefs[step - 1].id);
         if (prevIsMulti) { setSelectedMultiple(Array.isArray(prevAnswer) ? prevAnswer : []); setSelected(null); }
         else { setSelected(prevAnswer || null); setSelectedMultiple([]); }
       };
@@ -1387,41 +1787,44 @@
         <div id="main-content" style={{ minHeight: "calc(100vh - 64px)", background: "var(--cream)", display: "flex", flexDirection: "column", alignItems: "center", padding: "40px 24px" }}>
           <div style={{ width: "100%", maxWidth: 560, marginBottom: 40 }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-              <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text-muted)" }}>Step {step + 1} of {quizSteps.length}</span>
-              <span style={{ fontSize: 13, color: "var(--text-muted)" }}>{Math.round(progress)}% complete</span>
+              <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text-muted)" }}>{t('quiz_step')} {step + 1} {t('quiz_of')} {quizStepDefs.length}</span>
+              <span style={{ fontSize: 13, color: "var(--text-muted)" }}>{Math.round(progress)}{t('quiz_pct')}</span>
             </div>
             <div className="progress-track"><div className="progress-fill" style={{ width: `${progress}%` }} /></div>
           </div>
           <div className="animate-fadeUp" style={{ width: "100%", maxWidth: 560 }}>
-            <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 26, fontWeight: 500, lineHeight: 1.25, marginBottom: 8, letterSpacing: "-0.02em" }}>{current.title}</h2>
-            <p style={{ color: "var(--text-secondary)", fontSize: 14, marginBottom: 16, lineHeight: 1.6 }}>{current.subtitle}</p>
-            <div className="info-box" style={{ marginBottom: 24 }}>{current.explanation}</div>
+            <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 26, fontWeight: 500, lineHeight: 1.25, marginBottom: 8, letterSpacing: "-0.02em" }}>{currentT.title}</h2>
+            <p style={{ color: "var(--text-secondary)", fontSize: 14, marginBottom: 16, lineHeight: 1.6 }}>{currentT.subtitle}</p>
+            <div className="info-box" style={{ marginBottom: 24 }}>{currentT.explanation}</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {current.options.map((opt, i) => {
                 const isSelected = isMultiSelect ? selectedMultiple.includes(opt) : selected === opt;
+                const label = currentT.labels[i] || opt;
                 return (
                   <div key={opt} role="button" tabIndex={0} aria-pressed={isSelected} className={`choice-card animate-fadeUp ${isSelected ? "selected" : ""}`} style={{ animationDelay: `${Math.min(i * 0.08, 0.3)}s` }} onClick={() => handleOptionClick(opt)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleOptionClick(opt); } }}>
                     <div className="choice-dot" aria-hidden="true">{isSelected && <Icon name="check" size={10} color="white" />}</div>
-                    {opt}
+                    {label}
                   </div>
                 );
               })}
             </div>
             <div style={{ display: "flex", gap: 12, marginTop: 32, justifyContent: "space-between" }}>
-              <button className="btn-ghost" onClick={handleBack} aria-label="Go back to previous step" style={{ display: "flex", alignItems: "center", gap: 6 }}><Icon name="back" size={16} aria-hidden="true" /> Back</button>
+              <button className="btn-ghost" onClick={handleBack} aria-label="Go back to previous step" style={{ display: "flex", alignItems: "center", gap: 6 }}><Icon name="back" size={16} aria-hidden="true" /> {t('quiz_back')}</button>
               <button className="btn-primary" onClick={handleNext} style={{ opacity: isMultiSelect ? (selectedMultiple.length > 0 ? 1 : 0.5) : (selected ? 1 : 0.5), cursor: isMultiSelect ? (selectedMultiple.length > 0 ? "pointer" : "not-allowed") : (selected ? "pointer" : "not-allowed") }} disabled={isMultiSelect ? selectedMultiple.length === 0 : !selected}>
-                {step === quizSteps.length - 1 ? "See my results" : "Continue"} <Icon name="arrow" size={16} />
+                {step === quizStepDefs.length - 1 ? t('quiz_finish') : t('quiz_continue')} <Icon name="arrow" size={16} />
               </button>
             </div>
           </div>
           <div style={{ marginTop: 40, maxWidth: 560, width: "100%", textAlign: "center" }}>
-            <p style={{ fontSize: 12, color: "var(--text-muted)" }}>🔒 Your answers are confidential and never shared.</p>
+            <p style={{ fontSize: 12, color: "var(--text-muted)" }}>{t('quiz_confidential')}</p>
           </div>
         </div>
       );
     };
 
     const Results = ({ answers, setView }) => {
+      const t = useT();
+      const progText = useProgText();
       const [selectedCategory, setSelectedCategory] = useState(null);
       const householdSizeMap = { "1 person": 1, "2 people": 2, "3 people": 3, "4 people": 4, "5 people": 5, "6 people": 6, "7+ people": 7 };
       const incomeMap = { "No income": 0, "Under $20,000": 10000, "$20,000\u2013$40,000": 30000, "$40,000\u2013$60,000": 50000, "$60,000\u2013$80,000": 70000, "$80,000\u2013$120,000": 100000, "$120,000\u2013$180,000": 150000, "Over $180,000": 200000 };
@@ -1460,6 +1863,7 @@
       React.useEffect(() => {
         track('results_shown', { likely_count: likelyPrograms.length, maybe_count: mayPrograms.length, total: tieredPrograms.length, zero_results: tieredPrograms.length === 0 });
       }, []);
+      const catLabel = (cat) => t('cat_' + cat.replace(/\s+/g, '_')) || CATEGORY_LABELS[cat] || cat.charAt(0).toUpperCase() + cat.slice(1);
       const SectionHeader = ({ tier, count }) => (
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '36px 0 20px', paddingBottom: 14, borderBottom: `2px solid ${tier === 'likely' ? 'var(--jade)' : 'var(--amber)'}` }}>
           <div style={{ width: 32, height: 32, borderRadius: 8, flexShrink: 0, background: tier === 'likely' ? 'var(--jade)' : 'var(--amber)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -1467,11 +1871,11 @@
           </div>
           <div>
             <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: 18, fontWeight: 500, margin: 0, color: 'var(--text-primary)' }}>
-              {tier === 'likely' ? 'Likely Eligible' : 'May Also Qualify'}
-              <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: 13, fontWeight: 600, marginLeft: 10, color: tier === 'likely' ? 'var(--jade)' : 'var(--terracotta)' }}>{count} program{count !== 1 ? 's' : ''}</span>
+              {tier === 'likely' ? t('results_likely') : t('results_may')}
+              <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: 13, fontWeight: 600, marginLeft: 10, color: tier === 'likely' ? 'var(--jade)' : 'var(--terracotta)' }}>{count} {count !== 1 ? t('results_programs') : t('results_program')}</span>
             </h3>
             <p style={{ fontSize: 12, color: 'var(--text-muted)', margin: '3px 0 0', lineHeight: 1.4 }}>
-              {tier === 'likely' ? 'Based on your answers, you appear to meet the eligibility criteria for these programs.' : "You may qualify through criteria the quiz couldn't fully verify. Contact each program to confirm."}
+              {tier === 'likely' ? t('results_likely_desc') : t('results_may_desc')}
             </p>
           </div>
         </div>
@@ -1481,44 +1885,44 @@
           <div aria-live="polite" aria-atomic="true" style={{ position: "absolute", left: "-9999px" }}>{tieredPrograms.length} programs found. {likelyPrograms.length} likely eligible, {mayPrograms.length} worth checking.</div>
           <div style={{ maxWidth: 1200, margin: "0 auto" }}>
             <div className="animate-fadeUp" style={{ marginBottom: 32 }}>
-              <div className="tag tag-green" style={{ marginBottom: 12 }}><Icon name="check" size={12} aria-hidden="true" /> Your results are ready</div>
+              <div className="tag tag-green" style={{ marginBottom: 12 }}><Icon name="check" size={12} aria-hidden="true" /> {t('results_ready')}</div>
               <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 36, fontWeight: 500, letterSpacing: "-0.03em", lineHeight: 1.1, marginBottom: 8 }}>
-                You may qualify for <em style={{ color: "var(--jade)", fontStyle: "italic" }}>{likelyPrograms.length} programs</em>
-                {mayPrograms.length > 0 && <span style={{ fontSize: 22, color: 'var(--text-secondary)', fontStyle: 'normal' }}> + {mayPrograms.length} to check</span>}
+                {t('results_heading_prefix')} <em style={{ color: "var(--jade)", fontStyle: "italic" }}>{likelyPrograms.length} {t('results_programs')}</em>
+                {mayPrograms.length > 0 && <span style={{ fontSize: 22, color: 'var(--text-secondary)', fontStyle: 'normal' }}> + {mayPrograms.length} {t('results_check')}</span>}
               </h2>
-              <p style={{ color: "var(--text-secondary)", fontSize: 15 }}>Based on your household of {householdSize} with annual income of ${annualIncome.toLocaleString()}</p>
+              <p style={{ color: "var(--text-secondary)", fontSize: 15 }}>{t('results_based_on')} {householdSize} {t('results_with_income')} ${annualIncome.toLocaleString()}</p>
             </div>
             <div className="disclaimer-box">
-              <div className="disclaimer-title">⚠️ Important Disclaimer</div>
-              These results are an estimate based on general eligibility criteria. Different programs define "household" and "income" differently and may have additional requirements. These results do not guarantee your eligibility. Please verify by contacting each program directly. Results are intentionally over-inclusive — we would rather show you a program you may not qualify for than miss one you do.
+              <div className="disclaimer-title">{t('results_disclaimer_title')}</div>
+              {t('results_disclaimer_body')}
             </div>
             <div className="animate-fadeUp delay-1" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 12, marginBottom: 32 }}>
-              {[{ label: "Household size", val: householdSize }, { label: "Annual income", val: `$${annualIncome.toLocaleString()}` }, { label: "Likely eligible", val: likelyPrograms.length }, { label: "Worth checking", val: mayPrograms.length }].map(s => (
+              {[{ label: t('results_stat_household'), val: householdSize }, { label: t('results_stat_income'), val: `$${annualIncome.toLocaleString()}` }, { label: t('results_stat_likely'), val: likelyPrograms.length }, { label: t('results_stat_check'), val: mayPrograms.length }].map(s => (
                 <div key={s.label} className="stat-card animate-fadeUp"><div className="stat-value">{s.val}</div><div className="stat-label">{s.label}</div></div>
               ))}
             </div>
             {tieredPrograms.length === 0 ? (
               <div className="card" style={{ textAlign: "center", padding: "40px" }}>
-                <p style={{ color: "var(--text-secondary)", marginBottom: 16 }}>Based on your answers, you may not currently qualify. However, you can:</p>
-                <button className="btn-primary" onClick={() => { track('results_to_directory'); track('browse_directory'); setView("directory"); }}>Browse all programs <Icon name="arrow" size={16} /></button>
+                <p style={{ color: "var(--text-secondary)", marginBottom: 16 }}>{t('results_empty')}</p>
+                <button className="btn-primary" onClick={() => { track('results_to_directory'); track('browse_directory'); setView("directory"); }}>{t('results_browse')} <Icon name="arrow" size={16} /></button>
               </div>
             ) : (
               <div>
                 <div className="filter-buttons animate-fadeUp delay-1">
-                  <button className={`filter-btn ${!selectedCategory ? 'active' : ''}`} onClick={() => setSelectedCategory(null)}>All ({tieredPrograms.length})</button>
+                  <button className={`filter-btn ${!selectedCategory ? 'active' : ''}`} onClick={() => setSelectedCategory(null)}>{t('cat_all')} ({tieredPrograms.length})</button>
                   {allCategories.map(cat => {
                     const count = tieredPrograms.filter(p => p.category === cat).length;
-                    return <button key={cat} className={`filter-btn ${selectedCategory === cat ? 'active' : ''}`} onClick={() => { track('category_filter', { category: cat, view: 'results' }); setSelectedCategory(cat); }}>{cat.charAt(0).toUpperCase() + cat.slice(1)} ({count})</button>;
+                    return <button key={cat} className={`filter-btn ${selectedCategory === cat ? 'active' : ''}`} onClick={() => { track('category_filter', { category: cat, view: 'results' }); setSelectedCategory(cat); }}>{catLabel(cat)} ({count})</button>;
                   })}
                 </div>
                 {selectedCategory && displayLikely.length === 0 && displayMay.length === 0 && (
                   <div style={{ textAlign: 'center', padding: '48px 24px', background: 'var(--warm-white)', borderRadius: 16, border: '1px solid var(--border)', marginTop: 24 }}>
                     <div style={{ fontSize: 32, marginBottom: 12 }}>🔍</div>
-                    <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: 20, fontWeight: 500, marginBottom: 8 }}>No {selectedCategory} programs matched your answers</h3>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 20, lineHeight: 1.6 }}>You may still find helpful programs in other categories, or explore the full directory for more options.</p>
+                    <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: 20, fontWeight: 500, marginBottom: 8 }}>No {catLabel(selectedCategory)} programs matched your answers</h3>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 20, lineHeight: 1.6 }}>{t('results_no_match_sub')}</p>
                     <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-                      <button className="btn-secondary" onClick={() => setSelectedCategory(null)}>View all my results</button>
-                      <button className="btn-primary" onClick={() => { track('results_to_directory'); track('browse_directory'); setView('directory'); }}>Browse full directory <Icon name="arrow" size={14} aria-hidden="true" /></button>
+                      <button className="btn-secondary" onClick={() => setSelectedCategory(null)}>{t('results_view_all')}</button>
+                      <button className="btn-primary" onClick={() => { track('results_to_directory'); track('browse_directory'); setView('directory'); }}>{t('results_browse_full')} <Icon name="arrow" size={14} aria-hidden="true" /></button>
                     </div>
                   </div>
                 )}
@@ -1527,7 +1931,7 @@
                     <SectionHeader tier="likely" count={displayLikely.length} />
                     {[...new Set(displayLikely.map(p => p.category))].sort().map(cat => (
                       <div key={cat} style={{ marginBottom: 32 }}>
-                        <h4 style={{ fontFamily: 'Fraunces, serif', fontSize: 17, fontWeight: 500, marginBottom: 14, color: 'var(--text-primary)', paddingBottom: 8, borderBottom: '1px solid var(--border)' }}>{CATEGORY_LABELS[cat] || cat.charAt(0).toUpperCase() + cat.slice(1)}</h4>
+                        <h4 style={{ fontFamily: 'Fraunces, serif', fontSize: 17, fontWeight: 500, marginBottom: 14, color: 'var(--text-primary)', paddingBottom: 8, borderBottom: '1px solid var(--border)' }}>{catLabel(cat)}</h4>
                         <div className="results-grid">
                           {displayLikely.filter(p => p.category === cat).map(prog => (
                             <ProgramCard key={prog.id} prog={prog} householdSize={householdSize} tagVariant="green" />
@@ -1542,7 +1946,7 @@
                     <SectionHeader tier="may" count={displayMay.length} />
                     {[...new Set(displayMay.map(p => p.category))].sort().map(cat => (
                       <div key={cat} style={{ marginBottom: 32 }}>
-                        <h4 style={{ fontFamily: 'Fraunces, serif', fontSize: 17, fontWeight: 500, marginBottom: 14, color: 'var(--text-primary)', paddingBottom: 8, borderBottom: '1px solid var(--border)' }}>{CATEGORY_LABELS[cat] || cat.charAt(0).toUpperCase() + cat.slice(1)}</h4>
+                        <h4 style={{ fontFamily: 'Fraunces, serif', fontSize: 17, fontWeight: 500, marginBottom: 14, color: 'var(--text-primary)', paddingBottom: 8, borderBottom: '1px solid var(--border)' }}>{catLabel(cat)}</h4>
                         <div className="results-grid">
                           {displayMay.filter(p => p.category === cat).map(prog => (
                             <ProgramCard key={prog.id} prog={prog} householdSize={householdSize} tagVariant="gray" />
@@ -1555,9 +1959,9 @@
               </div>
             )}
             <div style={{ marginTop: 40, display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }} className="no-print">
-              <button className="btn-secondary" onClick={() => { track('results_start_over'); setView("landing"); }}>Start over</button>
-              {tieredPrograms.length > 0 && <button className="btn-primary" onClick={() => { track('results_print'); window.print(); }} aria-label="Download or print your results" style={{ gap: 8 }}><svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>Download / Print results</button>}
-              {tieredPrograms.length > 0 && <button className="btn-secondary" onClick={() => { track('results_to_directory'); track('browse_directory'); setView('directory'); }} aria-label="Browse all programs in the full directory">Explore full directory</button>}
+              <button className="btn-secondary" onClick={() => { track('results_start_over'); setView("landing"); }}>{t('results_start_over')}</button>
+              {tieredPrograms.length > 0 && <button className="btn-primary" onClick={() => { track('results_print'); window.print(); }} aria-label="Download or print your results" style={{ gap: 8 }}><svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>{t('results_print')}</button>}
+              {tieredPrograms.length > 0 && <button className="btn-secondary" onClick={() => { track('results_to_directory'); track('browse_directory'); setView('directory'); }} aria-label="Browse all programs in the full directory">{t('results_directory')}</button>}
             </div>
           </div>
         </div>
@@ -1565,6 +1969,7 @@
     };
 
     const LandingPage = ({ setView, goToDirectory }) => {
+      const t = useT();
       const CATEGORY_ICONS = {
         food: "leaf", healthcare: "heart", "mental healthcare": "heart", "health necessities": "heart",
         income: "dollar", housing: "home", utility: "spark", transportation: "spark",
@@ -1574,14 +1979,15 @@
       const categories = Object.entries(
         Object.values(PROGRAMS).reduce((acc, p) => { acc[p.category] = (acc[p.category] || 0) + 1; return acc; }, {})
       ).sort(([a], [b]) => a.localeCompare(b)).map(([cat, count]) => ({
-        cat: cat.charAt(0).toUpperCase() + cat.slice(1),
+        cat,
+        catLabel: t('cat_' + cat.replace(/\s+/g, '_')) || cat.charAt(0).toUpperCase() + cat.slice(1),
         icon: CATEGORY_ICONS[cat] || "spark",
         count,
       }));
       const howItWorks = [
-        { n: "1", title: "Answer 6 quick questions", desc: "Tell us about your situation — about 3 minutes." },
-        { n: "2", title: "Get personalized results", desc: "We find programs that match your specific needs." },
-        { n: "3", title: "Apply today", desc: "Direct links to each program make applying easy." },
+        { n: "1", title: t('how_1_title'), desc: t('how_1_desc') },
+        { n: "2", title: t('how_2_title'), desc: t('how_2_desc') },
+        { n: "3", title: t('how_3_title'), desc: t('how_3_desc') },
       ];
       return (
         <div className="hero-bg" style={{ minHeight: "100%" }}>
@@ -1589,44 +1995,44 @@
             <div style={{ maxWidth: 640 }}>
               <div className="animate-fadeUp" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(26,107,90,0.1)", border: "1px solid rgba(26,107,90,0.2)", borderRadius: 99, padding: "6px 14px", marginBottom: 24 }}>
                 <Icon name="spark" size={14} color="var(--jade)" />
-                <span style={{ fontSize: 13, fontWeight: 600, color: "var(--jade-dark)" }}>San Diego County • California</span>
+                <span style={{ fontSize: 13, fontWeight: 600, color: "var(--jade-dark)" }}>{t('hero_location')}</span>
               </div>
               <h1 className="animate-fadeUp delay-1" style={{ fontFamily: "Fraunces, serif", fontSize: "clamp(42px, 6vw, 72px)", fontWeight: 500, lineHeight: 1.05, letterSpacing: "-0.03em", marginBottom: 24 }}>
-                Find the benefits<br /><em style={{ color: "var(--jade)", fontStyle: "italic" }}>you've earned.</em>
+                {t('hero_heading')}<br /><em style={{ color: "var(--jade)", fontStyle: "italic" }}>{t('hero_italic')}</em>
               </h1>
               <p className="animate-fadeUp delay-2" style={{ fontSize: 18, color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: 36, maxWidth: 500 }}>
-                Millions of eligible Americans miss out on public assistance because the system is overwhelming. We make it as simple as filing your taxes.
+                {t('hero_sub')}
               </p>
               <div className="animate-fadeUp delay-3" style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-                <button className="btn-primary" style={{ fontSize: 16, padding: "16px 32px" }} onClick={() => { track('quiz_start'); setView("quiz"); }}>Start quiz <Icon name="arrow" size={16} /></button>
-                <button className="btn-secondary" onClick={() => { track('browse_directory'); setView("directory"); }}>Browse all 165 programs</button>
+                <button className="btn-primary" style={{ fontSize: 16, padding: "16px 32px" }} onClick={() => { track('quiz_start'); setView("quiz"); }}>{t('hero_start')} <Icon name="arrow" size={16} /></button>
+                <button className="btn-secondary" onClick={() => { track('browse_directory'); setView("directory"); }}>{t('hero_browse')}</button>
               </div>
             </div>
           </section>
           <section style={{ maxWidth: 1120, margin: "0 auto", padding: "0 24px 40px" }}>
             <div className="disclaimer-box">
-              <div className="disclaimer-title">Important: About These Results</div>
-              This tool provides an estimate of programs you may qualify for. Each program defines "household" and "income" differently and may have additional requirements. Results do not guarantee eligibility—verify directly with each program.
+              <div className="disclaimer-title">{t('landing_disclaimer_title')}</div>
+              {t('landing_disclaimer_body')}
             </div>
           </section>
           <section style={{ maxWidth: 1120, margin: "0 auto", padding: "0 24px 80px" }}>
-            <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 28, fontWeight: 500, marginBottom: 8 }}>Programs we check</h2>
-            <p style={{ color: "var(--text-muted)", marginBottom: 32, fontSize: 15 }}>We search across 165 assistance programs in San Diego County.</p>
+            <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 28, fontWeight: 500, marginBottom: 8 }}>{t('programs_heading')}</h2>
+            <p style={{ color: "var(--text-muted)", marginBottom: 32, fontSize: 15 }}>{t('programs_sub')}</p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 12 }}>
               {categories.map((c, i) => (
-                <div key={c.cat} className="card card-hover animate-fadeUp" onClick={() => goToDirectory(c.cat.toLowerCase())} style={{ animationDelay: `${i * 0.06}s`, padding: 20, textAlign: "center", cursor: "pointer" }}>
+                <div key={c.cat} className="card card-hover animate-fadeUp" onClick={() => goToDirectory(c.cat)} style={{ animationDelay: `${i * 0.06}s`, padding: 20, textAlign: "center", cursor: "pointer" }}>
                   <div style={{ width: 40, height: 40, borderRadius: 10, background: "rgba(26,107,90,0.1)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12, margin: "0 auto 12px" }}>
                     <Icon name={c.icon} size={18} color="var(--jade)" />
                   </div>
-                  <div style={{ fontWeight: 700, fontSize: 14 }}>{c.cat}</div>
-                  <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>{c.count} programs</div>
+                  <div style={{ fontWeight: 700, fontSize: 14 }}>{c.catLabel}</div>
+                  <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>{c.count} {t('programs_count')}</div>
                 </div>
               ))}
             </div>
           </section>
           <section style={{ background: "var(--warm-white)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
             <div style={{ maxWidth: 1120, margin: "0 auto", padding: "72px 24px" }}>
-              <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 28, fontWeight: 500, marginBottom: 48, textAlign: "center" }}>How it works</h2>
+              <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 28, fontWeight: 500, marginBottom: 48, textAlign: "center" }}>{t('how_heading')}</h2>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 32 }}>
                 {howItWorks.map(s => (
                   <div key={s.n} style={{ display: "flex", gap: 20 }}>
@@ -1638,16 +2044,16 @@
             </div>
           </section>
           <section style={{ maxWidth: 1120, margin: "0 auto", padding: "80px 24px", textAlign: "center" }}>
-            <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 40, fontWeight: 500, marginBottom: 16, letterSpacing: "-0.03em" }}>Ready to discover your benefits?</h2>
-            <p style={{ color: "var(--text-secondary)", fontSize: 16, marginBottom: 32 }}>Free, confidential, takes 3 minutes.</p>
-            <button className="btn-primary" style={{ fontSize: 16, padding: "16px 40px" }} onClick={() => { track('quiz_start'); setView("quiz"); }}>Get started <Icon name="arrow" size={16} /></button>
-            <p style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 16 }}>No account required. Your information is never sold.</p>
+            <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 40, fontWeight: 500, marginBottom: 16, letterSpacing: "-0.03em" }}>{t('cta_heading')}</h2>
+            <p style={{ color: "var(--text-secondary)", fontSize: 16, marginBottom: 32 }}>{t('cta_sub')}</p>
+            <button className="btn-primary" style={{ fontSize: 16, padding: "16px 40px" }} onClick={() => { track('quiz_start'); setView("quiz"); }}>{t('cta_btn')} <Icon name="arrow" size={16} /></button>
+            <p style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 16 }}>{t('cta_note')}</p>
           </section>
           <section style={{ maxWidth: 1120, margin: "0 auto", padding: "0 24px 72px", textAlign: "center" }}>
             <p style={{ fontSize: 14, color: "var(--text-muted)" }}>
-              Found this helpful?{" "}
+              {t('landing_feedback')}{" "}
               <a href="https://forms.gle/rdkBfhabyRp7Mf5Y9" target="_blank" rel="noopener noreferrer" style={{ color: "var(--jade)", fontWeight: 600, textDecoration: "none", borderBottom: "1.5px solid rgba(26,107,90,0.3)", paddingBottom: 1, transition: "border-color 0.2s" }} onMouseOver={e => e.currentTarget.style.borderColor = "var(--jade)"} onMouseOut={e => e.currentTarget.style.borderColor = "rgba(26,107,90,0.3)"}>
-                Share your feedback →
+                {t('landing_feedback_link')}
               </a>
             </p>
           </section>
@@ -1656,12 +2062,16 @@
     };
 
     const Directory = ({ setView, initialCategory }) => {
+      const t = useT();
+      const progText = useProgText();
       const [search, setSearch] = useState("");
       const [selectedCategory, setSelectedCategory] = useState(initialCategory || null);
       const searchTimer = useRef(null);
       const categories = [...new Set(Object.values(PROGRAMS).map(p => p.category))].sort();
       const filtered = Object.values(PROGRAMS).filter(p => {
-        const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) || p.description.toLowerCase().includes(search.toLowerCase());
+        const displayName = progText.name(p);
+        const displayDesc = progText.desc(p);
+        const matchSearch = displayName.toLowerCase().includes(search.toLowerCase()) || displayDesc.toLowerCase().includes(search.toLowerCase());
         const matchCat = !selectedCategory || p.category === selectedCategory;
         return matchSearch && matchCat;
       });
@@ -1669,23 +2079,23 @@
         <div style={{ minHeight: "calc(100vh - 64px)", background: "var(--cream)", padding: "40px 24px" }}>
           <div style={{ maxWidth: 900, margin: "0 auto" }}>
             <div className="animate-fadeUp" style={{ marginBottom: 32 }}>
-              <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 32, fontWeight: 500, marginBottom: 12 }}>Browse all 165 programs</h2>
-              <p style={{ color: "var(--text-secondary)", fontSize: 15 }}>Explore all 165 assistance programs available in San Diego County.</p>
+              <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 32, fontWeight: 500, marginBottom: 12 }}>{t('dir_heading')}</h2>
+              <p style={{ color: "var(--text-secondary)", fontSize: 15 }}>{t('dir_sub')}</p>
             </div>
             <div className="animate-fadeUp delay-1" style={{ marginBottom: 24 }}>
-              <input className="input" placeholder="Search programs..." value={search} onChange={e => { setSearch(e.target.value); if (e.target.value.trim()) { clearTimeout(searchTimer.current); searchTimer.current = setTimeout(() => track('search_used', { term_length: e.target.value.length }), 1000); } }} style={{ marginBottom: 16 }} />
+              <input className="input" placeholder={t('dir_search')} value={search} onChange={e => { setSearch(e.target.value); if (e.target.value.trim()) { clearTimeout(searchTimer.current); searchTimer.current = setTimeout(() => track('search_used', { term_length: e.target.value.length }), 1000); } }} style={{ marginBottom: 16 }} />
             </div>
             <div className="animate-fadeUp delay-2" style={{ marginBottom: 24, display: "flex", gap: 8, flexWrap: "wrap" }}>
               {categories.map(cat => (
                 <button key={cat} onClick={() => { const next = selectedCategory === cat ? null : cat; if (next) track('category_filter', { category: cat, view: 'directory' }); setSelectedCategory(next); }} style={{ background: selectedCategory === cat ? "var(--jade)" : "var(--warm-white)", color: selectedCategory === cat ? "white" : "var(--text-secondary)", border: selectedCategory === cat ? "none" : "1px solid var(--border)", padding: "8px 16px", borderRadius: 99, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "Plus Jakarta Sans" }}>
-                  {cat}
+                  {t('cat_' + cat.replace(/\s+/g, '_')) || cat}
                 </button>
               ))}
             </div>
             {(() => {
               const cats = [...new Set(filtered.map(p => p.category))].sort();
               return cats.map(cat => {
-                const catLabel = CATEGORY_LABELS[cat] || cat.charAt(0).toUpperCase() + cat.slice(1);
+                const catLabel = t('cat_' + cat.replace(/\s+/g, '_')) || CATEGORY_LABELS[cat] || cat.charAt(0).toUpperCase() + cat.slice(1);
                 const catProgs = filtered.filter(p => p.category === cat);
                 return (
                   <div key={cat} style={{ marginBottom: 40 }}>
@@ -1707,9 +2117,10 @@
     };
 
     const AboutUs = ({ setView }) => {
+      const t = useT();
       const sections = [
-        { icon: "spark", label: "Vision", color: "var(--jade)", bg: "rgba(26,107,90,0.08)", content: "Everyone receives the support they need." },
-        { icon: "leaf", label: "Mission", color: "var(--jade)", bg: "rgba(26,107,90,0.06)", content: "The mission of Public Programs Foundation is to enrich the lives of children and adults by empowering users with access to information that secures equitable housing support, healthcare, and the prevention of food insecurity." }
+        { icon: "spark", label: t('about_vision'), color: "var(--jade)", bg: "rgba(26,107,90,0.08)", isVision: true, content: "Everyone receives the support they need." },
+        { icon: "leaf", label: t('about_mission'), color: "var(--jade)", bg: "rgba(26,107,90,0.06)", isVision: false, content: "The mission of Public Programs Foundation is to enrich the lives of children and adults by empowering users with access to information that secures equitable housing support, healthcare, and the prevention of food insecurity." }
       ];
       return (
         <div style={{ minHeight: "calc(100vh - 64px)", background: "var(--cream)" }}>
@@ -1722,7 +2133,7 @@
               <h1 style={{ fontFamily: "Fraunces, serif", fontSize: "clamp(36px, 6vw, 54px)", fontWeight: 500, lineHeight: 1.1, letterSpacing: "-0.03em", marginBottom: 20, color: "var(--text-primary)" }}>
                 About <em style={{ fontStyle: "italic", color: "var(--jade)" }}>Us</em>
               </h1>
-              <p style={{ fontSize: 17, color: "var(--text-secondary)", lineHeight: 1.7, maxWidth: 560, margin: "0 auto" }}>We build tools that connect people with the programs they've earned — freely, privately, and without barriers.</p>
+              <p style={{ fontSize: 17, color: "var(--text-secondary)", lineHeight: 1.7, maxWidth: 560, margin: "0 auto" }}>{t('about_tagline')}</p>
             </div>
           </div>
           <div style={{ maxWidth: 760, margin: "0 auto", padding: "56px 24px 80px" }}>
@@ -1733,38 +2144,38 @@
                     <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(26,107,90,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}><Icon name={s.icon} size={18} color="var(--jade)" /></div>
                     <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--jade-dark)" }}>{s.label}</span>
                   </div>
-                  <p style={{ fontSize: 15.5, lineHeight: 1.65, color: "var(--text-primary)", fontStyle: s.label === "Vision" ? "italic" : "normal", fontFamily: s.label === "Vision" ? "Fraunces, serif" : "inherit", fontWeight: s.label === "Vision" ? 500 : 400 }}>{s.content}</p>
+                  <p style={{ fontSize: 15.5, lineHeight: 1.65, color: "var(--text-primary)", fontStyle: s.isVision ? "italic" : "normal", fontFamily: s.isVision ? "Fraunces, serif" : "inherit", fontWeight: s.isVision ? 500 : 400 }}>{s.content}</p>
                 </div>
               ))}
             </div>
             <div className="animate-fadeUp delay-1" style={{ marginBottom: 40 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
                 <div style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(196,98,45,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}><Icon name="file" size={20} color="var(--terracotta)" /></div>
-                <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 26, fontWeight: 500, color: "var(--text-primary)" }}>Our Story</h2>
+                <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 26, fontWeight: 500, color: "var(--text-primary)" }}>{t('about_story_heading')}</h2>
               </div>
               <div style={{ background: "var(--warm-white)", border: "1px solid var(--border)", borderRadius: 16, padding: 28, lineHeight: 1.75, color: "var(--text-secondary)", fontSize: 15 }}>
-                <p>When Public Programs Foundation founder, <strong style={{ color: "var(--text-primary)" }}>Ashley L. Salas</strong>, looked for a list of programs that community members could rely on in their times of need, she didn't find it easily. She asked around, and no one knew of such a list. So she founded Public Programs Foundation to build it.</p>
-                <p style={{ marginTop: 16 }}>We know we are missing programs. If you know of programs that are not yet on the Benefits Navigator, please email us at <a href="mailto:info@public-programs.org" style={{ color: "var(--jade)", fontWeight: 600, textDecoration: "none" }}>info@public-programs.org</a>, and we'll add them.</p>
-                <p style={{ marginTop: 16 }}>We are starting in <strong style={{ color: "var(--text-primary)" }}>San Diego, California, United States</strong>, because that is where we are, but our goal is for the Benefits Navigator to serve every county, state, and US territory.</p>
+                <p>{t('about_story_1')}</p>
+                <p style={{ marginTop: 16 }}>{t('about_story_2')} <a href="mailto:info@public-programs.org" style={{ color: "var(--jade)", fontWeight: 600, textDecoration: "none" }}>info@public-programs.org</a></p>
+                <p style={{ marginTop: 16 }}>{t('about_story_3')}</p>
               </div>
             </div>
             <div className="animate-fadeUp delay-1" style={{ marginBottom: 40 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
                 <div style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(232,168,48,0.12)", display: "flex", alignItems: "center", justifyContent: "center" }}><Icon name="check" size={20} color="var(--amber)" /></div>
-                <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 26, fontWeight: 500, color: "var(--text-primary)" }}>Your Privacy</h2>
+                <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 26, fontWeight: 500, color: "var(--text-primary)" }}>{t('about_privacy_heading')}</h2>
               </div>
               <div style={{ background: "rgba(232,168,48,0.06)", border: "1px solid rgba(232,168,48,0.25)", borderLeft: "4px solid var(--amber)", borderRadius: 12, padding: 24, fontSize: 15, lineHeight: 1.75, color: "var(--text-secondary)" }}>
-                Your information is <strong style={{ color: "var(--text-primary)" }}>confidential and never stored, shared, or sold.</strong> We use your answers only to show you matching programs in this session. No data is collected or retained after you leave the Benefits Navigator.
+                {t('about_privacy_body')}
               </div>
             </div>
             <div className="animate-fadeUp delay-1" style={{ marginBottom: 40 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
                 <div style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(26,107,90,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}><Icon name="heart" size={20} color="var(--jade)" /></div>
-                <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 26, fontWeight: 500, color: "var(--text-primary)" }}>Accessibility</h2>
+                <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 26, fontWeight: 500, color: "var(--text-primary)" }}>{t('about_access_heading')}</h2>
               </div>
-              <p style={{ fontSize: 15, color: "var(--text-secondary)", marginBottom: 16, lineHeight: 1.6 }}>The Benefits Navigator is designed to be accessible to everyone:</p>
+              <p style={{ fontSize: 15, color: "var(--text-secondary)", marginBottom: 16, lineHeight: 1.6 }}>{t('about_access_sub')}</p>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
-                {[{ icon: "dollar", title: "Free to use", desc: "No cost, no account required" }, { icon: "home", title: "Mobile-friendly", desc: "Works on phones, tablets, and computers" }, { icon: "leaf", title: "Available in English", desc: "With plans to add more languages" }, { icon: "spark", title: "Comprehensive", desc: "80+ programs and growing" }].map(item => (
+                {[{ icon: "dollar", title: t('about_card_free'), desc: t('about_card_free_desc') }, { icon: "home", title: t('about_card_mobile'), desc: t('about_card_mobile_desc') }, { icon: "leaf", title: t('about_card_lang'), desc: t('about_card_lang_desc') }, { icon: "spark", title: t('about_card_comp'), desc: t('about_card_comp_desc') }].map(item => (
                   <div key={item.title} style={{ background: "var(--warm-white)", border: "1px solid var(--border)", borderRadius: 12, padding: 18, display: "flex", gap: 14, alignItems: "flex-start" }}>
                     <div style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(26,107,90,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><Icon name={item.icon} size={16} color="var(--jade)" /></div>
                     <div><div style={{ fontWeight: 700, fontSize: 13.5, color: "var(--text-primary)", marginBottom: 3 }}>{item.title}</div><div style={{ fontSize: 12.5, color: "var(--text-secondary)", lineHeight: 1.5 }}>{item.desc}</div></div>
@@ -1775,11 +2186,11 @@
             <div className="animate-fadeUp delay-2" style={{ marginBottom: 40 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
                 <div style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(26,107,90,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}><Icon name="arrow" size={20} color="var(--jade)" /></div>
-                <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 26, fontWeight: 500, color: "var(--text-primary)" }}>How You Can Help</h2>
+                <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 26, fontWeight: 500, color: "var(--text-primary)" }}>{t('about_help_heading')}</h2>
               </div>
-              <p style={{ fontSize: 15, color: "var(--text-secondary)", marginBottom: 16, lineHeight: 1.6 }}>There are several ways you can support our mission:</p>
+              <p style={{ fontSize: 15, color: "var(--text-secondary)", marginBottom: 16, lineHeight: 1.6 }}>{t('about_help_sub')}</p>
               <div style={{ background: "var(--warm-white)", border: "1px solid var(--border)", borderRadius: 16, overflow: "hidden" }}>
-                {[{ label: "Share the tool", desc: "Tell someone in your community who might benefit" }, { label: "Report missing programs", desc: <span>Email us at <a href="mailto:info@public-programs.org" style={{ color: "var(--jade)", fontWeight: 600, textDecoration: "none" }}>info@public-programs.org</a> with programs we should include</span> }, { label: "Share feedback", desc: <span>Let us know how we can improve — <a href="https://forms.gle/rdkBfhabyRp7Mf5Y9" target="_blank" rel="noopener noreferrer" style={{ color: "var(--jade)", fontWeight: 600, textDecoration: "none", borderBottom: "1.5px solid rgba(26,107,90,0.3)", paddingBottom: 1 }}>fill out our feedback form</a></span> }, { label: "Spread the word", desc: "Help us reach more people who need this resource" }].map((item, i, arr) => (
+                {[{ label: t('about_help_share'), desc: t('about_help_share_desc') }, { label: t('about_help_report'), desc: <span>Email us at <a href="mailto:info@public-programs.org" style={{ color: "var(--jade)", fontWeight: 600, textDecoration: "none" }}>info@public-programs.org</a> with programs we should include</span> }, { label: t('about_help_feedback'), desc: <span>Let us know how we can improve — <a href="https://forms.gle/rdkBfhabyRp7Mf5Y9" target="_blank" rel="noopener noreferrer" style={{ color: "var(--jade)", fontWeight: 600, textDecoration: "none", borderBottom: "1.5px solid rgba(26,107,90,0.3)", paddingBottom: 1 }}>fill out our feedback form</a></span> }, { label: t('about_help_spread'), desc: t('about_help_spread_desc') }].map((item, i, arr) => (
                   <div key={item.label} style={{ padding: "18px 22px", borderBottom: i < arr.length - 1 ? "1px solid var(--border)" : "none", display: "flex", gap: 14, alignItems: "flex-start" }}>
                     <div style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--jade)", marginTop: 7, flexShrink: 0 }} />
                     <div><span style={{ fontWeight: 700, fontSize: 14, color: "var(--text-primary)" }}>{item.label}</span><span style={{ fontSize: 14, color: "var(--text-secondary)" }}> — {item.desc}</span></div>
@@ -1790,8 +2201,8 @@
             <div className="animate-fadeUp delay-3">
               <div style={{ background: "linear-gradient(135deg, var(--jade-dark) 0%, var(--jade) 100%)", borderRadius: 20, padding: "40px 36px", textAlign: "center", color: "white" }}>
                 <div style={{ width: 48, height: 48, borderRadius: 14, background: "rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}><Icon name="spark" size={24} color="white" /></div>
-                <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 28, fontWeight: 500, marginBottom: 12, letterSpacing: "-0.02em" }}>Get in Touch</h2>
-                <p style={{ fontSize: 15, opacity: 0.85, lineHeight: 1.65, marginBottom: 28, maxWidth: 440, margin: "0 auto 28px" }}>Have questions or want to contribute? We would love to hear from you.</p>
+                <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 28, fontWeight: 500, marginBottom: 12, letterSpacing: "-0.02em" }}>{t('about_contact_heading')}</h2>
+                <p style={{ fontSize: 15, opacity: 0.85, lineHeight: 1.65, marginBottom: 28, maxWidth: 440, margin: "0 auto 28px" }}>{t('about_contact_sub')}</p>
                 <a href="mailto:info@public-programs.org" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "white", color: "var(--jade-dark)", borderRadius: 99, padding: "14px 28px", fontWeight: 700, fontSize: 15, textDecoration: "none", fontFamily: "Plus Jakarta Sans, sans-serif" }}>
                   <Icon name="arrow" size={15} color="var(--jade-dark)" /> info@public-programs.org
                 </a>
@@ -1802,57 +2213,79 @@
       );
     };
 
-    const Nav = ({ view, setView, quizStep }) => (
+    const Nav = ({ view, setView, quizStep, lang, setLang }) => {
+      const t = useT();
+      return (
       <nav className="nav">
         <div className="nav-inner" style={{ justifyContent: "space-between" }}>
           <button onClick={() => { track('nav_click', { target: 'home' }); if (view === 'quiz') track('quiz_abandon', { step: quizStep + 1 }); setView("landing"); }} className="btn-ghost" aria-label="Benefits Navigator home" style={{ padding: 0 }}>
             <img src="../../assets/ppf-logo.svg" alt="Public Programs Foundation" style={{ height: 96, width: "auto" }} />
           </button>
           <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+            <div style={{ display: 'flex', gap: 2, border: '1.5px solid rgba(26,107,90,0.2)', borderRadius: 99, padding: 3, background: 'rgba(26,107,90,0.04)' }}>
+              {['en', 'es', 'vi'].map(l => (
+                <button key={l} onClick={() => setLang(l)}
+                  style={{ borderRadius: 99, border: 'none', padding: '5px 12px', fontSize: 12, fontWeight: 700,
+                           background: lang === l ? 'var(--jade)' : 'transparent',
+                           color: lang === l ? 'white' : 'var(--text-secondary)', cursor: 'pointer',
+                           fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                  {l.toUpperCase()}
+                </button>
+              ))}
+            </div>
             <a href="https://forms.gle/rdkBfhabyRp7Mf5Y9" target="_blank" rel="noopener noreferrer" onClick={() => { track('nav_click', { target: 'feedback' }); if (view === 'quiz') track('quiz_abandon', { step: quizStep + 1 }); }} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(26,107,90,0.08)", color: "var(--jade)", border: "1.5px solid rgba(26,107,90,0.2)", borderRadius: 99, padding: "7px 16px", fontSize: 13.5, fontWeight: 600, textDecoration: "none", fontFamily: "Plus Jakarta Sans, sans-serif", transition: "all 0.2s ease" }}
               onMouseOver={e => { e.currentTarget.style.background = "rgba(26,107,90,0.14)"; e.currentTarget.style.borderColor = "var(--jade)"; }}
               onMouseOut={e => { e.currentTarget.style.background = "rgba(26,107,90,0.08)"; e.currentTarget.style.borderColor = "rgba(26,107,90,0.2)"; }}
               aria-label="Share feedback via Google Form">
-              Share Feedback
+              {t('nav_feedback')}
             </a>
             <a href="https://givebutter.com/public-programs" target="_blank" rel="noopener noreferrer" onClick={() => track('nav_click', { target: 'donate' })} style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--terracotta)", color: "white", border: "1.5px solid var(--terracotta)", borderRadius: 99, padding: "7px 16px", fontSize: 13.5, fontWeight: 600, textDecoration: "none", fontFamily: "Plus Jakarta Sans, sans-serif", transition: "all 0.2s ease" }}
               onMouseOver={e => { e.currentTarget.style.background = "#b5561f"; e.currentTarget.style.borderColor = "#b5561f"; }}
               onMouseOut={e => { e.currentTarget.style.background = "var(--terracotta)"; e.currentTarget.style.borderColor = "var(--terracotta)"; }}
               aria-label="Donate to Public Programs Foundation">
-              ♥ Donate
+              {t('nav_donate')}
             </a>
             <a href="/about" onClick={() => { track('nav_click', { target: 'about' }); if (view === 'quiz') track('quiz_abandon', { step: quizStep + 1 }); }} className="btn-ghost" style={{ fontSize: 14, fontWeight: 600, color: "var(--text-secondary)", textDecoration: "none" }} aria-label="About Us page">
-              About Us
+              {t('nav_about')}
             </a>
           </div>
         </div>
       </nav>
-    );
+      );
+    };
 
-    const SiteFooter = () => (
+    const SiteFooter = () => {
+      const t = useT();
+      return (
       <footer style={{ borderTop: "1px solid var(--border)", padding: "16px 24px", textAlign: "center" }}>
-        <p style={{ fontSize: 12, color: "var(--text-muted)" }}>
-          Public Programs Foundation is a 501(c)(3) organization.&nbsp;&nbsp;EIN 93-4712731.
-        </p>
+        <p style={{ fontSize: 12, color: "var(--text-muted)" }}>{t('footer_ein')}</p>
       </footer>
-    );
+      );
+    };
 
     function App() {
       const [view, setView] = useState("landing");
       const [answers, setAnswers] = useState(null);
       const [directoryCategory, setDirectoryCategory] = useState(null);
       const [quizStep, setQuizStep] = useState(0);
+      const [lang, setLang] = useState(() => { try { return localStorage.getItem('bnLang') || 'en'; } catch(e) { return 'en'; } });
+      useEffect(() => {
+        try { localStorage.setItem('bnLang', lang); } catch(e) {}
+        document.documentElement.lang = lang;
+      }, [lang]);
       const goToDirectory = (category = null) => { setDirectoryCategory(category); setView("directory"); };
       return (
-        <div>
-          <Nav view={view} setView={setView} quizStep={quizStep} />
-          {view === "landing" && <LandingPage setView={setView} goToDirectory={goToDirectory} />}
-          {view === "quiz" && <Quiz setView={setView} setAnswers={setAnswers} onStepChange={setQuizStep} />}
-          {view === "results" && answers && <Results answers={answers} setView={setView} />}
-          {view === "directory" && <Directory key={directoryCategory} setView={setView} initialCategory={directoryCategory} />}
-          {view === "about" && <AboutUs setView={setView} />}
-          <SiteFooter />
-        </div>
+        <LangContext.Provider value={lang}>
+          <div>
+            <Nav view={view} setView={setView} quizStep={quizStep} lang={lang} setLang={setLang} />
+            {view === "landing" && <LandingPage setView={setView} goToDirectory={goToDirectory} />}
+            {view === "quiz" && <Quiz setView={setView} setAnswers={setAnswers} onStepChange={setQuizStep} />}
+            {view === "results" && answers && <Results answers={answers} setView={setView} />}
+            {view === "directory" && <Directory key={directoryCategory} setView={setView} initialCategory={directoryCategory} />}
+            {view === "about" && <AboutUs setView={setView} />}
+            <SiteFooter />
+          </div>
+        </LangContext.Provider>
       );
     }
 

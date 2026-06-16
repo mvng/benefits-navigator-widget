@@ -23,16 +23,16 @@ const ROOT = join(__dirname, '..');
 
 // ---------------------------------------------------------------------------
 // Extract the pure-JS eligibility block from the HTML.
-// Everything from "const PROGRAMS = {" up to (not including) "const quizSteps"
-// contains no JSX and no React dependencies.
+// Everything from "const PROGRAMS = {" up to (not including) the quizSteps
+// comment contains no JSX and no React dependencies.
 // ---------------------------------------------------------------------------
 const html = readFileSync(join(ROOT, 'california/san-diego/index.html'), 'utf8');
 const startMarker = '    const PROGRAMS = {';
-const endMarker   = '    const quizSteps = [';
+const endMarker   = '    // quizSteps moved inside Quiz component';
 const startIdx = html.indexOf(startMarker);
 const endIdx   = html.indexOf(endMarker);
 assert.ok(startIdx !== -1, 'Could not find PROGRAMS in index.html');
-assert.ok(endIdx   !== -1, 'Could not find quizSteps in index.html');
+assert.ok(endIdx   !== -1, 'Could not find quizSteps boundary comment in index.html');
 const pureJsBlock = html.slice(startIdx, endIdx);
 
 const ctx = createContext({ Set, Map, Array, Object, console, exports: {} });
