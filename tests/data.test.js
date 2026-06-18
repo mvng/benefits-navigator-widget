@@ -1,5 +1,5 @@
 /**
- * Data integrity tests for data.js
+ * Data integrity tests for california/san-diego/index.html
  *
  * Protects against:
  *   - Programs being accidentally added, removed, or reordered
@@ -7,7 +7,6 @@
  *   - Category/icon values drifting outside the valid set
  *   - Duplicate IDs or names
  *   - Links being accidentally deleted
- *   - Quiz steps referencing non-existent program IDs
  *   - PROGRAM_CRITERIA referencing non-existent program IDs
  */
 
@@ -22,29 +21,35 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 
 // ---------------------------------------------------------------------------
-// Load data.js by evaluating it in a sandboxed context so we can extract
-// all the constants it defines without modifying the source file.
+// Extract the pure-JS data block from the HTML (same approach as eligibility.test.js)
 // ---------------------------------------------------------------------------
-const dataSource = readFileSync(join(ROOT, 'data.js'), 'utf8');
-// `const` in VM context isn't exposed on the context object — wrap with explicit exports
+const html = readFileSync(join(ROOT, 'california/san-diego/index.html'), 'utf8');
+const startMarker = '    const PROGRAMS = {';
+const endMarker   = '    // quizSteps moved inside Quiz component';
+const startIdx = html.indexOf(startMarker);
+const endIdx   = html.indexOf(endMarker);
+assert.ok(startIdx !== -1, 'Could not find PROGRAMS in index.html');
+assert.ok(endIdx   !== -1, 'Could not find quizSteps boundary comment in index.html');
+const pureJsBlock = html.slice(startIdx, endIdx);
+
 const ctx = createContext({ Set, Map, Array, Object, console, exports: {} });
 runInContext(
-  dataSource + '\nexports.PROGRAMS=PROGRAMS;exports.PROGRAM_CRITERIA=PROGRAM_CRITERIA;exports.quizSteps=quizSteps;exports.GATE_EXEMPT=GATE_EXEMPT;',
+  pureJsBlock +
+  `\nexports.PROGRAMS=PROGRAMS;\nexports.PROGRAM_CRITERIA=PROGRAM_CRITERIA;`,
   ctx
 );
 
-const { PROGRAMS, PROGRAM_CRITERIA, quizSteps, GATE_EXEMPT } = ctx.exports;
+const { PROGRAMS, PROGRAM_CRITERIA } = ctx.exports;
 
 // ---------------------------------------------------------------------------
 // Snapshot constants — update these intentionally when programs are added
 // ---------------------------------------------------------------------------
-const EXPECTED_PROGRAM_COUNT = 165;
-const EXPECTED_QUIZ_STEP_COUNT = 6;
+const EXPECTED_PROGRAM_COUNT = 530;
 
 const VALID_CATEGORIES = new Set([
   'food', 'income', 'healthcare', 'mental healthcare', 'health necessities',
   'utility', 'transportation', 'housing', 'caretaker', 'entertainment',
-  'legal', 'day care', 'taxes', 'technology', 'education',
+  'legal', 'day care', 'taxes', 'technology', 'education', 'employment',
 ]);
 
 const VALID_ICONS = new Set(['leaf', 'dollar', 'heart', 'spark', 'home', 'file']);
@@ -59,10 +64,10 @@ describe('PROGRAMS — completeness', () => {
       `Expected ${EXPECTED_PROGRAM_COUNT} programs, got ${count}`);
   });
 
-  test('IDs are non-empty strings matching expected format (e.g. CA-01, US-01, CA37-01)', () => {
+  test('IDs are non-empty strings matching expected format (e.g. CA-001, US-001, CA37-001)', () => {
     for (const id of Object.keys(PROGRAMS)) {
       assert.ok(typeof id === 'string' && id.length > 0, `Program has empty or non-string ID: ${id}`);
-      assert.match(id, /^[A-Z]{2}[0-9A-Z.-]+$/, `Program ID "${id}" does not match expected format`);
+      assert.match(id, /^[A-Z]{2}[0-9]*-[0-9]{3}(\.[A-Z][0-9]+)?$/, `Program ID "${id}" does not match expected format`);
     }
   });
 
@@ -143,67 +148,14 @@ describe('PROGRAM_CRITERIA — referential integrity', () => {
 });
 
 // ---------------------------------------------------------------------------
-// quizSteps
+// Structural checks on the HTML file itself
 // ---------------------------------------------------------------------------
-describe('quizSteps — structure', () => {
-  test(`contains exactly ${EXPECTED_QUIZ_STEP_COUNT} steps`, () => {
-    assert.equal(quizSteps.length, EXPECTED_QUIZ_STEP_COUNT,
-      `Expected ${EXPECTED_QUIZ_STEP_COUNT} quiz steps, got ${quizSteps.length}`);
-  });
-
-  test('every step has id, title, and options array', () => {
-    for (const step of quizSteps) {
-      assert.ok(step.id, `Quiz step missing id: ${JSON.stringify(step)}`);
-      assert.ok(typeof step.title === 'string' && step.title.trim().length > 0,
-        `Quiz step ${step.id} missing title`);
-      assert.ok(Array.isArray(step.options) && step.options.length > 0,
-        `Quiz step ${step.id} has no options`);
-    }
-  });
-
-  test('every step option is a non-empty string', () => {
-    // quiz options are plain strings, not {value, label} objects
-    for (const step of quizSteps) {
-      assert.ok(Array.isArray(step.options) && step.options.length > 0,
-        `Step ${step.id} has empty options array`);
-      for (const opt of step.options) {
-        assert.ok(typeof opt === 'string' && opt.trim().length > 0,
-          `Step ${step.id} has empty or non-string option: ${JSON.stringify(opt)}`);
-      }
-    }
-  });
-});
-
-// ---------------------------------------------------------------------------
-// GATE_EXEMPT
-// ---------------------------------------------------------------------------
-describe('GATE_EXEMPT — referential integrity', () => {
-  test('all GATE_EXEMPT IDs reference valid programs', () => {
-    const invalid = [...GATE_EXEMPT].filter(id => !PROGRAMS[id]);
-    assert.deepEqual(invalid, [],
-      `GATE_EXEMPT contains non-existent program IDs: ${invalid.join(', ')}`);
-  });
-});
-
-// ---------------------------------------------------------------------------
-// Sync check: inline PROGRAMS in index.html matches data.js count
-// ---------------------------------------------------------------------------
-describe('Sync — data.js vs california/san-diego/index.html', () => {
-  const html = readFileSync(join(ROOT, 'california/san-diego/index.html'), 'utf8');
-
-  test('index.html inline program count matches data.js', () => {
-    // Count `id: "XX-` patterns in the PROGRAMS object inside the HTML
-    const matches = html.match(/\bid:\s*"[A-Z]{2}[0-9A-Z.-]+"/g) || [];
-    assert.equal(matches.length, EXPECTED_PROGRAM_COUNT,
-      `index.html has ${matches.length} inline programs, expected ${EXPECTED_PROGRAM_COUNT} (data.js count)`);
-  });
-
-  test('index.html noscript block exists', () => {
+describe('index.html — structural checks', () => {
+  test('noscript block exists', () => {
     assert.ok(html.includes('<noscript>'), 'No <noscript> block found in index.html');
   });
 
-  test('index.html noscript contains list items', () => {
-    // noscript uses human-friendly abbreviated names; protect against mass deletion
+  test('noscript contains at least 50 list items', () => {
     const noscriptMatch = html.match(/<noscript>([\s\S]*?)<\/noscript>/);
     assert.ok(noscriptMatch, 'No <noscript> block found');
     const liCount = (noscriptMatch[1].match(/<li>/g) || []).length;
