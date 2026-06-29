@@ -796,6 +796,10 @@
   "CA-191": { id: "CA-191", name: "CA Dept. of Rehabilitation - Supported Employment Program (SEP)", description: "Ongoing support services for people with significant disabilities to obtain a job.", category: "employment", icon: "dollar", link: "https://www.dor.ca.gov/Home/SupportedEmploymentProgram" },
   "CA-192": { id: "CA-192", name: "CA Dept. of Rehabilitation - Students and Youth", description: "Support, including on accommodations, for students and youth who have disabilities in school, or are working or looking for a job.", category: "education", icon: "spark", link: "https://www.dor.ca.gov/Home/StudentsandYouth" },
   "CA-193": { id: "CA-193", name: "Heat Ready California", description: "Resources for extreme heat preparedness, including for people susceptible to extreme heat related illnesses.", category: "healthcare", icon: "heart", link: "https://heatready.ca.gov/" },
+  "CA-194": { id: "CA-194", name: "CA HCD - ReCover CA Single-Family Rehabilitation and Reconstruction Program", description: "Funding for homeowners and landlords to repair or rebuild homes damaged by a disaster.\nNote: application windows open after a disaster and are available only for areas affected by the disaster.  Priority for people who are older, have a disability, or have a household income at or below 80% area median income (AMI).", category: "housing", icon: "home", link: "https://www.hcd.ca.gov/funding/recoverca/overview" },
+  "CA-195": { id: "CA-195", name: "CA HCD - ReCover CA Homebuyer Assistance Program (DR-HBA)", description: "Financial assistance for qualifying homeowners and renters to receive forgivable loans to purchase a new home after a disaster.\nNote:  application windows open after a disaster.  Eligibility may vary based on disaster.", category: "housing", icon: "home", link: "https://www.hcd.ca.gov/funding/dr/hba" },
+  "CA-196": { id: "CA-196", name: "CA HCD - Disaster Recovery Manufactured Home Repair and Elevation Program (DR MHRE)", description: "Financial assistance for eligible mobilehome residents affected by a disaster.\nNote:  Application window opens after a disaster.  Priority to homeowners residing in the counties most impacted by the disaster.  Mobilehome owner must apply through the local government or nonprofit organization overseeing this program; check the program website to find this information.", category: "housing", icon: "home", link: "https://www.hcd.ca.gov/funding/dr/mhre" },
+  "CA-197": { id: "CA-197", name: "CA HCD - Disaster Recovery Multifamily Housing Program (DR-MHP)", description: "Financial assistance for eligible multifamily housing projects in areas affected by a disaster.\nNote:  Application window opens after a disaster.  Priority to homeowners residing in the counties most impacted by the disaster.  Mobilehome owner must apply through the local government or nonprofit organization overseeing this program; check the program website to find this information.", category: "housing", icon: "home", link: "https://www.hcd.ca.gov/funding/dr/dr-mhp" },
   "CA37-001": { id: "CA37-001", name: "San Diego County General Relief", description: "Temporary cash assistance for people who meet the following criteria:\nSan Diego resident for at least 15 days with the intent to reside in San Diego County\nAge between 18 and 64, with rare exceptions\nMonthly income less than $598 (individual) or $819 (married)\nNo real property\nLess than $50 in liquid assets\nLess than $1,500 in total assets, excluding one vehicle valued at no more than $4,650", category: "income", icon: "dollar", link: "https://www.sandiegocounty.gov/content/sdc/hhsa/programs/ssp/general_relief.html" },
   "CA37-002": { id: "CA37-002", name: "San Diego County Medical Services (CMS)", description: "Healthcare of last resort for people who meet all of the following criteria:\nImmediate or long-term medical need\nAge between 21 and 64 years\nResident of San Diego County\nSign a lien form for services covered by CMS\nMeet CMS financial requirements or receive San Diego County General Relief", category: "healthcare", icon: "heart", link: "https://www.sandiegocounty.gov/content/sdc/hhsa/programs/ssp/county_medical_services/faq.html" },
   "CA37-003": { id: "CA37-003", name: "MTS Reduced Fares", description: "Low- or no-cost public transportation fare for people who meet any of the following criteria:\nPeople age 65 and older\nMedicare recipients\nPeople with disabilities\nPeople age 6 through 18 (effective through June 30, 2026)\nChildren age 5 and younger ride free when traveling with a paying passenger", category: "transportation", icon: "spark", link: "https://www.sdmts.com/fares/reduced-fares" },
@@ -1668,6 +1672,10 @@
   "CA-191": {},
   "CA-192": {},
   "CA-193": {},
+  "CA-194": {},
+  "CA-195": {},
+  "CA-196": {},
+  "CA-197": {},
   "CA37-001": {
     1: [{ incomeLimit: 7176 }],
     2: [{ incomeLimit: 9828 }]
@@ -5566,6 +5574,31 @@
       "CA-193": [
         {
           "for_everyone": true
+        }
+      ],
+      "CA-194": [
+        {
+          "homeowner": true,
+          "disaster survivor": true
+        },
+        {
+          "landlord": true,
+          "disaster survivor": true
+        }
+      ],
+      "CA-195": [
+        {
+          "disaster survivor": true
+        }
+      ],
+      "CA-196": [
+        {
+          "disaster survivor": true
+        }
+      ],
+      "CA-197": [
+        {
+          "disaster survivor": true
         }
       ],
       "CA37-001": [

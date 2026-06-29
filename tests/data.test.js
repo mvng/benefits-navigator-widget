@@ -44,7 +44,7 @@ const { PROGRAMS, PROGRAM_CRITERIA } = ctx.exports;
 // ---------------------------------------------------------------------------
 // Snapshot constants — update these intentionally when programs are added
 // ---------------------------------------------------------------------------
-const EXPECTED_PROGRAM_COUNT = 530;
+const EXPECTED_PROGRAM_COUNT = 534;
 
 const VALID_CATEGORIES = new Set([
   'food', 'income', 'healthcare', 'mental healthcare', 'health necessities',
