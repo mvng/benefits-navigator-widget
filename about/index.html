@@ -41,14 +41,9 @@
     button:focus-visible, a:focus-visible { outline: 3px solid var(--jade); outline-offset: 2px; border-radius: 4px; }
     .site-header { position: sticky; top: 0; z-index: 100; background: rgba(250,246,239,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 24px; }
     .header-inner { max-width: 1120px; margin: 0 auto; height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    .wordmark { display: flex; align-items: center; gap: 8px; text-decoration: none; }
-    .wordmark-icon { width: 32px; height: 32px; background: var(--jade); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .wordmark-text { font-family: 'Fraunces', serif; font-weight: 500; font-size: 22px; color: var(--text-primary); }
-    .btn-back { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--jade); border: 1.5px solid var(--jade); border-radius: 99px; padding: 9px 20px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; font-family: 'Plus Jakarta Sans', sans-serif; text-decoration: none; }
-    .btn-back:hover { background: rgba(26,107,90,0.06); }
+    .wordmark { display: flex; align-items: center; text-decoration: none; }
     .btn-donate { display: inline-flex; align-items: center; gap: 6px; background: var(--terracotta); color: white; border: 1.5px solid var(--terracotta); border-radius: 99px; padding: 9px 18px; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; font-family: 'Plus Jakarta Sans', sans-serif; text-decoration: none; }
     .btn-donate:hover { background: #b5561f; border-color: #b5561f; }
-    .back-arrow { font-size: 16px; line-height: 1; }
     .hero { background: radial-gradient(ellipse 80% 60% at 60% -10%, rgba(26,107,90,0.12) 0%, transparent 60%), var(--cream); padding: 64px 24px 48px; text-align: center; border-bottom: 1px solid var(--border); }
     .hero-inner { max-width: 680px; margin: 0 auto; }
     .logo-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(26,107,90,0.1); border-radius: 99px; padding: 6px 16px; margin-bottom: 24px; }
@@ -94,8 +89,6 @@
     .team-bio-text p { margin-bottom: 12px; }
     .team-bio-text p:last-child { margin-bottom: 0; }
     @media (max-width: 600px) {
-      .wordmark-text { font-size: 18px; }
-      .btn-back { font-size: 13px; padding: 8px 14px; }
       .team-grid { grid-template-columns: 1fr; }
     }
   </style>
@@ -106,21 +99,15 @@
 
   <header class="site-header" role="banner">
     <div class="header-inner">
-      <div class="wordmark" aria-label="Benefits Navigator by Public Programs Foundation">
-        <div class="wordmark-icon" aria-hidden="true">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" aria-hidden="true" focusable="false"><path d="M2 22 16 8"/><path d="M8.5 2C4 2 2 6 2 10s2 8 8.5 8C16 18 22 14 22 7c0-5-4-5-6-5-2.5 0-5 1.5-7.5 0z"/></svg>
-        </div>
-        <span class="wordmark-text">Benefits <em style="font-style:italic;">Navigator</em><sup style="font-size:12px;font-style:normal;vertical-align:super;margin-left:2px;">™</sup></span>
-      </div>
+      <a href="../california/san-diego/" class="wordmark" aria-label="Benefits Navigator home">
+        <img src="../assets/ppf-logo.svg" alt="Public Programs Foundation" style="height:96px;width:auto;">
+      </a>
       <div style="display:flex;align-items:center;gap:8px;">
         <div id="lang-switcher" style="display:flex;gap:2px;border:1.5px solid rgba(26,107,90,0.2);border-radius:99px;padding:3px;background:rgba(26,107,90,0.04);" aria-label="Select language">
           <button onclick="setLang('en')" data-lang="en" style="border-radius:99px;border:none;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.15s;">EN</button>
           <button onclick="setLang('es')" data-lang="es" style="border-radius:99px;border:none;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.15s;">ES</button>
           <button onclick="setLang('vi')" data-lang="vi" style="border-radius:99px;border:none;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.15s;">VI</button>
         </div>
-        <button class="btn-back" onclick="window.close()" aria-label="Close this tab and return to Benefits Navigator">
-          <span class="back-arrow" aria-hidden="true">←</span> Back
-        </button>
         <a href="https://givebutter.com/public-programs" target="_blank" rel="noopener noreferrer" class="btn-donate" aria-label="Donate to Public Programs Foundation">♥ Donate</a>
       </div>
     </div>
