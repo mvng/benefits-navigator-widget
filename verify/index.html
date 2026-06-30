@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Verification — Benefits Navigator</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,500;1,300;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --jade: #1a6b5a; --jade-light: #2a8f76; --jade-dark: #0f4038;
+      --cream: #faf6ef; --warm-white: #fffdf9;
+      --terracotta: #c4622d; --amber: #e8a830;
+      --text-primary: #1c1a17; --text-secondary: #5c5649; --text-muted: #9a9082;
+      --border: #e0d6c6; --shadow-sm: 0 1px 4px rgba(28,26,23,0.08);
+    }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--cream); color: var(--text-primary); font-size: 14px; }
+
+    /* Header */
+    .header { position: sticky; top: 0; z-index: 100; background: rgba(250,246,239,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 24px; }
+    .header-inner { max-width: 1400px; margin: 0 auto; height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .header-title { display: flex; align-items: center; gap: 10px; }
+    .header-title .logo { width: 28px; height: 28px; background: var(--jade); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+    .header-title .logo svg { width: 14px; height: 14px; }
+    .header-title h1 { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500; color: var(--text-primary); }
+    .admin-badge { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: rgba(196,98,45,0.1); color: var(--terracotta); border: 1px solid rgba(196,98,45,0.25); border-radius: 99px; padding: 3px 10px; }
+    .header-link { font-size: 13px; color: var(--jade); text-decoration: none; font-weight: 600; opacity: 0.8; }
+    .header-link:hover { opacity: 1; }
+
+    /* Controls */
+    .controls { max-width: 1400px; margin: 0 auto; padding: 20px 24px 12px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .search-wrap { position: relative; flex: 1; min-width: 240px; }
+    .search-wrap input { width: 100%; padding: 9px 14px 9px 36px; border: 1.5px solid var(--border); border-radius: 8px; background: white; font-family: inherit; font-size: 13.5px; color: var(--text-primary); outline: none; transition: border-color 0.2s; }
+    .search-wrap input:focus { border-color: var(--jade); }
+    .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+    .filter-row { display: flex; gap: 6px; flex-wrap: wrap; }
+    .filter-btn { padding: 6px 13px; border-radius: 99px; border: 1.5px solid var(--border); background: white; font-family: inherit; font-size: 12px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+    .filter-btn:hover { border-color: var(--jade); color: var(--jade); }
+    .filter-btn.active { background: var(--jade); border-color: var(--jade); color: white; }
+    .count-label { font-size: 12px; color: var(--text-muted); white-space: nowrap; padding: 0 4px; }
+
+    /* Stats bar */
+    .stats-bar { max-width: 1400px; margin: 0 auto; padding: 0 24px 16px; display: flex; gap: 20px; flex-wrap: wrap; }
+    .stat { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
+    .stat strong { color: var(--text-primary); font-size: 14px; font-weight: 700; }
+
+    /* Table */
+    .table-wrap { max-width: 1400px; margin: 0 auto; padding: 0 24px 40px; }
+    table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
+    thead th { background: #f0ebe1; padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); white-space: nowrap; border-bottom: 1px solid var(--border); cursor: pointer; user-select: none; }
+    thead th:hover { color: var(--jade); }
+    thead th .sort-arrow { margin-left: 4px; opacity: 0.4; }
+    thead th.sorted .sort-arrow { opacity: 1; color: var(--jade); }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; cursor: pointer; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #faf6ef; }
+    tbody tr.expanded { background: #f5f0e8; }
+    tbody td { padding: 10px 14px; vertical-align: middle; }
+    .detail-row td { padding: 0; }
+    .detail-box { padding: 16px 24px 20px; background: #f5f0e8; border-top: 1px dashed var(--border); display: none; }
+    .detail-box.open { display: block; }
+
+    /* Cell styles */
+    .id-badge { font-family: monospace; font-size: 11px; font-weight: 700; background: rgba(26,107,90,0.1); color: var(--jade-dark); border: 1px solid rgba(26,107,90,0.2); border-radius: 5px; padding: 2px 7px; white-space: nowrap; }
+    .prog-name { font-weight: 600; font-size: 13px; max-width: 340px; }
+    .prog-name small { display: block; font-weight: 400; font-size: 11.5px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
+    .cat-tag { display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; border-radius: 99px; padding: 2px 8px; white-space: nowrap; }
+    .income-cell { font-size: 12px; font-weight: 600; color: var(--text-secondary); white-space: nowrap; }
+    .income-cell.limited { color: var(--jade-dark); }
+    .flags-cell { display: flex; flex-wrap: wrap; gap: 4px; }
+    .flag { font-size: 10px; font-weight: 700; letter-spacing: 0.04em; border-radius: 4px; padding: 2px 6px; white-space: nowrap; }
+    .flag-age    { background: #e8f4f1; color: #0f5a4a; }
+    .flag-income { background: #fef3e2; color: #8a5200; }
+    .flag-status { background: #f0f0f0; color: #444; }
+    .flag-may    { background: #fef8e8; color: #8a6000; }
+    .flag-everyone { background: #e8f0fe; color: #1a5296; }
+    .link-cell a { font-size: 11.5px; color: var(--jade); text-decoration: none; font-weight: 600; }
+    .link-cell a:hover { text-decoration: underline; }
+    .link-cell .contact { font-size: 11px; color: var(--text-muted); font-style: italic; }
+
+    /* Detail box */
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 700px) { .detail-grid { grid-template-columns: 1fr; } }
+    .detail-section h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--jade-dark); margin-bottom: 8px; }
+    .detail-desc { font-size: 12.5px; color: var(--text-secondary); line-height: 1.65; white-space: pre-line; }
+    .income-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .income-table th { text-align: left; font-weight: 600; color: var(--text-muted); padding: 3px 8px; }
+    .income-table td { padding: 3px 8px; border-top: 1px solid rgba(0,0,0,0.05); }
+    .eligibility-path { margin-bottom: 8px; padding: 8px 10px; background: rgba(255,255,255,0.7); border-radius: 7px; border: 1px solid var(--border); font-size: 12px; }
+    .eligibility-path:last-child { margin-bottom: 0; }
+    .path-flags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+    .path-tier { font-size: 10px; font-weight: 700; border-radius: 4px; padding: 1px 6px; display: inline-block; }
+    .tier-likely { background: var(--jade); color: white; }
+    .tier-may    { background: var(--amber); color: #4a3000; }
+
+    /* Empty state */
+    .empty-row td { text-align: center; padding: 48px 24px; color: var(--text-muted); font-size: 13px; }
+
+    /* Category colors */
+    .cat-food           { background: #e8f5e9; color: #1b5e20; }
+    .cat-healthcare     { background: #fce4ec; color: #880e4f; }
+    .cat-mental         { background: #f3e5f5; color: #4a148c; }
+    .cat-income         { background: #fff8e1; color: #e65100; }
+    .cat-housing        { background: #e3f2fd; color: #0d47a1; }
+    .cat-utility        { background: #fff3e0; color: #bf360c; }
+    .cat-transport      { background: #e0f2f1; color: #004d40; }
+    .cat-legal          { background: #fbe9e7; color: #bf360c; }
+    .cat-education      { background: #e8eaf6; color: #1a237e; }
+    .cat-employment     { background: #f1f8e9; color: #33691e; }
+    .cat-entertainment  { background: #fce4ec; color: #ad1457; }
+    .cat-technology     { background: #e0f7fa; color: #006064; }
+    .cat-taxes          { background: #fff8e1; color: #5d4037; }
+    .cat-daycare        { background: #fdf6ec; color: #5d3a00; }
+    .cat-caretaker      { background: #f3e5f5; color: #6a1b9a; }
+    .cat-health         { background: #fce4ec; color: #880e4f; }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .col-flags, .col-income { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-title">
+      <div class="logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <h1>Benefits Navigator</h1>
+      <span class="admin-badge">Internal Verification</span>
+    </div>
+    <a class="header-link" href="../california/san-diego" target="_blank">↗ Live site</a>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="search" placeholder="Search by name, ID, or description…" autocomplete="off" spellcheck="false">
+  </div>
+  <div class="filter-row" id="cat-filters"></div>
+  <span class="count-label" id="count-label"></span>
+</div>
+
+<div class="stats-bar" id="stats-bar"></div>
+
+<div class="table-wrap">
+  <table id="prog-table">
+    <thead>
+      <tr>
+        <th data-col="id">ID <span class="sort-arrow">↕</span></th>
+        <th data-col="name">Program <span class="sort-arrow">↕</span></th>
+        <th data-col="category">Category <span class="sort-arrow">↕</span></th>
+        <th data-col="income" class="col-income">Income Limit (HH=1) <span class="sort-arrow">↕</span></th>
+        <th class="col-flags">Eligibility Flags</th>
+        <th>Link</th>
+      </tr>
+    </thead>
+    <tbody id="prog-body">
+      <tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted)">Loading…</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script src="../data.js"></script>
+<script>
+(() => {
+  // ── Helpers ────────────────────────────────────────────────────────────────
+  const CAT_LABEL = {
+    food: 'Food', healthcare: 'Healthcare', 'mental healthcare': 'Mental Health',
+    'health necessities': 'Health Necessities', income: 'Income', housing: 'Housing',
+    utility: 'Utility', transportation: 'Transport', legal: 'Legal',
+    'day care': 'Day Care', caretaker: 'Caretaker', entertainment: 'Entertainment',
+    taxes: 'Taxes', technology: 'Technology', education: 'Education', employment: 'Employment',
+  };
+  const CAT_CLASS = {
+    food: 'cat-food', healthcare: 'cat-healthcare', 'mental healthcare': 'cat-mental',
+    'health necessities': 'cat-health', income: 'cat-income', housing: 'cat-housing',
+    utility: 'cat-utility', transportation: 'cat-transport', legal: 'cat-legal',
+    'day care': 'cat-daycare', caretaker: 'cat-caretaker', entertainment: 'cat-entertainment',
+    taxes: 'cat-taxes', technology: 'cat-technology', education: 'cat-education',
+    employment: 'cat-employment',
+  };
+  const FLAG_LABELS = {
+    veteran_military: 'Veteran', disabled: 'Disabled', pregnant: 'Pregnant',
+    foster_care: 'Foster Care', refugee: 'Refugee', tribal_member: 'Tribal',
+    'domestic violence': 'DV Survivor', homeowner: 'Homeowner', landlord: 'Landlord',
+    homeless: 'Homeless', legal: 'Legal Need', 're-entry': 'Re-entry',
+    rural: 'Rural', 'disaster survivor': 'Disaster', unemployed: 'Unemployed',
+    'part-time': 'Part-time', retired: 'Retired', student: 'Student',
+    business: 'Business', provider_search: 'Provider Search', other_eligibility: 'Other',
+    for_everyone: 'For Everyone',
+  };
+  const STATUS_FLAGS = ['veteran_military','disabled','pregnant','foster_care','refugee',
+    'tribal_member','domestic violence','homeowner','landlord','homeless','legal',
+    're-entry','rural','disaster survivor','unemployed','part-time','retired','student',
+    'business','provider_search','other_eligibility','for_everyone'];
+
+  function fmt$(n) { return n == null ? '—' : '$' + n.toLocaleString(); }
+  function pathTier(path) { return path.may_only || path.provider_search || path.other_eligibility || path.business ? 'may' : 'likely'; }
+
+  function summarize(progId) {
+    const paths = ELIGIBILITY[progId] || [];
+    const criteria = PROGRAM_CRITERIA[progId] || {};
+    // Income limit for HH=1
+    const incomeLimit1 = criteria[1]?.[0]?.incomeLimit ?? null;
+    // Collect status flags from all paths
+    const flags = new Set();
+    let hasAge = false, minAge = null, maxAge = null;
+    let hasIncomePath = false;
+    for (const p of paths) {
+      if (p.income_limit != null) hasIncomePath = true;
+      if (p.age_min != null || p.age_max != null) {
+        hasAge = true;
+        if (p.age_min != null && (minAge == null || p.age_min < minAge)) minAge = p.age_min;
+        if (p.age_max != null && (maxAge == null || p.age_max > maxAge)) maxAge = p.age_max;
+      }
+      for (const f of STATUS_FLAGS) { if (p[f]) flags.add(f); }
+    }
+    return { incomeLimit1, hasIncomePath, hasAge, minAge, maxAge, flags };
+  }
+
+  function pathToHuman(path) {
+    const parts = [];
+    if (path.household_size != null) parts.push(`HH=${path.household_size}`);
+    if (path.income_limit != null) parts.push(`Income ≤ ${fmt$(path.income_limit)}`);
+    if (path.income_minimum != null && path.income_minimum > 0) parts.push(`Income ≥ ${fmt$(path.income_minimum)}`);
+    if (path.age_min != null || path.age_max != null) {
+      const lo = path.age_min ?? 0, hi = path.age_max ?? '∞';
+      parts.push(`Age ${lo}–${hi}`);
+    }
+    for (const f of STATUS_FLAGS) {
+      if (path[f] && FLAG_LABELS[f]) parts.push(FLAG_LABELS[f]);
+    }
+    if (path.enrolled_any?.length) parts.push(`Enrolled in [${path.enrolled_any.slice(0,3).join(', ')}${path.enrolled_any.length > 3 ? '…' : ''}]`);
+    return parts;
+  }
+
+  function renderFlags(flags, hasAge, minAge, maxAge, hasIncomePath, incomeLimit1) {
+    const items = [];
+    if (hasAge) {
+      const lo = minAge ?? 0, hi = maxAge ?? '∞';
+      items.push(`<span class="flag flag-age">Age ${lo}–${hi}</span>`);
+    }
+    if (hasIncomePath && incomeLimit1 != null) {
+      items.push(`<span class="flag flag-income">≤ ${fmt$(incomeLimit1)} HH=1</span>`);
+    } else if (hasIncomePath) {
+      items.push(`<span class="flag flag-income">Income-gated</span>`);
+    }
+    for (const f of flags) {
+      if (f === 'for_everyone') {
+        items.push(`<span class="flag flag-everyone">For Everyone</span>`);
+      } else if (f === 'provider_search' || f === 'other_eligibility' || f === 'business') {
+        items.push(`<span class="flag flag-may">${FLAG_LABELS[f]||f}</span>`);
+      } else {
+        items.push(`<span class="flag flag-status">${FLAG_LABELS[f]||f}</span>`);
+      }
+    }
+    return items.join('');
+  }
+
+  function renderDetail(prog) {
+    const paths = ELIGIBILITY[prog.id] || [];
+    const criteria = PROGRAM_CRITERIA[prog.id] || {};
+
+    // Income table from PROGRAM_CRITERIA
+    const incomeRows = Object.entries(criteria).map(([sz, arr]) => {
+      const lim = arr[0]?.incomeLimit;
+      return lim != null ? `<tr><td>${sz === '7' ? '7+' : sz} person${sz === '1' ? '' : 's'}</td><td>${fmt$(lim)}/yr</td></tr>` : '';
+    }).filter(Boolean).join('');
+
+    const incomeSection = incomeRows
+      ? `<div class="detail-section"><h4>Income Limits (Max Annual)</h4><table class="income-table"><tr><th>Household</th><th>Max Income</th></tr>${incomeRows}</table></div>`
+      : '';
+
+    // Eligibility paths
+    const pathsHtml = paths.map((path, i) => {
+      const tier = pathTier(path);
+      const parts = pathToHuman(path);
+      const partsHtml = parts.length
+        ? `<div class="path-flags">${parts.map(p => `<span class="flag flag-status">${p}</span>`).join('')}</div>`
+        : '<span style="color:var(--text-muted);font-size:11px">No specific requirements (open eligibility)</span>';
+      return `<div class="eligibility-path"><span class="path-tier tier-${tier}">${tier === 'likely' ? 'Likely' : 'May Qualify'}</span> &nbsp;Path ${i+1}${partsHtml}</div>`;
+    }).join('');
+
+    return `
+      <div class="detail-grid">
+        <div>
+          <div class="detail-section" style="margin-bottom:16px">
+            <h4>Description</h4>
+            <div class="detail-desc">${prog.description || '—'}</div>
+          </div>
+          ${incomeSection}
+        </div>
+        <div>
+          <div class="detail-section">
+            <h4>Eligibility Paths (${paths.length})</h4>
+            ${pathsHtml || '<span style="color:var(--text-muted);font-size:12px">No eligibility data</span>'}
+          </div>
+        </div>
+      </div>`;
+  }
+
+  // ── Build table ─────────────────────────────────────────────────────────────
+  const allPrograms = Object.values(PROGRAMS).map(prog => {
+    const s = summarize(prog.id);
+    return { ...prog, ...s };
+  });
+
+  let filtered = allPrograms.slice();
+  let sortCol = 'id', sortDir = 1;
+  let activeCategory = null;
+  let searchTerm = '';
+
+  function sortPrograms(arr) {
+    return arr.slice().sort((a, b) => {
+      let av = a[sortCol] ?? '', bv = b[sortCol] ?? '';
+      if (sortCol === 'income') { av = a.incomeLimit1 ?? Infinity; bv = b.incomeLimit1 ?? Infinity; }
+      if (typeof av === 'string') return av.localeCompare(bv) * sortDir;
+      return (av - bv) * sortDir;
+    });
+  }
+
+  function applyFilters() {
+    filtered = allPrograms.filter(p => {
+      if (activeCategory && p.category !== activeCategory) return false;
+      if (searchTerm) {
+        const q = searchTerm.toLowerCase();
+        if (!p.name.toLowerCase().includes(q) && !p.id.toLowerCase().includes(q) && !(p.description||'').toLowerCase().includes(q)) return false;
+      }
+      return true;
+    });
+    render();
+  }
+
+  function render() {
+    const sorted = sortPrograms(filtered);
+    const tbody = document.getElementById('prog-body');
+    document.getElementById('count-label').textContent = `${sorted.length} of ${allPrograms.length} programs`;
+
+    if (!sorted.length) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="6">No programs match. Try a different search or filter.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = sorted.map(prog => {
+      const catLabel = CAT_LABEL[prog.category] || prog.category;
+      const catClass = CAT_CLASS[prog.category] || '';
+      const flagsHtml = renderFlags(prog.flags, prog.hasAge, prog.minAge, prog.maxAge, prog.hasIncomePath, prog.incomeLimit1);
+      const incomeText = prog.incomeLimit1 != null ? fmt$(prog.incomeLimit1) : (prog.hasIncomePath ? 'varies' : 'Open');
+      const incomeClass = prog.hasIncomePath ? 'limited' : '';
+      const isContact = prog.link?.startsWith('Contact');
+      const linkHtml = isContact
+        ? `<span class="contact">${prog.link}</span>`
+        : `<a href="${prog.link}" target="_blank" rel="noopener">↗ Apply</a>`;
+      const nameTrunc = prog.name.length > 60 ? prog.name.slice(0, 57) + '…' : prog.name;
+
+      return `
+        <tr data-id="${prog.id}" onclick="toggleDetail('${prog.id}')">
+          <td><span class="id-badge">${prog.id}</span></td>
+          <td class="prog-name">${nameTrunc}</td>
+          <td><span class="cat-tag ${catClass}">${catLabel}</span></td>
+          <td class="income-cell ${incomeClass} col-income">${incomeText}</td>
+          <td class="flags-cell col-flags">${flagsHtml || '<span style="color:var(--text-muted);font-size:11px">—</span>'}</td>
+          <td class="link-cell">${linkHtml}</td>
+        </tr>
+        <tr class="detail-row" id="detail-${prog.id}">
+          <td colspan="6">
+            <div class="detail-box" id="detail-box-${prog.id}">
+              ${renderDetail(prog)}
+            </div>
+          </td>
+        </tr>`;
+    }).join('');
+  }
+
+  window.toggleDetail = function(id) {
+    const box = document.getElementById('detail-box-' + id);
+    const row = document.querySelector(`tr[data-id="${id}"]`);
+    if (!box) return;
+    const isOpen = box.classList.toggle('open');
+    row.classList.toggle('expanded', isOpen);
+  };
+
+  // ── Category filters ────────────────────────────────────────────────────────
+  const catCounts = {};
+  allPrograms.forEach(p => { catCounts[p.category] = (catCounts[p.category]||0)+1; });
+  const cats = Object.keys(catCounts).sort();
+
+  const filterRow = document.getElementById('cat-filters');
+  const allBtn = document.createElement('button');
+  allBtn.className = 'filter-btn active';
+  allBtn.textContent = `All (${allPrograms.length})`;
+  allBtn.onclick = () => { activeCategory = null; document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); allBtn.classList.add('active'); applyFilters(); };
+  filterRow.appendChild(allBtn);
+
+  cats.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.textContent = `${CAT_LABEL[cat]||cat} (${catCounts[cat]})`;
+    btn.onclick = () => {
+      activeCategory = cat;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilters();
+    };
+    filterRow.appendChild(btn);
+  });
+
+  // ── Search ──────────────────────────────────────────────────────────────────
+  let searchTimer;
+  document.getElementById('search').addEventListener('input', e => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => { searchTerm = e.target.value.trim(); applyFilters(); }, 180);
+  });
+
+  // ── Sort ────────────────────────────────────────────────────────────────────
+  document.querySelectorAll('thead th[data-col]').forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.dataset.col;
+      if (sortCol === col) { sortDir *= -1; } else { sortCol = col; sortDir = 1; }
+      document.querySelectorAll('thead th').forEach(h => { h.classList.remove('sorted'); delete h.querySelector('.sort-arrow')?.dataset.dir; });
+      th.classList.add('sorted');
+      const arrow = th.querySelector('.sort-arrow');
+      if (arrow) arrow.textContent = sortDir === 1 ? '↑' : '↓';
+      render();
+    });
+  });
+
+  // ── Stats bar ────────────────────────────────────────────────────────────────
+  const withIncome = allPrograms.filter(p => p.hasIncomePath).length;
+  const withStatus = allPrograms.filter(p => p.flags.size > 0).length;
+  const withAge    = allPrograms.filter(p => p.hasAge).length;
+  const openAll    = allPrograms.filter(p => !p.hasIncomePath && p.flags.size === 0 && !p.hasAge).length;
+  document.getElementById('stats-bar').innerHTML = `
+    <div class="stat"><strong>${allPrograms.length}</strong> total programs</div>
+    <div class="stat" style="color:#888">·</div>
+    <div class="stat"><strong>${withIncome}</strong> income-gated</div>
+    <div class="stat" style="color:#888">·</div>
+    <div class="stat"><strong>${withStatus}</strong> status-flagged</div>
+    <div class="stat" style="color:#888">·</div>
+    <div class="stat"><strong>${withAge}</strong> age-restricted</div>
+    <div class="stat" style="color:#888">·</div>
+    <div class="stat"><strong>${openAll}</strong> open / no restrictions</div>
+    <div class="stat" style="color:#888">·</div>
+    <div class="stat"><strong>${cats.length}</strong> categories</div>`;
+
+  // ── Initial render ──────────────────────────────────────────────────────────
+  render();
+})();
+</script>
+</body>
+</html>
