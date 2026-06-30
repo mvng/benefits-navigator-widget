@@ -11276,33 +11276,9 @@
       const t = useT();
       const progText = useProgText();
       const [selectedCategory, setSelectedCategory] = useState(null);
-      const householdSizeMap = { "1 person": 1, "2 people": 2, "3 people": 3, "4 people": 4, "5 people": 5, "6 people": 6, "7+ people": 7 };
-      const incomeMap = { "No income": 0, "Under $20,000": 10000, "$20,000\u2013$40,000": 30000, "$40,000\u2013$60,000": 50000, "$60,000\u2013$80,000": 70000, "$80,000\u2013$120,000": 100000, "$120,000\u2013$180,000": 150000, "Over $180,000": 200000 };
-      const householdSize = householdSizeMap[answers.household_size] || 1;
-      const annualIncome = incomeMap[answers.annual_income] || 0;
-      const specialStatus = Array.isArray(answers.special_status) ? answers.special_status : [answers.special_status].filter(Boolean);
-      const enrolledRaw = Array.isArray(answers.enrolled_programs) ? answers.enrolled_programs : [];
-      const enrolledPrograms = enrolledRaw.map(p => ENROLLED_KEYS[p]).filter(Boolean);
-      const profile = {
-        ageArr: Array.isArray(answers.age) ? answers.age : [answers.age].filter(Boolean),
-        householdSize, annualIncome,
-        isVeteran: specialStatus.some(s => s.includes("Veteran")),
-        isRefugee: specialStatus.some(s => s.includes("Refugee")),
-        isDisabled: specialStatus.some(s => s.includes("Disabled") || s.includes("Disability")),
-        isFosterCare: specialStatus.some(s => s.includes("Foster")),
-        isPregnant: specialStatus.some(s => s.includes("Pregnant")),
-        hasChildren: specialStatus.some(s => s.includes("children")),
-        isTribal: specialStatus.some(s => s.includes("tribal") || s.includes("Tribal")),
-        isDVSurvivor: specialStatus.some(s => s.includes("Domestic violence")),
-        needsLegal: specialStatus.some(s => s.includes("legal assistance")),
-        isUnemployed: (answers.employment || "").includes("Unemployed") || (answers.employment || "").includes("Unable to work"),
-        isEmployedFullTime: (answers.employment || "") === "Employed full-time",
-        isPartTime: (answers.employment || "") === "Employed part-time",
-        isRetired: (answers.employment || "") === "Retired",
-        isStudent: specialStatus.some(s => s.includes("student")),
-        isHomeowner: specialStatus.some(s => s.includes("Homeowner")),
-        enrolledPrograms,
-      };
+      const profile = buildProfile(answers);
+      const householdSize = profile.householdSize;
+      const annualIncome = profile.income === Infinity ? 0 : profile.income;
       const tieredPrograms = Object.values(PROGRAMS).map(prog => ({ ...prog, tier: getProgramTier(prog.id, profile) })).filter(p => p.tier !== null);
       const likelyPrograms = tieredPrograms.filter(p => p.tier === 'likely');
       const mayPrograms = tieredPrograms.filter(p => p.tier === 'may');
@@ -11713,8 +11689,31 @@
       );
     };
 
+    const ProgramDetail = ({ prog, setView }) => {
+      const progText = useProgText();
+      const displayName = progText.name(prog);
+      return (
+        <main id="main-content" style={{ maxWidth: 680, margin: '0 auto', padding: '48px 24px' }}>
+          <button
+            className="btn-secondary no-print"
+            style={{ marginBottom: 32 }}
+            onClick={() => setView('landing')}
+          >
+            ← Explore all programs
+          </button>
+          <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 26, fontWeight: 500, marginBottom: 24, color: 'var(--text-primary)', lineHeight: 1.3 }}>
+            {displayName}
+          </h1>
+          <ProgramCard prog={prog} />
+        </main>
+      );
+    };
+
     function App() {
-      const [view, setView] = useState("landing");
+      const _urlProgId = new URLSearchParams(window.location.search).get('program');
+      const _urlProg   = _urlProgId && PROGRAMS[_urlProgId] ? PROGRAMS[_urlProgId] : null;
+      const [view, setView] = useState(_urlProg ? 'program_detail' : 'landing');
+      const [detailProg, setDetailProg] = useState(_urlProg);
       const [answers, setAnswers] = useState(null);
       const [directoryCategory, setDirectoryCategory] = useState(null);
       const [quizStep, setQuizStep] = useState(0);
@@ -11733,6 +11732,7 @@
             {view === "results" && answers && <Results answers={answers} setView={setView} />}
             {view === "directory" && <Directory key={directoryCategory} setView={setView} initialCategory={directoryCategory} />}
             {view === "about" && <AboutUs setView={setView} />}
+            {view === "program_detail" && detailProg && <ProgramDetail prog={detailProg} setView={setView} />}
             <SiteFooter />
           </div>
         </LangContext.Provider>

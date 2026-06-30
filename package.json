@@ -4,6 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test tests/**/*.test.js"
+    "test": "node --test tests/**/*.test.js",
+    "gen-qr": "node scripts/gen_qr.js"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4"
   }
 }
