@@ -24,8 +24,7 @@
     .header-inner { max-width: 1400px; margin: 0 auto; height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
     .header-title { display: flex; align-items: center; gap: 10px; }
     .header-title .logo { width: 28px; height: 28px; background: var(--jade); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
-    .header-title .logo svg { width: 14px; height: 14px; }
-    .header-title h1 { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500; color: var(--text-primary); }
+    .header-title h1 { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500; }
     .admin-badge { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: rgba(196,98,45,0.1); color: var(--terracotta); border: 1px solid rgba(196,98,45,0.25); border-radius: 99px; padding: 3px 10px; }
     .header-link { font-size: 13px; color: var(--jade); text-decoration: none; font-weight: 600; opacity: 0.8; }
     .header-link:hover { opacity: 1; }
@@ -41,11 +40,43 @@
     .filter-btn:hover { border-color: var(--jade); color: var(--jade); }
     .filter-btn.active { background: var(--jade); border-color: var(--jade); color: white; }
     .count-label { font-size: 12px; color: var(--text-muted); white-space: nowrap; padding: 0 4px; }
+    .sim-toggle-btn { display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px; border: 1.5px solid var(--border); background: white; font-family: inherit; font-size: 12.5px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+    .sim-toggle-btn:hover { border-color: var(--jade); color: var(--jade); }
+    .sim-toggle-btn.active { background: #fff8e8; border-color: var(--amber); color: #7a5200; }
 
     /* Stats bar */
     .stats-bar { max-width: 1400px; margin: 0 auto; padding: 0 24px 16px; display: flex; gap: 20px; flex-wrap: wrap; }
     .stat { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
     .stat strong { color: var(--text-primary); font-size: 14px; font-weight: 700; }
+
+    /* ── Simulator panel ───────────────────────────────────────────────────── */
+    .sim-panel { max-width: 1400px; margin: 0 auto; padding: 0 24px 20px; display: none; }
+    .sim-panel.open { display: block; }
+    .sim-box { background: #fffcf0; border: 1.5px solid #e0c870; border-radius: 12px; padding: 20px 24px; }
+    .sim-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; gap: 12px; flex-wrap: wrap; }
+    .sim-title { font-size: 13px; font-weight: 700; color: #7a5200; display: flex; align-items: center; gap: 8px; }
+    .sim-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .sim-result-bar { font-size: 13px; font-weight: 600; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .sim-likely { color: var(--jade); }
+    .sim-may { color: #a06800; }
+    .sim-none { color: var(--text-muted); }
+    .sim-reset { font-size: 11.5px; font-weight: 600; color: var(--text-muted); background: none; border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; cursor: pointer; font-family: inherit; }
+    .sim-reset:hover { color: var(--terracotta); border-color: var(--terracotta); }
+    .sim-matches-toggle { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #7a5200; cursor: pointer; user-select: none; }
+    .sim-matches-toggle input { accent-color: var(--jade); width: 14px; height: 14px; }
+    .sim-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px 20px; }
+    @media (max-width: 900px) { .sim-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { .sim-grid { grid-template-columns: 1fr; } }
+    .sim-q { display: flex; flex-direction: column; gap: 5px; }
+    .sim-q label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #7a5200; }
+    .sim-q select { padding: 6px 10px; border: 1.5px solid #e0c870; border-radius: 7px; background: white; font-family: inherit; font-size: 12.5px; color: var(--text-primary); outline: none; width: 100%; }
+    .sim-q select:focus { border-color: var(--amber); }
+    .sim-multi { display: flex; flex-direction: column; gap: 4px; max-height: 150px; overflow-y: auto; padding: 6px 8px; background: white; border: 1.5px solid #e0c870; border-radius: 7px; }
+    .sim-multi label { display: flex; align-items: flex-start; gap: 6px; font-size: 11.5px; color: var(--text-secondary); cursor: pointer; line-height: 1.4; padding: 1px 0; }
+    .sim-multi label:hover { color: var(--text-primary); }
+    .sim-multi input[type=checkbox] { flex-shrink: 0; margin-top: 2px; accent-color: var(--jade); }
+    .sim-multi-span2 { grid-column: span 2; }
+    @media (max-width: 600px) { .sim-multi-span2 { grid-column: span 1; } }
 
     /* Table */
     .table-wrap { max-width: 1400px; margin: 0 auto; padding: 0 24px 40px; }
@@ -63,10 +94,22 @@
     .detail-box { padding: 16px 24px 20px; background: #f5f0e8; border-top: 1px dashed var(--border); display: none; }
     .detail-box.open { display: block; }
 
+    /* Simulator result column & row tinting */
+    .col-sim { display: none; }
+    body.sim-active .col-sim { display: table-cell; }
+    .result-badge { display: inline-block; font-size: 11px; font-weight: 700; border-radius: 5px; padding: 2px 8px; white-space: nowrap; }
+    .result-likely { background: rgba(26,107,90,0.12); color: var(--jade-dark); }
+    .result-may    { background: rgba(232,168,48,0.18); color: #7a5200; }
+    .result-none   { color: var(--text-muted); font-size: 11px; }
+    body.sim-active tbody tr.sim-likely-row { background: rgba(26,107,90,0.04); }
+    body.sim-active tbody tr.sim-may-row    { background: rgba(232,168,48,0.05); }
+    body.sim-active tbody tr.sim-none-row   { opacity: 0.45; }
+    body.sim-active tbody tr.sim-likely-row:hover { background: rgba(26,107,90,0.08); }
+    body.sim-active tbody tr.sim-may-row:hover    { background: rgba(232,168,48,0.1); }
+
     /* Cell styles */
     .id-badge { font-family: monospace; font-size: 11px; font-weight: 700; background: rgba(26,107,90,0.1); color: var(--jade-dark); border: 1px solid rgba(26,107,90,0.2); border-radius: 5px; padding: 2px 7px; white-space: nowrap; }
-    .prog-name { font-weight: 600; font-size: 13px; max-width: 340px; }
-    .prog-name small { display: block; font-weight: 400; font-size: 11.5px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
+    .prog-name { font-weight: 600; font-size: 13px; max-width: 300px; }
     .cat-tag { display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; border-radius: 99px; padding: 2px 8px; white-space: nowrap; }
     .income-cell { font-size: 12px; font-weight: 600; color: var(--text-secondary); white-space: nowrap; }
     .income-cell.limited { color: var(--jade-dark); }
@@ -82,19 +125,30 @@
     .link-cell .contact { font-size: 11px; color: var(--text-muted); font-style: italic; }
 
     /* Detail box */
-    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    @media (max-width: 700px) { .detail-grid { grid-template-columns: 1fr; } }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+    @media (max-width: 1000px) { .detail-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px)  { .detail-grid { grid-template-columns: 1fr; } }
     .detail-section h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--jade-dark); margin-bottom: 8px; }
     .detail-desc { font-size: 12.5px; color: var(--text-secondary); line-height: 1.65; white-space: pre-line; }
     .income-table { width: 100%; border-collapse: collapse; font-size: 12px; }
     .income-table th { text-align: left; font-weight: 600; color: var(--text-muted); padding: 3px 8px; }
     .income-table td { padding: 3px 8px; border-top: 1px solid rgba(0,0,0,0.05); }
-    .eligibility-path { margin-bottom: 8px; padding: 8px 10px; background: rgba(255,255,255,0.7); border-radius: 7px; border: 1px solid var(--border); font-size: 12px; }
-    .eligibility-path:last-child { margin-bottom: 0; }
-    .path-flags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
-    .path-tier { font-size: 10px; font-weight: 700; border-radius: 4px; padding: 1px 6px; display: inline-block; }
+
+    /* Quiz logic paths */
+    .logic-path { margin-bottom: 8px; padding: 9px 11px; background: rgba(255,255,255,0.7); border-radius: 7px; border: 1px solid var(--border); font-size: 11.5px; }
+    .logic-path:last-child { margin-bottom: 0; }
+    .logic-path.path-match { background: rgba(26,107,90,0.07); border-color: rgba(26,107,90,0.3); }
+    .logic-path.path-may-match { background: rgba(232,168,48,0.08); border-color: rgba(232,168,48,0.35); }
+    .logic-path-header { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
+    .path-tier { font-size: 10px; font-weight: 700; border-radius: 4px; padding: 2px 7px; }
     .tier-likely { background: var(--jade); color: white; }
     .tier-may    { background: var(--amber); color: #4a3000; }
+    .path-match-badge { font-size: 10px; font-weight: 700; border-radius: 4px; padding: 2px 7px; background: rgba(26,107,90,0.15); color: var(--jade-dark); }
+    .path-no-match-badge { font-size: 10px; font-weight: 700; border-radius: 4px; padding: 2px 7px; background: rgba(0,0,0,0.06); color: var(--text-muted); }
+    .path-conditions { display: flex; flex-direction: column; gap: 3px; }
+    .path-cond { display: flex; align-items: baseline; gap: 6px; font-size: 11.5px; color: var(--text-secondary); line-height: 1.4; }
+    .path-cond .q-label { font-size: 10px; font-weight: 700; color: var(--jade-dark); background: rgba(26,107,90,0.1); border-radius: 3px; padding: 1px 5px; white-space: nowrap; flex-shrink: 0; }
+    .path-open { font-size: 11px; color: var(--text-muted); font-style: italic; }
 
     /* Empty state */
     .empty-row td { text-align: center; padding: 48px 24px; color: var(--text-muted); font-size: 13px; }
@@ -117,10 +171,7 @@
     .cat-caretaker      { background: #f3e5f5; color: #6a1b9a; }
     .cat-health         { background: #fce4ec; color: #880e4f; }
 
-    /* Responsive */
-    @media (max-width: 900px) {
-      .col-flags, .col-income { display: none; }
-    }
+    @media (max-width: 900px) { .col-flags, .col-income { display: none; } }
   </style>
 </head>
 <body>
@@ -144,7 +195,29 @@
     <input type="text" id="search" placeholder="Search by name, ID, or description…" autocomplete="off" spellcheck="false">
   </div>
   <div class="filter-row" id="cat-filters"></div>
+  <button class="sim-toggle-btn" id="sim-toggle">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg>
+    Quiz Simulator
+  </button>
   <span class="count-label" id="count-label"></span>
+</div>
+
+<!-- Simulator panel -->
+<div class="sim-panel" id="sim-panel">
+  <div class="sim-box">
+    <div class="sim-header">
+      <div class="sim-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        Set quiz answers — see which programs match in real time
+      </div>
+      <div class="sim-actions">
+        <div id="sim-result-bar" class="sim-result-bar"></div>
+        <label class="sim-matches-toggle"><input type="checkbox" id="sim-matches-only"> Show matches only</label>
+        <button class="sim-reset" id="sim-reset">Reset</button>
+      </div>
+    </div>
+    <div class="sim-grid" id="sim-grid"></div>
+  </div>
 </div>
 
 <div class="stats-bar" id="stats-bar"></div>
@@ -158,11 +231,12 @@
         <th data-col="category">Category <span class="sort-arrow">↕</span></th>
         <th data-col="income" class="col-income">Income Limit (HH=1) <span class="sort-arrow">↕</span></th>
         <th class="col-flags">Eligibility Flags</th>
+        <th class="col-sim" data-col="simtier">Result <span class="sort-arrow">↕</span></th>
         <th>Link</th>
       </tr>
     </thead>
     <tbody id="prog-body">
-      <tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted)">Loading…</td></tr>
+      <tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-muted)">Loading…</td></tr>
     </tbody>
   </table>
 </div>
@@ -170,96 +244,305 @@
 <script src="../data.js"></script>
 <script>
 (() => {
+  // ── Eligibility engine (mirrors california/san-diego/index.html) ───────────
+  const HOUSEHOLD_SIZE_MAP = {"1 person":1,"2 people":2,"3 people":3,"4 people":4,"5 people":5,"6 people":6,"7 people":7};
+  const INCOME_UPPER = {"Under $20,000":20000,"$20,000\u201340,000":40000,"$40,000\u201360,000":60000,"$60,000\u201380,000":80000,"$80,000\u2013120,000":120000,"$120,000\u2013180,000":180000,"Over $180,000":Infinity};
+  const AGE_RANGE_MAP = {"Under 6":[0,5],"6\u201313":[6,13],"13\u201317":[13,17],"18":[18,18],"19\u201325":[19,25],"26\u201359":[26,59],"60\u201361":[60,61],"62\u201364":[62,64],"65+":[65,150]};
+
+  function ageQualifies(ages, ageMin, ageMax) {
+    if (!ages || ages.length === 0) return true;
+    return ages.some(([lo, hi]) => lo <= ageMax && hi >= ageMin);
+  }
+  function buildProfile(answers) {
+    const emp     = answers.employment || [];
+    const special = answers.special_status || [];
+    const enrolled = (answers.enrolled_programs || []).filter(e => e !== 'None of the above');
+    const ages = (answers.age || []).map(a => AGE_RANGE_MAP[a]).filter(Boolean);
+    return {
+      householdSize: HOUSEHOLD_SIZE_MAP[answers.household_size] || 1,
+      income: INCOME_UPPER[answers.annual_income] ?? Infinity,
+      ages,
+      unemployed:       emp.includes('Unemployed (looking for work)'),
+      partTime:         emp.includes('Employed part-time'),
+      retired:          emp.includes('Retired'),
+      student:          emp.includes('Student'),
+      cannotWork:       emp.includes('Unable to work (disability/medical)'),
+      disabled:         special.includes('Disabled, blind, or have a chronic illness') || emp.includes('Unable to work (disability/medical)'),
+      pregnant:         special.includes('Pregnant or recently pregnant'),
+      veteran:          special.includes('Military (active duty, reserve, national guard), Veteran, Gold Star Family, and Dependents'),
+      fosterCare:       special.includes('In foster care or extended foster care'),
+      refugee:          special.includes('Refugee or recent immigrant'),
+      tribal:           special.includes('Tribal member'),
+      domesticViolence: special.includes('Domestic violence or human trafficking survivor'),
+      homeowner:        special.includes('Homeowner'),
+      landlord:         special.includes('Landlord'),
+      homeless:         special.includes('Homeless'),
+      legalHelp:        special.includes('Need legal assistance'),
+      reentry:          special.includes('Reentry'),
+      rural:            special.includes('Live in a rural area'),
+      disasterSurvivor: special.includes('Disaster survivor'),
+      providerSearch:   special.includes('Want to find a healthcare or mental health provider'),
+      forEveryone:      special.includes('Want to learn about community resources available to everyone'),
+      enrolledPrograms: enrolled,
+    };
+  }
+  function checkPath(path, profile) {
+    if (path.household_size !== undefined && profile.householdSize !== path.household_size) return null;
+    if (path.income_limit  != null && profile.income > path.income_limit)  return null;
+    if (path.income_minimum != null && profile.income < path.income_minimum) return null;
+    if (path.age_min !== undefined || path.age_max !== undefined) {
+      if (!ageQualifies(profile.ages, path.age_min ?? 0, path.age_max ?? 150)) return null;
+    }
+    if (path.unemployed        && !profile.unemployed)        return null;
+    if (path['part-time']      && !profile.partTime)          return null;
+    if (path.retired           && !profile.retired)           return null;
+    if (path.student           && !profile.student)           return null;
+    if (path.disabled          && !profile.disabled)          return null;
+    if (path.pregnant          && !profile.pregnant)          return null;
+    if (path.veteran_military  && !profile.veteran)           return null;
+    if (path.foster_care       && !profile.fosterCare)        return null;
+    if (path.refugee           && !profile.refugee)           return null;
+    if (path.tribal_member     && !profile.tribal)            return null;
+    if (path['domestic violence'] && !profile.domesticViolence) return null;
+    if (path.homeowner         && !profile.homeowner)         return null;
+    if (path.landlord          && !profile.landlord)          return null;
+    if (path.homeless          && !profile.homeless)          return null;
+    if (path.legal             && !profile.legalHelp)         return null;
+    if (path['re-entry']       && !profile.reentry)           return null;
+    if (path.rural             && !profile.rural)             return null;
+    if (path['disaster survivor'] && !profile.disasterSurvivor) return null;
+    if (path.provider_search) return 'may';
+    if (path.other_eligibility) return 'may';
+    if (path.business) return 'may';
+    if (path.enrolled_any && path.enrolled_any.length > 0) {
+      if (!profile.enrolledPrograms.some(id => path.enrolled_any.includes(id))) return null;
+    }
+    return path.may_only ? 'may' : 'likely';
+  }
+  function getProgramTier(progId, profile) {
+    const paths = ELIGIBILITY[progId];
+    if (!paths || paths.length === 0) return null;
+    let best = null;
+    for (const path of paths) {
+      const t = checkPath(path, profile);
+      if (t === 'likely') return 'likely';
+      if (t === 'may') best = 'may';
+    }
+    return best;
+  }
+
+  // ── Quiz options (mirrors main widget) ────────────────────────────────────
+  const Q = {
+    household_size: { label: 'Q1 — Household Size', type: 'select',
+      opts: ['1 person','2 people','3 people','4 people','5 people','6 people','7 people'] },
+    annual_income: { label: 'Q3 — Annual Income', type: 'select',
+      opts: ['Under $20,000','$20,000\u201340,000','$40,000\u201360,000','$60,000\u201380,000','$80,000\u2013120,000','$120,000\u2013180,000','Over $180,000'] },
+    employment: { label: 'Q4 — Employment', type: 'select',
+      opts: ['Employed full-time','Employed part-time','Retired','Self-employed','Student','Unable to work (disability/medical)','Unemployed (looking for work)'] },
+    age: { label: 'Q2 — Ages in Household', type: 'multi',
+      opts: ['Under 6','6\u201313','13\u201317','18','19\u201325','26\u201359','60\u201361','62\u201364','65+'] },
+    special_status: { label: 'Q5 — Special Status', type: 'multi', span2: true,
+      opts: ['Disabled, blind, or have a chronic illness','Disaster survivor','Domestic violence or human trafficking survivor','Homeless','Homeowner','In foster care or extended foster care','Landlord','Live in a rural area','Military (active duty, reserve, national guard), Veteran, Gold Star Family, and Dependents','Need legal assistance','Pregnant or recently pregnant','Reentry','Refugee or recent immigrant','Tribal member','Want to find a healthcare or mental health provider','Want to learn about community resources available to everyone'] },
+    enrolled_programs: { label: 'Q6 — Already Enrolled In', type: 'multi',
+      opts: ['Cal Fresh / Supplemental Nutrition Assistance Program (SNAP)','CalWORKs / Temporary Assistance for Needy Families (TANF)','California Alternative Rates for Energy (CARE)','California LifeLine','Family Electric Rate Assistance Program (FERA)','Federal Lifeline','Low Income Home Energy Assistance Program (LIHEAP)','Medi-Cal (Medicaid)','Medicare','Public Housing','San Diego County General Relief','Section 8 Housing Choice Voucher','Supplemental Security Income (SSI)','Women, Infants, and Children (WIC)'] },
+  };
+
+  // Default answers
+  const defaultAnswers = () => ({
+    household_size: '1 person', annual_income: 'Under $20,000',
+    employment: 'Employed full-time', age: [], special_status: [], enrolled_programs: [],
+  });
+  let simAnswers = defaultAnswers();
+  let simActive = false;
+  let simResults = {}; // { progId: 'likely'|'may'|null }
+  let simMatchesOnly = false;
+
+  function runSimulator() {
+    if (!simActive) return;
+    const profile = buildProfile(simAnswers);
+    simResults = {};
+    for (const prog of allPrograms) {
+      simResults[prog.id] = getProgramTier(prog.id, profile);
+    }
+    const nLikely = Object.values(simResults).filter(t => t === 'likely').length;
+    const nMay    = Object.values(simResults).filter(t => t === 'may').length;
+    const nNone   = Object.values(simResults).filter(t => !t).length;
+    document.getElementById('sim-result-bar').innerHTML =
+      `<span class="sim-likely">✓ ${nLikely} Likely</span>` +
+      `<span class="sim-may">◎ ${nMay} May Qualify</span>` +
+      `<span class="sim-none">✗ ${nNone} Not shown</span>`;
+    render();
+    // Refresh open detail boxes with updated path matching
+    document.querySelectorAll('.detail-box.open').forEach(box => {
+      const id = box.id.replace('detail-box-', '');
+      const prog = allPrograms.find(p => p.id === id);
+      if (prog) box.innerHTML = renderDetail(prog);
+    });
+  }
+
+  // ── Build simulator controls ───────────────────────────────────────────────
+  const simGrid = document.getElementById('sim-grid');
+  const order = ['household_size','annual_income','employment','age','special_status','enrolled_programs'];
+  order.forEach(key => {
+    const q = Q[key];
+    const div = document.createElement('div');
+    div.className = 'sim-q' + (q.span2 ? ' sim-multi-span2' : '');
+    const lbl = document.createElement('label');
+    lbl.textContent = q.label;
+    div.appendChild(lbl);
+    if (q.type === 'select') {
+      const sel = document.createElement('select');
+      sel.id = 'sim-' + key;
+      q.opts.forEach(o => { const opt = document.createElement('option'); opt.value = o; opt.textContent = o; sel.appendChild(opt); });
+      sel.value = simAnswers[key] || q.opts[0];
+      sel.addEventListener('change', () => { simAnswers[key] = sel.value; runSimulator(); });
+      div.appendChild(sel);
+    } else {
+      const wrap = document.createElement('div');
+      wrap.className = 'sim-multi';
+      q.opts.forEach(o => {
+        const lbl2 = document.createElement('label');
+        const cb = document.createElement('input');
+        cb.type = 'checkbox'; cb.value = o;
+        cb.id = 'simcb-' + key + '-' + o.replace(/[^a-z]/gi,'');
+        cb.addEventListener('change', () => {
+          if (cb.checked) simAnswers[key] = [...(simAnswers[key]||[]), o];
+          else simAnswers[key] = (simAnswers[key]||[]).filter(x => x !== o);
+          runSimulator();
+        });
+        lbl2.appendChild(cb);
+        lbl2.appendChild(document.createTextNode(' ' + o));
+        wrap.appendChild(lbl2);
+      });
+      div.appendChild(wrap);
+    }
+    simGrid.appendChild(div);
+  });
+
+  document.getElementById('sim-toggle').addEventListener('click', () => {
+    simActive = !simActive;
+    document.getElementById('sim-panel').classList.toggle('open', simActive);
+    document.getElementById('sim-toggle').classList.toggle('active', simActive);
+    document.body.classList.toggle('sim-active', simActive);
+    if (simActive) runSimulator(); else render();
+  });
+  document.getElementById('sim-reset').addEventListener('click', () => {
+    simAnswers = defaultAnswers();
+    // Reset controls
+    order.forEach(key => {
+      const q = Q[key];
+      if (q.type === 'select') {
+        document.getElementById('sim-' + key).value = simAnswers[key];
+      } else {
+        document.querySelectorAll(`[id^="simcb-${key}-"]`).forEach(cb => { cb.checked = false; });
+        simAnswers[key] = [];
+      }
+    });
+    runSimulator();
+  });
+  document.getElementById('sim-matches-only').addEventListener('change', e => {
+    simMatchesOnly = e.target.checked;
+    render();
+  });
+
   // ── Helpers ────────────────────────────────────────────────────────────────
   const CAT_LABEL = {
-    food: 'Food', healthcare: 'Healthcare', 'mental healthcare': 'Mental Health',
-    'health necessities': 'Health Necessities', income: 'Income', housing: 'Housing',
-    utility: 'Utility', transportation: 'Transport', legal: 'Legal',
-    'day care': 'Day Care', caretaker: 'Caretaker', entertainment: 'Entertainment',
-    taxes: 'Taxes', technology: 'Technology', education: 'Education', employment: 'Employment',
+    food:'Food', healthcare:'Healthcare', 'mental healthcare':'Mental Health',
+    'health necessities':'Health Necessities', income:'Income', housing:'Housing',
+    utility:'Utility', transportation:'Transport', legal:'Legal',
+    'day care':'Day Care', caretaker:'Caretaker', entertainment:'Entertainment',
+    taxes:'Taxes', technology:'Technology', education:'Education', employment:'Employment',
   };
   const CAT_CLASS = {
-    food: 'cat-food', healthcare: 'cat-healthcare', 'mental healthcare': 'cat-mental',
-    'health necessities': 'cat-health', income: 'cat-income', housing: 'cat-housing',
-    utility: 'cat-utility', transportation: 'cat-transport', legal: 'cat-legal',
-    'day care': 'cat-daycare', caretaker: 'cat-caretaker', entertainment: 'cat-entertainment',
-    taxes: 'cat-taxes', technology: 'cat-technology', education: 'cat-education',
-    employment: 'cat-employment',
-  };
-  const FLAG_LABELS = {
-    veteran_military: 'Veteran', disabled: 'Disabled', pregnant: 'Pregnant',
-    foster_care: 'Foster Care', refugee: 'Refugee', tribal_member: 'Tribal',
-    'domestic violence': 'DV Survivor', homeowner: 'Homeowner', landlord: 'Landlord',
-    homeless: 'Homeless', legal: 'Legal Need', 're-entry': 'Re-entry',
-    rural: 'Rural', 'disaster survivor': 'Disaster', unemployed: 'Unemployed',
-    'part-time': 'Part-time', retired: 'Retired', student: 'Student',
-    business: 'Business', provider_search: 'Provider Search', other_eligibility: 'Other',
-    for_everyone: 'For Everyone',
+    food:'cat-food', healthcare:'cat-healthcare', 'mental healthcare':'cat-mental',
+    'health necessities':'cat-health', income:'cat-income', housing:'cat-housing',
+    utility:'cat-utility', transportation:'cat-transport', legal:'cat-legal',
+    'day care':'cat-daycare', caretaker:'cat-caretaker', entertainment:'cat-entertainment',
+    taxes:'cat-taxes', technology:'cat-technology', education:'cat-education',
+    employment:'cat-employment',
   };
   const STATUS_FLAGS = ['veteran_military','disabled','pregnant','foster_care','refugee',
     'tribal_member','domestic violence','homeowner','landlord','homeless','legal',
     're-entry','rural','disaster survivor','unemployed','part-time','retired','student',
     'business','provider_search','other_eligibility','for_everyone'];
+  const FLAG_LABELS = {
+    veteran_military:'Veteran', disabled:'Disabled', pregnant:'Pregnant',
+    foster_care:'Foster Care', refugee:'Refugee', tribal_member:'Tribal',
+    'domestic violence':'DV Survivor', homeowner:'Homeowner', landlord:'Landlord',
+    homeless:'Homeless', legal:'Legal Need', 're-entry':'Re-entry',
+    rural:'Rural', 'disaster survivor':'Disaster', unemployed:'Unemployed',
+    'part-time':'Part-time', retired:'Retired', student:'Student',
+    business:'Business', provider_search:'Provider Search', other_eligibility:'Other',
+    for_everyone:'For Everyone',
+  };
 
   function fmt$(n) { return n == null ? '—' : '$' + n.toLocaleString(); }
-  function pathTier(path) { return path.may_only || path.provider_search || path.other_eligibility || path.business ? 'may' : 'likely'; }
+
+  // Map a path flag to a human-readable quiz condition { q, label }
+  function pathConditions(path) {
+    const c = [];
+    if (path.household_size != null)
+      c.push({ q:'Q1', label:`Household size = ${path.household_size}` });
+    if (path.income_limit != null)
+      c.push({ q:'Q3', label:`Annual income ≤ ${fmt$(path.income_limit)}` });
+    if (path.income_minimum != null && path.income_minimum > 0)
+      c.push({ q:'Q3', label:`Annual income ≥ ${fmt$(path.income_minimum)}` });
+    if (path.age_min != null || path.age_max != null)
+      c.push({ q:'Q2', label:`Age ${path.age_min ?? 0}–${path.age_max ?? '∞'}` });
+    if (path.unemployed)          c.push({ q:'Q4', label:'Unemployed (looking for work)' });
+    if (path['part-time'])        c.push({ q:'Q4', label:'Employed part-time' });
+    if (path.retired)             c.push({ q:'Q4', label:'Retired' });
+    if (path.student)             c.push({ q:'Q4', label:'Student' });
+    if (path.disabled)            c.push({ q:'Q4/Q5', label:'Disabled / Unable to work' });
+    if (path.pregnant)            c.push({ q:'Q5', label:'Pregnant or recently pregnant' });
+    if (path.veteran_military)    c.push({ q:'Q5', label:'Military / Veteran' });
+    if (path.foster_care)         c.push({ q:'Q5', label:'In foster care / extended foster care' });
+    if (path.refugee)             c.push({ q:'Q5', label:'Refugee or recent immigrant' });
+    if (path.tribal_member)       c.push({ q:'Q5', label:'Tribal member' });
+    if (path['domestic violence']) c.push({ q:'Q5', label:'Domestic violence or trafficking survivor' });
+    if (path.homeowner)           c.push({ q:'Q5', label:'Homeowner' });
+    if (path.landlord)            c.push({ q:'Q5', label:'Landlord' });
+    if (path.homeless)            c.push({ q:'Q5', label:'Homeless' });
+    if (path.legal)               c.push({ q:'Q5', label:'Need legal assistance' });
+    if (path['re-entry'])         c.push({ q:'Q5', label:'Reentry' });
+    if (path.rural)               c.push({ q:'Q5', label:'Live in a rural area' });
+    if (path['disaster survivor']) c.push({ q:'Q5', label:'Disaster survivor' });
+    if (path.for_everyone)        c.push({ q:'Q5', label:'Community resource — anyone' });
+    if (path.provider_search)     c.push({ q:'Q5', label:'Looking for healthcare/mental health provider' });
+    if (path.other_eligibility)   c.push({ q:'—',  label:'Other eligibility (contact program)' });
+    if (path.business)            c.push({ q:'—',  label:'Business owner' });
+    if (path.enrolled_any?.length)
+      c.push({ q:'Q6', label:`Already enrolled in: ${path.enrolled_any.slice(0,3).join(', ')}${path.enrolled_any.length > 3 ? ` +${path.enrolled_any.length-3} more` : ''}` });
+    return c;
+  }
 
   function summarize(progId) {
     const paths = ELIGIBILITY[progId] || [];
     const criteria = PROGRAM_CRITERIA[progId] || {};
-    // Income limit for HH=1
     const incomeLimit1 = criteria[1]?.[0]?.incomeLimit ?? null;
-    // Collect status flags from all paths
     const flags = new Set();
-    let hasAge = false, minAge = null, maxAge = null;
-    let hasIncomePath = false;
+    let hasAge=false, minAge=null, maxAge=null, hasIncomePath=false;
     for (const p of paths) {
       if (p.income_limit != null) hasIncomePath = true;
       if (p.age_min != null || p.age_max != null) {
         hasAge = true;
-        if (p.age_min != null && (minAge == null || p.age_min < minAge)) minAge = p.age_min;
-        if (p.age_max != null && (maxAge == null || p.age_max > maxAge)) maxAge = p.age_max;
+        if (p.age_min != null && (minAge==null||p.age_min<minAge)) minAge=p.age_min;
+        if (p.age_max != null && (maxAge==null||p.age_max>maxAge)) maxAge=p.age_max;
       }
       for (const f of STATUS_FLAGS) { if (p[f]) flags.add(f); }
     }
     return { incomeLimit1, hasIncomePath, hasAge, minAge, maxAge, flags };
   }
 
-  function pathToHuman(path) {
-    const parts = [];
-    if (path.household_size != null) parts.push(`HH=${path.household_size}`);
-    if (path.income_limit != null) parts.push(`Income ≤ ${fmt$(path.income_limit)}`);
-    if (path.income_minimum != null && path.income_minimum > 0) parts.push(`Income ≥ ${fmt$(path.income_minimum)}`);
-    if (path.age_min != null || path.age_max != null) {
-      const lo = path.age_min ?? 0, hi = path.age_max ?? '∞';
-      parts.push(`Age ${lo}–${hi}`);
-    }
-    for (const f of STATUS_FLAGS) {
-      if (path[f] && FLAG_LABELS[f]) parts.push(FLAG_LABELS[f]);
-    }
-    if (path.enrolled_any?.length) parts.push(`Enrolled in [${path.enrolled_any.slice(0,3).join(', ')}${path.enrolled_any.length > 3 ? '…' : ''}]`);
-    return parts;
-  }
-
   function renderFlags(flags, hasAge, minAge, maxAge, hasIncomePath, incomeLimit1) {
     const items = [];
-    if (hasAge) {
-      const lo = minAge ?? 0, hi = maxAge ?? '∞';
-      items.push(`<span class="flag flag-age">Age ${lo}–${hi}</span>`);
-    }
-    if (hasIncomePath && incomeLimit1 != null) {
-      items.push(`<span class="flag flag-income">≤ ${fmt$(incomeLimit1)} HH=1</span>`);
-    } else if (hasIncomePath) {
-      items.push(`<span class="flag flag-income">Income-gated</span>`);
-    }
+    if (hasAge) items.push(`<span class="flag flag-age">Age ${minAge??0}–${maxAge??'∞'}</span>`);
+    if (hasIncomePath && incomeLimit1 != null) items.push(`<span class="flag flag-income">≤ ${fmt$(incomeLimit1)} HH=1</span>`);
+    else if (hasIncomePath) items.push(`<span class="flag flag-income">Income-gated</span>`);
     for (const f of flags) {
-      if (f === 'for_everyone') {
-        items.push(`<span class="flag flag-everyone">For Everyone</span>`);
-      } else if (f === 'provider_search' || f === 'other_eligibility' || f === 'business') {
-        items.push(`<span class="flag flag-may">${FLAG_LABELS[f]||f}</span>`);
-      } else {
-        items.push(`<span class="flag flag-status">${FLAG_LABELS[f]||f}</span>`);
-      }
+      if (f==='for_everyone') items.push(`<span class="flag flag-everyone">For Everyone</span>`);
+      else if (f==='provider_search'||f==='other_eligibility'||f==='business') items.push(`<span class="flag flag-may">${FLAG_LABELS[f]||f}</span>`);
+      else items.push(`<span class="flag flag-status">${FLAG_LABELS[f]||f}</span>`);
     }
     return items.join('');
   }
@@ -268,60 +551,79 @@
     const paths = ELIGIBILITY[prog.id] || [];
     const criteria = PROGRAM_CRITERIA[prog.id] || {};
 
-    // Income table from PROGRAM_CRITERIA
+    // Income table
     const incomeRows = Object.entries(criteria).map(([sz, arr]) => {
       const lim = arr[0]?.incomeLimit;
-      return lim != null ? `<tr><td>${sz === '7' ? '7+' : sz} person${sz === '1' ? '' : 's'}</td><td>${fmt$(lim)}/yr</td></tr>` : '';
+      return lim != null ? `<tr><td>${sz==='7'?'7+':sz} person${sz==='1'?'':'s'}</td><td>${fmt$(lim)}/yr</td></tr>` : '';
     }).filter(Boolean).join('');
-
     const incomeSection = incomeRows
-      ? `<div class="detail-section"><h4>Income Limits (Max Annual)</h4><table class="income-table"><tr><th>Household</th><th>Max Income</th></tr>${incomeRows}</table></div>`
+      ? `<div class="detail-section" style="margin-top:16px"><h4>Income Limits</h4><table class="income-table"><tr><th>Household</th><th>Max Annual</th></tr>${incomeRows}</table></div>`
       : '';
 
-    // Eligibility paths
+    // Quiz logic paths
+    const profile = simActive ? buildProfile(simAnswers) : null;
     const pathsHtml = paths.map((path, i) => {
-      const tier = pathTier(path);
-      const parts = pathToHuman(path);
-      const partsHtml = parts.length
-        ? `<div class="path-flags">${parts.map(p => `<span class="flag flag-status">${p}</span>`).join('')}</div>`
-        : '<span style="color:var(--text-muted);font-size:11px">No specific requirements (open eligibility)</span>';
-      return `<div class="eligibility-path"><span class="path-tier tier-${tier}">${tier === 'likely' ? 'Likely' : 'May Qualify'}</span> &nbsp;Path ${i+1}${partsHtml}</div>`;
+      const tier = path.may_only || path.provider_search || path.other_eligibility || path.business ? 'may' : 'likely';
+      const conds = pathConditions(path);
+      const condsHtml = conds.length
+        ? `<div class="path-conditions">${conds.map(c => `<div class="path-cond"><span class="q-label">${c.q}</span>${c.label}</div>`).join('')}</div>`
+        : `<div class="path-open">No specific requirements — open to all</div>`;
+      let matchBadge = '';
+      let pathClass = '';
+      if (profile) {
+        const result = checkPath(path, profile);
+        if (result === 'likely') { matchBadge = '<span class="path-match-badge">✓ Matches</span>'; pathClass = 'path-match'; }
+        else if (result === 'may') { matchBadge = '<span class="path-match-badge" style="background:rgba(232,168,48,0.15);color:#7a5200">◎ May match</span>'; pathClass = 'path-may-match'; }
+        else { matchBadge = `<span class="path-no-match-badge">✗ No match</span>`; }
+      }
+      return `<div class="logic-path ${pathClass}">
+        <div class="logic-path-header">
+          <span class="path-tier tier-${tier}">${tier==='likely'?'Likely':'May Qualify'}</span>
+          <span style="font-size:11px;color:var(--text-muted)">Path ${i+1}</span>
+          ${matchBadge}
+        </div>
+        ${condsHtml}
+      </div>`;
     }).join('');
 
     return `
       <div class="detail-grid">
         <div>
-          <div class="detail-section" style="margin-bottom:16px">
+          <div class="detail-section">
             <h4>Description</h4>
             <div class="detail-desc">${prog.description || '—'}</div>
           </div>
           ${incomeSection}
         </div>
-        <div>
+        <div style="grid-column: span 2">
           <div class="detail-section">
-            <h4>Eligibility Paths (${paths.length})</h4>
+            <h4>Quiz Logic — ${paths.length} eligibility path${paths.length!==1?'s':''}</h4>
             ${pathsHtml || '<span style="color:var(--text-muted);font-size:12px">No eligibility data</span>'}
           </div>
         </div>
       </div>`;
   }
 
-  // ── Build table ─────────────────────────────────────────────────────────────
-  const allPrograms = Object.values(PROGRAMS).map(prog => {
-    const s = summarize(prog.id);
-    return { ...prog, ...s };
-  });
+  // ── Data ─────────────────────────────────────────────────────────────────────
+  const allPrograms = Object.values(PROGRAMS).map(prog => ({ ...prog, ...summarize(prog.id) }));
 
   let filtered = allPrograms.slice();
   let sortCol = 'id', sortDir = 1;
   let activeCategory = null;
   let searchTerm = '';
 
+  const TIER_ORDER = { likely:0, may:1, null:2, undefined:2 };
+
   function sortPrograms(arr) {
     return arr.slice().sort((a, b) => {
       let av = a[sortCol] ?? '', bv = b[sortCol] ?? '';
-      if (sortCol === 'income') { av = a.incomeLimit1 ?? Infinity; bv = b.incomeLimit1 ?? Infinity; }
-      if (typeof av === 'string') return av.localeCompare(bv) * sortDir;
+      if (sortCol==='income') { av = a.incomeLimit1 ?? Infinity; bv = b.incomeLimit1 ?? Infinity; }
+      if (sortCol==='simtier') {
+        av = TIER_ORDER[simResults[a.id] ?? null] ?? 2;
+        bv = TIER_ORDER[simResults[b.id] ?? null] ?? 2;
+        return (av - bv) * sortDir;
+      }
+      if (typeof av==='string') return av.localeCompare(bv) * sortDir;
       return (av - bv) * sortDir;
     });
   }
@@ -333,6 +635,7 @@
         const q = searchTerm.toLowerCase();
         if (!p.name.toLowerCase().includes(q) && !p.id.toLowerCase().includes(q) && !(p.description||'').toLowerCase().includes(q)) return false;
       }
+      if (simActive && simMatchesOnly && !simResults[p.id]) return false;
       return true;
     });
     render();
@@ -344,7 +647,7 @@
     document.getElementById('count-label').textContent = `${sorted.length} of ${allPrograms.length} programs`;
 
     if (!sorted.length) {
-      tbody.innerHTML = '<tr class="empty-row"><td colspan="6">No programs match. Try a different search or filter.</td></tr>';
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="7">No programs match. Try a different search or filter.</td></tr>';
       return;
     }
 
@@ -357,23 +660,30 @@
       const isContact = prog.link?.startsWith('Contact');
       const linkHtml = isContact
         ? `<span class="contact">${prog.link}</span>`
-        : `<a href="${prog.link}" target="_blank" rel="noopener">↗ Apply</a>`;
-      const nameTrunc = prog.name.length > 60 ? prog.name.slice(0, 57) + '…' : prog.name;
+        : `<a href="${prog.link}" target="_blank" rel="noopener" onclick="event.stopPropagation()">↗ Apply</a>`;
+      const nameTrunc = prog.name.length > 55 ? prog.name.slice(0, 52) + '…' : prog.name;
+
+      const tier = simResults[prog.id];
+      const tierClass = tier==='likely' ? 'sim-likely-row' : tier==='may' ? 'sim-may-row' : 'sim-none-row';
+      const tierCell = tier==='likely'
+        ? `<span class="result-badge result-likely">✓ Likely</span>`
+        : tier==='may'
+        ? `<span class="result-badge result-may">◎ May</span>`
+        : `<span class="result-none">—</span>`;
 
       return `
-        <tr data-id="${prog.id}" onclick="toggleDetail('${prog.id}')">
+        <tr data-id="${prog.id}" class="${simActive ? tierClass : ''}" onclick="toggleDetail('${prog.id}')">
           <td><span class="id-badge">${prog.id}</span></td>
           <td class="prog-name">${nameTrunc}</td>
           <td><span class="cat-tag ${catClass}">${catLabel}</span></td>
           <td class="income-cell ${incomeClass} col-income">${incomeText}</td>
-          <td class="flags-cell col-flags">${flagsHtml || '<span style="color:var(--text-muted);font-size:11px">—</span>'}</td>
+          <td class="flags-cell col-flags">${flagsHtml||'<span style="color:var(--text-muted);font-size:11px">—</span>'}</td>
+          <td class="col-sim">${tierCell}</td>
           <td class="link-cell">${linkHtml}</td>
         </tr>
         <tr class="detail-row" id="detail-${prog.id}">
-          <td colspan="6">
-            <div class="detail-box" id="detail-box-${prog.id}">
-              ${renderDetail(prog)}
-            </div>
+          <td colspan="7">
+            <div class="detail-box" id="detail-box-${prog.id}">${renderDetail(prog)}</div>
           </td>
         </tr>`;
     }).join('');
@@ -387,56 +697,49 @@
     row.classList.toggle('expanded', isOpen);
   };
 
-  // ── Category filters ────────────────────────────────────────────────────────
+  // ── Category filters ─────────────────────────────────────────────────────────
   const catCounts = {};
   allPrograms.forEach(p => { catCounts[p.category] = (catCounts[p.category]||0)+1; });
   const cats = Object.keys(catCounts).sort();
-
   const filterRow = document.getElementById('cat-filters');
   const allBtn = document.createElement('button');
   allBtn.className = 'filter-btn active';
   allBtn.textContent = `All (${allPrograms.length})`;
-  allBtn.onclick = () => { activeCategory = null; document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); allBtn.classList.add('active'); applyFilters(); };
+  allBtn.onclick = () => { activeCategory=null; document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); allBtn.classList.add('active'); applyFilters(); };
   filterRow.appendChild(allBtn);
-
   cats.forEach(cat => {
     const btn = document.createElement('button');
     btn.className = 'filter-btn';
     btn.textContent = `${CAT_LABEL[cat]||cat} (${catCounts[cat]})`;
-    btn.onclick = () => {
-      activeCategory = cat;
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      applyFilters();
-    };
+    btn.onclick = () => { activeCategory=cat; document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); applyFilters(); };
     filterRow.appendChild(btn);
   });
 
-  // ── Search ──────────────────────────────────────────────────────────────────
+  // ── Search ───────────────────────────────────────────────────────────────────
   let searchTimer;
   document.getElementById('search').addEventListener('input', e => {
     clearTimeout(searchTimer);
     searchTimer = setTimeout(() => { searchTerm = e.target.value.trim(); applyFilters(); }, 180);
   });
 
-  // ── Sort ────────────────────────────────────────────────────────────────────
+  // ── Sort ─────────────────────────────────────────────────────────────────────
   document.querySelectorAll('thead th[data-col]').forEach(th => {
     th.addEventListener('click', () => {
       const col = th.dataset.col;
-      if (sortCol === col) { sortDir *= -1; } else { sortCol = col; sortDir = 1; }
-      document.querySelectorAll('thead th').forEach(h => { h.classList.remove('sorted'); delete h.querySelector('.sort-arrow')?.dataset.dir; });
+      if (sortCol===col) sortDir*=-1; else { sortCol=col; sortDir=1; }
+      document.querySelectorAll('thead th').forEach(h => h.classList.remove('sorted'));
       th.classList.add('sorted');
       const arrow = th.querySelector('.sort-arrow');
-      if (arrow) arrow.textContent = sortDir === 1 ? '↑' : '↓';
+      if (arrow) arrow.textContent = sortDir===1 ? '↑' : '↓';
       render();
     });
   });
 
-  // ── Stats bar ────────────────────────────────────────────────────────────────
-  const withIncome = allPrograms.filter(p => p.hasIncomePath).length;
-  const withStatus = allPrograms.filter(p => p.flags.size > 0).length;
-  const withAge    = allPrograms.filter(p => p.hasAge).length;
-  const openAll    = allPrograms.filter(p => !p.hasIncomePath && p.flags.size === 0 && !p.hasAge).length;
+  // ── Stats bar ─────────────────────────────────────────────────────────────────
+  const withIncome = allPrograms.filter(p=>p.hasIncomePath).length;
+  const withStatus = allPrograms.filter(p=>p.flags.size>0).length;
+  const withAge    = allPrograms.filter(p=>p.hasAge).length;
+  const openAll    = allPrograms.filter(p=>!p.hasIncomePath&&p.flags.size===0&&!p.hasAge).length;
   document.getElementById('stats-bar').innerHTML = `
     <div class="stat"><strong>${allPrograms.length}</strong> total programs</div>
     <div class="stat" style="color:#888">·</div>
@@ -446,11 +749,10 @@
     <div class="stat" style="color:#888">·</div>
     <div class="stat"><strong>${withAge}</strong> age-restricted</div>
     <div class="stat" style="color:#888">·</div>
-    <div class="stat"><strong>${openAll}</strong> open / no restrictions</div>
+    <div class="stat"><strong>${openAll}</strong> open</div>
     <div class="stat" style="color:#888">·</div>
     <div class="stat"><strong>${cats.length}</strong> categories</div>`;
 
-  // ── Initial render ──────────────────────────────────────────────────────────
   render();
 })();
 </script>
