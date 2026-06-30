@@ -172,6 +172,36 @@
     .cat-health         { background: #fce4ec; color: #880e4f; }
 
     @media (max-width: 900px) { .col-flags, .col-income { display: none; } }
+
+    /* Raw JSON modal */
+    .json-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(28,26,23,0.55); z-index: 200; align-items: flex-start; justify-content: center; padding: 40px 16px; overflow-y: auto; }
+    .json-modal-overlay.open { display: flex; }
+    .json-modal { background: white; border-radius: 14px; width: 100%; max-width: 900px; box-shadow: 0 20px 60px rgba(0,0,0,0.25); display: flex; flex-direction: column; max-height: calc(100vh - 80px); margin: auto; }
+    .json-modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .json-modal-title { font-size: 14px; font-weight: 700; flex: 1; min-width: 120px; }
+    .json-tab-row { display: flex; gap: 4px; }
+    .json-tab { padding: 5px 12px; border-radius: 6px; border: 1.5px solid var(--border); background: white; font-family: inherit; font-size: 12px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 0.15s; }
+    .json-tab:hover { border-color: var(--jade); color: var(--jade); }
+    .json-tab.active { background: var(--jade); border-color: var(--jade); color: white; }
+    .json-modal-actions { display: flex; gap: 8px; margin-left: auto; }
+    .json-action-btn { padding: 6px 13px; border-radius: 7px; border: 1.5px solid var(--border); background: white; font-family: inherit; font-size: 12px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 5px; }
+    .json-action-btn:hover { border-color: var(--jade); color: var(--jade); }
+    .json-action-btn.copied { background: var(--jade); border-color: var(--jade); color: white; }
+    .json-close { padding: 6px 10px; border-radius: 7px; border: 1.5px solid var(--border); background: white; font-family: inherit; font-size: 16px; color: var(--text-muted); cursor: pointer; line-height: 1; }
+    .json-close:hover { border-color: var(--terracotta); color: var(--terracotta); }
+    .json-search-bar { padding: 10px 20px; border-bottom: 1px solid var(--border); display: flex; gap: 8px; align-items: center; }
+    .json-search-bar input { flex: 1; padding: 7px 12px; border: 1.5px solid var(--border); border-radius: 7px; font-family: monospace; font-size: 12.5px; outline: none; }
+    .json-search-bar input:focus { border-color: var(--jade); }
+    .json-match-count { font-size: 11.5px; color: var(--text-muted); white-space: nowrap; min-width: 80px; }
+    .json-body { flex: 1; overflow: auto; padding: 0; }
+    pre#json-pre { margin: 0; padding: 16px 20px; font-family: 'SF Mono', 'Fira Code', 'Fira Mono', monospace; font-size: 12px; line-height: 1.6; white-space: pre; tab-size: 2; }
+    .json-hl { background: rgba(232,168,48,0.35); border-radius: 2px; }
+    .json-key   { color: #1a5296; }
+    .json-str   { color: #1b5e20; }
+    .json-num   { color: #c4622d; }
+    .json-bool  { color: #880e4f; }
+    .json-null  { color: #9a9082; }
+    .json-modal-footer { padding: 10px 20px; border-top: 1px solid var(--border); font-size: 11.5px; color: var(--text-muted); display: flex; gap: 16px; flex-wrap: wrap; }
   </style>
 </head>
 <body>
@@ -198,6 +228,10 @@
   <button class="sim-toggle-btn" id="sim-toggle">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg>
     Quiz Simulator
+  </button>
+  <button class="sim-toggle-btn" id="json-btn">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+    Raw JSON
   </button>
   <span class="count-label" id="count-label"></span>
 </div>
@@ -239,6 +273,39 @@
       <tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-muted)">Loading…</td></tr>
     </tbody>
   </table>
+</div>
+
+<!-- Raw JSON modal -->
+<div class="json-modal-overlay" id="json-overlay">
+  <div class="json-modal">
+    <div class="json-modal-header">
+      <span class="json-modal-title">Raw JSON</span>
+      <div class="json-tab-row" id="json-tabs">
+        <button class="json-tab active" data-key="PROGRAMS">PROGRAMS</button>
+        <button class="json-tab" data-key="PROGRAM_CRITERIA">PROGRAM_CRITERIA</button>
+        <button class="json-tab" data-key="ELIGIBILITY">ELIGIBILITY</button>
+      </div>
+      <div class="json-modal-actions">
+        <button class="json-action-btn" id="json-copy">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+        <button class="json-action-btn" id="json-download">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download
+        </button>
+        <button class="json-close" id="json-close">✕</button>
+      </div>
+    </div>
+    <div class="json-search-bar">
+      <input type="text" id="json-search" placeholder="Search within JSON… (e.g. program name, flag, income)" autocomplete="off" spellcheck="false">
+      <span class="json-match-count" id="json-match-count"></span>
+    </div>
+    <div class="json-body">
+      <pre id="json-pre"></pre>
+    </div>
+    <div class="json-modal-footer" id="json-footer"></div>
+  </div>
 </div>
 
 <script src="../data.js"></script>
@@ -754,6 +821,133 @@
     <div class="stat"><strong>${cats.length}</strong> categories</div>`;
 
   render();
+
+  // ── Raw JSON modal ─────────────────────────────────────────────────────────
+  const JSON_SOURCES = {
+    PROGRAMS: () => PROGRAMS,
+    PROGRAM_CRITERIA: () => PROGRAM_CRITERIA,
+    ELIGIBILITY: () => ELIGIBILITY,
+  };
+
+  let jsonActiveKey = 'PROGRAMS';
+  let jsonRawString = '';
+  let jsonSearchQuery = '';
+
+  function syntaxHighlight(json) {
+    // Escape HTML entities first, then colorize
+    return json
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, match => {
+        let cls = 'json-num';
+        if (/^"/.test(match)) {
+          cls = /:$/.test(match) ? 'json-key' : 'json-str';
+        } else if (/true|false/.test(match)) {
+          cls = 'json-bool';
+        } else if (/null/.test(match)) {
+          cls = 'json-null';
+        }
+        return `<span class="${cls}">${match}</span>`;
+      });
+  }
+
+  function applySearchHighlight(html, query) {
+    if (!query) return { html, count: 0 };
+    // search on raw text (strip tags) — find positions, then wrap in pre
+    const stripped = html.replace(/<[^>]*>/g, '');
+    const re = new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+    let count = 0;
+    // We need to highlight in the HTML while preserving tags.
+    // Strategy: replace inside tag content only.
+    const hlHtml = html.replace(/>([^<]*)</g, (m, text) => {
+      const replaced = text.replace(re, s => { count++; return `<mark class="json-hl">${s}</mark>`; });
+      return `>${replaced}<`;
+    });
+    return { html: hlHtml, count };
+  }
+
+  function renderJsonView() {
+    const data = JSON_SOURCES[jsonActiveKey]();
+    jsonRawString = JSON.stringify(data, null, 2);
+    let html = syntaxHighlight(jsonRawString);
+    const countEl = document.getElementById('json-match-count');
+    if (jsonSearchQuery) {
+      const result = applySearchHighlight(html, jsonSearchQuery);
+      html = result.html;
+      countEl.textContent = result.count ? `${result.count} match${result.count !== 1 ? 'es' : ''}` : 'No matches';
+    } else {
+      countEl.textContent = '';
+    }
+    document.getElementById('json-pre').innerHTML = html;
+
+    // Footer stats
+    const keys = Object.keys(data);
+    const footer = document.getElementById('json-footer');
+    footer.textContent = `${keys.length.toLocaleString()} entries · ${(jsonRawString.length / 1024).toFixed(1)} KB`;
+  }
+
+  function openJsonModal(key) {
+    jsonActiveKey = key || 'PROGRAMS';
+    jsonSearchQuery = '';
+    document.getElementById('json-search').value = '';
+    document.querySelectorAll('.json-tab').forEach(t => t.classList.toggle('active', t.dataset.key === jsonActiveKey));
+    renderJsonView();
+    document.getElementById('json-overlay').classList.add('open');
+    document.getElementById('json-search').focus();
+  }
+
+  document.getElementById('json-btn').addEventListener('click', () => openJsonModal('PROGRAMS'));
+
+  document.getElementById('json-close').addEventListener('click', () => {
+    document.getElementById('json-overlay').classList.remove('open');
+  });
+  document.getElementById('json-overlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('json-overlay'))
+      document.getElementById('json-overlay').classList.remove('open');
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.getElementById('json-overlay').classList.remove('open');
+  });
+
+  document.getElementById('json-tabs').addEventListener('click', e => {
+    const btn = e.target.closest('.json-tab');
+    if (!btn) return;
+    jsonActiveKey = btn.dataset.key;
+    document.querySelectorAll('.json-tab').forEach(t => t.classList.toggle('active', t.dataset.key === jsonActiveKey));
+    renderJsonView();
+  });
+
+  let searchDebounce;
+  document.getElementById('json-search').addEventListener('input', e => {
+    clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(() => {
+      jsonSearchQuery = e.target.value.trim();
+      renderJsonView();
+      // Scroll to first match
+      const first = document.querySelector('#json-pre .json-hl');
+      if (first) first.scrollIntoView({ block: 'center' });
+    }, 200);
+  });
+
+  document.getElementById('json-copy').addEventListener('click', function() {
+    navigator.clipboard.writeText(jsonRawString).then(() => {
+      this.classList.add('copied');
+      this.textContent = 'Copied!';
+      setTimeout(() => {
+        this.classList.remove('copied');
+        this.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy';
+      }, 1500);
+    });
+  });
+
+  document.getElementById('json-download').addEventListener('click', () => {
+    const blob = new Blob([jsonRawString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${jsonActiveKey.toLowerCase()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
 })();
 </script>
 </body>
