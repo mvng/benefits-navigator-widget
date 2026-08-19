@@ -4,7 +4,7 @@ const PROGRAMS = {
   "CA-003": { id: "CA-003", name: "Medi-Cal (Medicaid)", description: "Low- and no-cost medical insurance for individuals who meet any of the following criteria:\nAged 20 years or younger\nAged 65 years and older\nBlind\nDisabled\nPregnant\nIn a skilled nursing or intermediate care facility\nParent or caregiver of an age-eligible child\nScreened for breast or cervical cancer\nEnrolled in CalFresh (SNAP), SSI/ SSP, or CalWORKs (TANF)\nIn foster care or adoption assistance program.", category: "healthcare", icon: "heart", link: "https://www.healthforcalifornia.com/medical-quote" },
   "CA-004": { id: "CA-004", name: "Covered California", description: "Affordable medical insurance coverage.", category: "healthcare", icon: "heart", link: "https://www.healthforcalifornia.com/medical-quote" },
   "CA-005": { id: "CA-005", name: "California LifeLine", description: "Low to no cost landline or mobile phone service.  Can be combined with, or used separately from, Federal Lifeline.\n\nQualify using income-based eligibility or enrollment in any of the following programs:  \nWomen, Infants & Children (WIC)\nNational School Lunch Program\nLow-Income Home Energy Assistance (LIHEAP)\nCalFresh (SNAP)\nMedi-Cal (Medicaid)\nSupplemental Security Income (SSI)\nFederal Public Housing Assistance or Section 8\nCalWORKs/ StanWORKS/ WTW/ GAIN (TANF)\nTribal Head Start\nBIA General Assistance\nTribal TANF\nFood Distribution Program on Indian Reservations\nVeterans and Survivors Pension Benefit Program", category: "utility", icon: "spark", link: "https://www.californialifeline.com/en" },
-  "CA-006": { id: "CA-006", name: "California LifeLine Foster Program", description: "No-cost mobile phone and internet service for youth age 13-17 in foster care, and young adults age 18-20 in extended foster care.", category: "utility", icon: "spark", link: "https://www.californialifeline.com/Foster/en" },
+  "CA-006": { id: "CA-006", name: "California LifeLine Foster Youth Program", description: "No-cost mobile phone and internet service for youth age 13-17 in foster care, and young adults age 18-20 in extended foster care.", category: "utility", icon: "spark", link: "https://www.californialifeline.com/Foster/en" },
   "CA-007": { id: "CA-007", name: "California Alternative Rates for Energy (CARE)", description: "30-35% discount on electric bill and 20% discount on gas bill for qualifying households.", category: "utility", icon: "spark", link: "https://www.cpuc.ca.gov/industries-and-topics/electrical-energy/electric-costs/care-fera-program" },
   "CA-008": { id: "CA-008", name: "Family Electric Rate Assistance (FERA)", description: "18% discount on electricity bill for qualifying households.", category: "utility", icon: "spark", link: "https://www.cpuc.ca.gov/industries-and-topics/electrical-energy/electric-costs/care-fera-program" },
   "CA-009": { id: "CA-009", name: "Arrearage Management Payment (AMP) Plan", description: "Up to $8,000 in debt forgiveness for gas and electricity bills past due by at least 90 days and with balances of at least $250.", category: "utility", icon: "spark", link: "Contact your energy utility." },
@@ -25,7 +25,7 @@ const PROGRAMS = {
   "CA-024": { id: "CA-024", name: "California State Supplementary Payment (SSP)", description: "California-funded supplemental income for people who are enrolled in the federal Supplemental Security Income (SSI) program.", category: "income", icon: "dollar", link: "https://cdss.ca.gov/inforesources/ssi-ssp" },
   "CA-025": { id: "CA-025", name: "Program of All-Inclusive Care for the Elderly (PACE)", description: "Coordinated care for people who meet all of the following criteria:\nAge 55 and older\nCan live in the community without jeopardizing personal health or safety\nMeets requirement for needing skilled nursing care", category: "caretaker", icon: "heart", link: "https://www.dhcs.ca.gov/services/ltc/Pages/programofall-inclusivecarefortheelderly.aspx" },
   "CA-026": { id: "CA-026", name: "California Low Cost Automobile (CLCA) Insurance", description: "Low-cost automobile insurance for people who meet all of the following criteria:\nAge 16 and older\nHave a valid California driver's license\nOwn a vehicle valued at $25,000 or less\nHave a good driving record (no more than one at-fault property damage-only accident or no more than one point for a moving violation within the last 3 years, no at-fault accidents involving bodily injury or death within the last 3 years, and no felony or misdemeanor convictions for violations of the Vehicle Code).", category: "transportation", icon: "spark", link: "https://www.mylowcostauto.com/" },
-  "CA-027": { id: "CA-027", name: "CA State Controller's Office - Property Tax Postponement", description: "Deferment of current-year property taxes on principal residence for people who meet all of the following criteria:\nAge 62 or older, blind or disabled,\nHousehold income of $55,181 or less,\nOwns and occupies the property as the principal place of residence,\nHas at least 40 percent equity in the property, and\nHas not had a reverse mortgage on the property.", category: "housing", icon: "home", link: "https://www.sco.ca.gov/ardtax_prop_tax_postponement.html" },
+  "CA-027": { id: "CA-027", name: "CA State Controller's Office - Property Tax Postponement", description: "Deferment of current-year property taxes on principal residence for people who meet all of the following criteria:\nAge 62 or older, blind or disabled,\nHousehold income of $55,181 or less,\nOwns and occupies the property as the principal place of residence,\nHas at least 40 percent equity in the property, and\nHas not had a reverse mortgage on the property.", category: "taxes", icon: "file", link: "https://www.sco.ca.gov/ardtax_prop_tax_postponement.html" },
   "CA-028": { id: "CA-028", name: "California Board of Equalization - Homeowners Exemption", description: "Homeowners may receive up to $7000 off the full value of the property to reduce property tax liability for the principal place of residence.  Apply with the county assessor.", category: "taxes", icon: "file", link: "https://www.boe.ca.gov/proptaxes/homeowners_exemption.htm" },
   "CA-029": { id: "CA-029", name: "California Board of Equalization - Disabled Veterans Exemption", description: "Disabled veterans may receive up to $150,000 off the full value of the property to reduce property tax liability for the principal place of residence.  Apply with the county assessor.\nMust be renewed every year.", category: "taxes", icon: "file", link: "https://www.boe.ca.gov/proptaxes/dv_exemption.htm" },
   "CA-030": { id: "CA-030", name: "Utility Consumer Protection -- Emergency Disaster Relief", description: "Consumer protections and disaster relief programs for utilities customers:  electricity, natural gas, landline phone, mobile phone, water, and sewer.", category: "utility", icon: "spark", link: "https://www.cpuc.ca.gov/consumer-support/psps/consumer-protections-and-resources-for-wildfire-victims" },
@@ -36,6 +36,7 @@ const PROGRAMS = {
   "CA-035": { id: "CA-035", name: "California State Parks - Senior Golden Bear Pass (fka Limited Use Golden Bear)", description: "No-cost annual pass for people age 62 and older to many parks during non-peak seasons.", category: "entertainment", icon: "spark", link: "https://www.parks.ca.gov/?page_id=30961" },
   "CA-036": { id: "CA-036", name: "USDA - Women, Infants & Children (WIC)", description: "Food for women who are pregnant or breastfeeding, or were pregnant in the last six months (including pregnancy loss), and children under age 5.", category: "food", icon: "leaf", link: "https://www.cdph.ca.gov/Programs/CFH/DWICSN/Pages/HowCanIGetWIC.aspx" },
   "CA-037.R1": { id: "CA-037.R1", name: "California Work Opportunity and Responsibility to Kids (CalWORKs)/ California's Temporary Assistance for Needy Families (TANF)", description: "Temporary cash aid for eligible families with at least one child, and for eligible students who meet any of the following requirements:\nFamilies where either parent is absent, disabled, or deceased\nFamilies where the primary income-earner is unemployed\nFamilies with relatives who are the caretaker for foster child(ren)\nNote:  complicated income equation", category: "income", icon: "dollar", link: "https://www.calworks.org/eligibility-process" },
+  "CA-037.R2": { id: "CA-037.R2", name: "California Work Opportunity and Responsibility to Kids (CalWORKs)/ California's Temporary Assistance for Needy Families (TANF)", description: "Temporary cash aid for eligible families with at least one child, and for eligible students who meet any of the following requirements:\nFamilies where either parent is absent, disabled, or deceased\nFamilies where the primary income-earner is unemployed\nFamilies with relatives who are the caretaker for foster child(ren)\nNote:  complicated income equation", category: "income", icon: "dollar", link: "https://www.calworks.org/eligibility-process" },
   "CA-038": { id: "CA-038", name: "Low-Income Home Energy Assistance Program (LIHEAP)", description: "Multi-part program:\n• one-time financial assistance to help pay balance of utility bill; \n• assistance for crisis (i.e. 24-48 hour disconnection notice); \n• free energy efficiency upgrades; AND\n• education on energy efficiency practices and energy budget counseling.", category: "utility", icon: "spark", link: "https://www.csd.ca.gov/Pages/FindServicesInYourArea.aspx" },
   "CA-039": { id: "CA-039", name: "USDA - National School Lunch Program (NSLP) and National School Breakfast Program (NSBP)", description: "Free or reduced-price breakfasts and lunches for qualifying school children.", category: "food", icon: "leaf", link: "https://www.cde.ca.gov/ls/nu/rs/scales2526.asp" },
   "CA-040": { id: "CA-040", name: "USDA - Special Milk Program", description: "Free milk for qualifying school children.", category: "food", icon: "leaf", link: "https://www.cde.ca.gov/ls/nu/rs/scales2526.asp" },
@@ -196,6 +197,9 @@ const PROGRAMS = {
   "CA-195": { id: "CA-195", name: "CA HCD - ReCover CA Homebuyer Assistance Program (DR-HBA)", description: "Financial assistance for qualifying homeowners and renters to receive forgivable loans to purchase a new home after a disaster.\nNote:  application windows open after a disaster.  Eligibility may vary based on disaster.", category: "housing", icon: "home", link: "https://www.hcd.ca.gov/funding/dr/hba" },
   "CA-196": { id: "CA-196", name: "CA HCD - Disaster Recovery Manufactured Home Repair and Elevation Program (DR MHRE)", description: "Financial assistance for eligible mobilehome residents affected by a disaster.\nNote:  Application window opens after a disaster.  Priority to homeowners residing in the counties most impacted by the disaster.  Mobilehome owner must apply through the local government or nonprofit organization overseeing this program; check the program website to find this information.", category: "housing", icon: "home", link: "https://www.hcd.ca.gov/funding/dr/mhre" },
   "CA-197": { id: "CA-197", name: "CA HCD - Disaster Recovery Multifamily Housing Program (DR-MHP)", description: "Financial assistance for eligible multifamily housing projects in areas affected by a disaster.\nNote:  Application window opens after a disaster.  Priority to homeowners residing in the counties most impacted by the disaster.  Mobilehome owner must apply through the local government or nonprofit organization overseeing this program; check the program website to find this information.", category: "housing", icon: "home", link: "https://www.hcd.ca.gov/funding/dr/dr-mhp" },
+  "CA-198": { id: "CA-198", name: "California Cool Air Rebate Program", description: "Qualifying households save up to 90% of the cost to repair or replace a vehicle's leaking air conditioning.\nThe vehicle must have been manufactured between 1993 and 2019, or has been retrofitted with R-134a refrigerant.", category: "transportation", icon: "spark", link: "https://coolairrebate.org/" },
+  "CA-199": { id: "CA-199", name: "California Cool Air Rebate Salute", description: "Qualifying veterans, military members, and their families, save up to 95% of the cost to repair or replace a vehicle's leaking air conditioning; available through October 31, 2026.  After October 31, 2026, veterans, military members, and their families save up to 90%.\nThe vehicle must have been manufactured between 1993 and 2019, or has been retrofitted with R-134a refrigerant.", category: "transportation", icon: "spark", link: "https://coolairrebate.org/salute/" },
+  "CA-200": { id: "CA-200", name: "CDSS - Kin-GAP", description: "Income for relatives who are guardians of children that are dependents or wards of the juvenile court and have been placed with the relative-guardian for at least six consecutive months.", category: "income", icon: "dollar", link: "https://www.cdss.ca.gov/inforesources/foster-care/kinship-guardianship-assistance" },
   "CA37-001": { id: "CA37-001", name: "San Diego County General Relief", description: "Temporary cash assistance for people who meet the following criteria:\nSan Diego resident for at least 15 days with the intent to reside in San Diego County\nAge between 18 and 64, with rare exceptions\nMonthly income less than $598 (individual) or $819 (married)\nNo real property\nLess than $50 in liquid assets\nLess than $1,500 in total assets, excluding one vehicle valued at no more than $4,650", category: "income", icon: "dollar", link: "https://www.sandiegocounty.gov/content/sdc/hhsa/programs/ssp/general_relief.html" },
   "CA37-002": { id: "CA37-002", name: "San Diego County Medical Services (CMS)", description: "Healthcare of last resort for people who meet all of the following criteria:\nImmediate or long-term medical need\nAge between 21 and 64 years\nResident of San Diego County\nSign a lien form for services covered by CMS\nMeet CMS financial requirements or receive San Diego County General Relief", category: "healthcare", icon: "heart", link: "https://www.sandiegocounty.gov/content/sdc/hhsa/programs/ssp/county_medical_services/faq.html" },
   "CA37-003": { id: "CA37-003", name: "MTS Reduced Fares", description: "Low- or no-cost public transportation fare for people who meet any of the following criteria:\nPeople age 65 and older\nMedicare recipients\nPeople with disabilities\nPeople age 6 through 18 (effective through June 30, 2026)\nChildren age 5 and younger ride free when traveling with a paying passenger", category: "transportation", icon: "spark", link: "https://www.sdmts.com/fares/reduced-fares" },
@@ -214,7 +218,7 @@ const PROGRAMS = {
   "CA37-016": { id: "CA37-016", name: "Cal Western School of Law - Trademark Clinic", description: "Assistance for individuals and small businesses seeking a trademark from the United States Patent and Trademark Office.\nCall to check eligibility and availability.", category: "legal", icon: "file", link: "https://www.cwsl.edu/experiential_learning/clinics/trademark_clinic.html" },
   "CA37-017": { id: "CA37-017", name: "San Diego County Bar Association - Lawyer Referral Automated Service, Modest Means Program", description: "Modest Means or Flat fee program:  call (800) 464-1529\nCall to check eligibility and availability.", category: "legal", icon: "file", link: "https://www.sdcba.org/?pg=clientReferrals" },
   "CA37-018": { id: "CA37-018", name: "San Diego Volunteer Lawyers", description: "Assistance with family law and domestic violence, microbusiness and nonprofit support, guardianship, restraining orders, landlord/tenant, education rights, HIV/AIDS legal services, Vision for Justice Collaborative, Special Immigrant Juvenile Status, Record Relief for Survivors.\nCall to check eligibility and availability.", category: "legal", icon: "file", link: "https://sdvlp.org/" },
-  "CA37-019": { id: "CA37-019", name: "Legal Aid of San Diego", description: "Assistance with civil appeals, conservatorship, consumer protection and bankruptcy, education rights, eviction defense, family law, health coverage and access to care, housing discrimination, immigration, landlord-tenant issues, foreclosure, public housing, name or gender marker changes, outpatient behavioral health grievances and appeals, public assistance, restraining orders, SSI benefits, taxpayer rights and education.\nCall to check eligibility and availability.", category: "legal", icon: "file", link: "https://www.lassd.org/" },
+  "CA37-019": { id: "CA37-019", name: "Legal Aid Society of San Diego", description: "Assistance with civil appeals, conservatorship, consumer protection and bankruptcy, education rights, eviction defense, family law, health coverage and access to care, housing discrimination, immigration, landlord-tenant issues, foreclosure, public housing, name or gender marker changes, outpatient behavioral health grievances and appeals, public assistance, restraining orders, SSI benefits, taxpayer rights and education.\nCall to check eligibility and availability.", category: "legal", icon: "file", link: "https://www.lassd.org/" },
   "CA37-020": { id: "CA37-020", name: "San Diego County - Department of Child Support Services", description: "Resources for paying and receiving child support.", category: "income", icon: "dollar", link: "https://www.sandiegocounty.gov/content/sdc/dcss.html" },
   "CA37-021": { id: "CA37-021", name: "In-Home Supportive Service (IHSS)", description: "In-home assistance for people who meet all of the following criteria:\nCalifornia resident\nQualified for full-scope Medi-Cal (Medicaid)\nAge 65 or older, blind, or disabled\nUnable to live at home safely without help", category: "caretaker", icon: "heart", link: "https://www.sandiegocounty.gov/content/sdc/hhsa/programs/ais/Services/In-Home-Supportive-Services.html" },
   "CA37-022": { id: "CA37-022", name: "Section 8 Housing Choice Voucher for San Diego County", description: "Rental assistance for people living in the unincorporated areas of San Diego County, and the cities of Chula Vista, Coronado, Del Mar, El Cajon, Imperial Beach, La Mesa, Lemon Grove, Poway, San Marcos, Santee, Solana Beach, and Vista. \nNOTE:  priority for households with incomes at or below 50% area median income (AMI).", category: "housing", icon: "home", link: "https://www.sandiegocounty.gov/content/sdc/sdhcd/rental-assistance/section-8-hcv-overview.html" },
@@ -244,24 +248,24 @@ const PROGRAMS = {
   "CA37-046": { id: "CA37-046", name: "San Diego County - Home Repair Program", description: "Loans and grants to eligible homeowners for minor health and safety repairs.  Homeowner must have resided in the home for at least 12 months prior to the application approval, and must live in unincorporated areas of San Diego County, Coronado, Del Mar, Imperial Beach, Lemon Grove, Poway, or Solana Beach.", category: "housing", icon: "home", link: "https://www.sandiegocounty.gov/content/sdc/sdhcd/home-buyers-owners/loan-grant.html" },
   "CA37-047": { id: "CA37-047", name: "San Diego County Water Authority - Residential Rebates & Programs", description: "List of rebate programs to incentivize residential customers to conserve water.  The rebate programs include high-efficiency water fixtures and toilets, rain barrels, landscaping and irrigation systems.\nNOTE:  Eligibility varies by rebate program.", category: "utility", icon: "spark", link: "https://www.sdcwa.org/your-water/water-use-efficiency/residential-rebates-programs/" },
   "CA37-048": { id: "CA37-048", name: "San Diego Law Library - Clinics", description: "List of legal clinics and self-help centers for a variety of legal issues including bankruptcy, SSI benefits, restraining orders.\nCall to check eligibility and availability.", category: "legal", icon: "file", link: "https://sandiegolawlibrary.org/clinics/" },
-  "CA37-049": { id: "CA37-049", name: "San Diego Law Library - Legal Databases", description: "No cost computer access to legal databases at the San Diego Law Library, and at the following partner libraries:  Chula Vista Civic Center Branch Library, El Cajon Branch of the San Diego County Library, Escondido Public Library.", category: "legal", icon: "file", link: "https://sandiegolawlibrary.org/contact-us/" },
-  "CA37-050": { id: "CA37-050", name: "San Diego Law Library - Self-Help Legal Resources", description: "No cost self-help legal resources on common legal issues.", category: "legal", icon: "file", link: "https://sandiegolawlibrary.org/self-help-center/" },
-  "CA37-051": { id: "CA37-051", name: "San Diego Superior Court - Self-Help Center", description: "No cost self-help legal resources on common legal issues.", category: "legal", icon: "file", link: "https://www.sdcourt.ca.gov/sdcourt/generalinformation/selfhelp" },
+  "CA37-049": { id: "CA37-049", name: "San Diego Law Library - Legal Databases", description: "No-cost computer access to legal databases at the San Diego Law Library, and at the following partner libraries:  Chula Vista Civic Center Branch Library, El Cajon Branch of the San Diego County Library, Escondido Public Library.", category: "legal", icon: "file", link: "https://sandiegolawlibrary.org/contact-us/" },
+  "CA37-050": { id: "CA37-050", name: "San Diego Law Library - Self-Help Legal Resources", description: "No-cost self-help legal resources on common legal issues.", category: "legal", icon: "file", link: "https://sandiegolawlibrary.org/self-help-center/" },
+  "CA37-051": { id: "CA37-051", name: "San Diego Superior Court - Self-Help Center", description: "No-cost self-help legal resources on common legal issues.", category: "legal", icon: "file", link: "https://www.sdcourt.ca.gov/sdcourt/generalinformation/selfhelp" },
   "CA37-052": { id: "CA37-052", name: "California Court - Self-Help Guide to the California Court", description: "Resources to help navigate a court case.", category: "legal", icon: "file", link: "https://selfhelp.courts.ca.gov/" },
-  "CA37-053": { id: "CA37-053", name: "California Courts of Appeal - Self-Help Guide", description: "No cost self-help legal resources on appealing a court case in the California Court of Appeal.", category: "legal", icon: "file", link: "https://selfhelp.courts.ca.gov/appeals" },
+  "CA37-053": { id: "CA37-053", name: "California Courts of Appeal - Self-Help Guide", description: "No-cost self-help legal resources on appealing a court case in the California Court of Appeal.", category: "legal", icon: "file", link: "https://selfhelp.courts.ca.gov/appeals" },
   "CA37-054": { id: "CA37-054", name: "San Diego Public Library - Adult Education", description: "Diploma, career development, and testing resources for San Diego Public Library cardholders.", category: "education", icon: "spark", link: "https://www.sandiego.gov/public-library/services/adulteducation" },
   "CA37-055": { id: "CA37-055", name: "San Diego Public Library - Innovate Discover Experiment Achieve (IDEA) Labs", description: "Access to science, technology, and design equipment, including 3D printer, screen printers, sewing and embroidery machines.  Equipment varies at branch locations.", category: "technology", icon: "spark", link: "https://www.sandiego.gov/public-library/idea" },
   "CA37-056": { id: "CA37-056", name: "San Diego Public Library - Discover U", description: "College, career, and trade preparation programs.", category: "education", icon: "spark", link: "https://www.sandiego.gov/public-library/careerprep" },
-  "CA37-057": { id: "CA37-057", name: "San Diego Public Library - Concerts", description: "No cost concert series at the Central Library.", category: "entertainment", icon: "spark", link: "https://www.sandiego.gov/public-library/concertseries" },
+  "CA37-057": { id: "CA37-057", name: "San Diego Public Library - Concerts", description: "No-cost concert series at the Central Library.", category: "entertainment", icon: "spark", link: "https://www.sandiego.gov/public-library/concertseries" },
   "CA37-058": { id: "CA37-058", name: "San Diego Public Library - The StartUp", description: "Resource center for start ups and small businesses.", category: "employment", icon: "dollar", link: "https://www.sandiego.gov/public-library/central-library/thestartup" },
   "CA37-059": { id: "CA37-059", name: "San Diego Public Library - Veteran's Resources", description: "Resource center for veterans and their families to find resources and benefits.", category: "education", icon: "spark", link: "https://www.sandiego.gov/public-library/services/outreach/vrc" },
   "CA37-060": { id: "CA37-060", name: "San Diego City - Free 4 Menstrual Equity (Free4ME)", description: "No-cost menstrual product dispensers in San Diego City facilities, including libraries, pools, and recreation teen centers.", category: "health necessities", icon: "heart", link: "https://www.sandiego.gov/public-library/free4me" },
   "CA37-061": { id: "CA37-061", name: "San Diego City Library - Tax Forms and Assistance", description: "Tax form, no-cost tax preparation, and other tax resources.", category: "taxes", icon: "file", link: "https://www.sandiego.gov/public-library/services/specialresources/taxforms" },
   "CA37-062": { id: "CA37-062", name: "San Diego City - The Hub", description: "Emergency and coordinated housing support.\nIf you are at imminent risk of homelessness, call the San Diego Housing Commission's HOUSING FIRST SAN DIEGO Hotline at (619) 578-7768", category: "housing", icon: "home", link: "https://www.sandiego.gov/homelessness-strategies-and-solutions/services/homelessness-response-center" },
-  "CA37-063": { id: "CA37-063", name: "San Diego City - Access 4 All", description: "Low-cost and no-cost computer and internet access, including no cost classes for how to use a computer, smart phone, and the internet.", category: "technology", icon: "spark", link: "https://www.sandiego.gov/sdaccess" },
+  "CA37-063": { id: "CA37-063", name: "San Diego City - Access 4 All", description: "Low-cost and no-cost computer and internet access, including no-cost classes for how to use a computer, smart phone, and the internet.", category: "technology", icon: "spark", link: "https://www.sandiego.gov/sdaccess" },
   "CA37-064": { id: "CA37-064", name: "San Diego City Library - Calendar of Events", description: "Find homework support, crafts, health and wellness, seed libraries, and other no-cost activities in your community.  Days, times, and locations vary.", category: "education", icon: "spark", link: "https://sandiego.events.mylibrary.digital/" },
-  "CA37-065": { id: "CA37-065", name: "San Diego County Library - Adult Learning", description: "No cost classes for adults at all times of their lives, including reentry, emergency preparedness, and career and trade development.", category: "education", icon: "spark", link: "https://www.sdcl.org/adult-learning/" },
-  "CA37-066": { id: "CA37-066", name: "San Diego County Library - Digital Skills & Technology", description: "No cost classes for digital skills, including computer and technology skills.", category: "technology", icon: "spark", link: "https://www.sdcl.org/technology/" },
+  "CA37-065": { id: "CA37-065", name: "San Diego County Library - Adult Learning", description: "No-cost classes for adults at all times of their lives, including reentry, emergency preparedness, and career and trade development.", category: "education", icon: "spark", link: "https://www.sdcl.org/adult-learning/" },
+  "CA37-066": { id: "CA37-066", name: "San Diego County Library - Digital Skills & Technology", description: "No-cost classes for digital skills, including computer and technology skills.", category: "technology", icon: "spark", link: "https://www.sdcl.org/technology/" },
   "CA37-067": { id: "CA37-067", name: "San Diego County Library - Vet Connect", description: "Video conferencing service for veterans to connect to the Office of Military & Veterans Affairs.", category: "technology", icon: "spark", link: "https://www.sdcl.org/vet-connect/" },
   "CA37-068": { id: "CA37-068", name: "San Diego County Library - Food Distribution", description: "Food distribution at San Diego County Library branches.  Days, times, and locations vary.", category: "food", icon: "leaf", link: "https://sdcl.bibliocommons.com/v2/events?" },
   "CA37-069": { id: "CA37-069", name: "San Diego County Library - Seeds & Sustainability", description: "Seed library at select branches.", category: "food", icon: "leaf", link: "https://www.sdcl.org/seeds/" },
@@ -344,7 +348,7 @@ const PROGRAMS = {
   "CA37-146": { id: "CA37-146", name: "National City - Free Ride Around National City (FRANC)", description: "No-cost shuttle service around National City.", category: "transportation", icon: "spark", link: "https://www.nationalcityca.gov/community/franc-free-rides-around-national-city" },
   "CA37-147": { id: "CA37-147", name: "National City - Recreational Programs", description: "No- and low-cost recreational programs.", category: "entertainment", icon: "spark", link: "https://www.nationalcityca.gov/government/community-services/programs" },
   "CA37-148": { id: "CA37-148", name: "National City - Section 8 Housing Choice Vouchers and Emergency Housing Vouchers", description: "Housing for qualifying households.\nNote:  priority for households with incomes at or below 50% area median income (AMI).", category: "housing", icon: "home", link: "https://www.nationalcityca.gov/government/national-city-housing-authority/section-8-housing-choice-voucher-hcv-program" },
-  "CA37-149": { id: "CA37-149", name: "Oceanside City - Library", description: "No- and low-cost educational and cultural events.", category: "education", icon: "spark", link: "https://www.oceansidelibrary.org/home-library" },
+  "CA37-149": { id: "CA37-149", name: "Oceanside City - Library Events", description: "No- and low-cost educational and cultural events.", category: "education", icon: "spark", link: "https://www.oceansidelibrary.org/home-library" },
   "CA37-150": { id: "CA37-150", name: "Oceanside City - Residential Rehabilitation Program", description: "Below-market rate loans and grants for qualifying single-family and mobilehome owners for health and safety repairs.", category: "housing", icon: "home", link: "https://www.ci.oceanside.ca.us/government/housing-neighborhood-services/housing/housing-rehabilitation" },
   "CA37-151": { id: "CA37-151", name: "Oceanside City - Parks & Recreation", description: "No- and low-cost recreational programs.", category: "entertainment", icon: "spark", link: "https://www.ci.oceanside.ca.us/government/parks-recreation" },
   "CA37-152": { id: "CA37-152", name: "Poway City - Poway Leisure Assistance for Youth (PLAY) Scholarship", description: "Up to $40 per child to pay for park and recreation fees per season.", category: "entertainment", icon: "spark", link: "https://poway.org/236/PLAY-Scholarships" },
@@ -380,16 +384,55 @@ const PROGRAMS = {
   "CA37-182": { id: "CA37-182", name: "Section 8 Housing Choice Voucher for the City of San Diego", description: "Rental assistance for people living in the city of San Diego, CA.\nNote:  priority for households with incomes at or below 50 area median income (AMI)", category: "housing", icon: "home", link: "https://sdhc.org/housing-opportunities/help-with-your-rent/" },
   "CA37-183": { id: "CA37-183", name: "Landlord Partnership Program (LLP)", description: "Financial incentives and support for landlords to rent to families that qualify for Section 8.", category: "housing", icon: "home", link: "https://sdhc.org/doing-business-with-us/landlords/landlord-partnership-program/" },
   "CA37-184": { id: "CA37-184", name: "CalKIDS Scholarship Program", description: "No-cost college and trade school savings account, with no-cost contributions from California, for eligible students.\nNote:  must register to claim savings account and receive state contributions.", category: "education", icon: "spark", link: "https://calkids.org/" },
-  "CA37-185": { id: "CA37-185", name: "County of San Diego - Sexual Health Clinics", description: "No-cost and low-cost confidential testing and treatment for sexually transmitted infections (STIs).", category: "healthcare", icon: "heart", link: "www.STDSanDiego.org" },
-  "CA37-186": { id: "CA37-186", name: "County of San Diego - HIV and STI Testing At Home", description: "No-cost at-home HIV and sexually transmitted infection (STI) testing kits.", category: "healthcare", icon: "heart", link: "takemehome.org" },
+  "CA37-185": { id: "CA37-185", name: "County of San Diego - Sexual Health Clinics", description: "No-cost and low-cost confidential testing and treatment for sexually transmitted infections (STIs).", category: "healthcare", icon: "heart", link: "https://www.sandiegocounty.gov/content/sdc/hhsa/programs/phs/hiv_std_hepatitis_branch/std_clinical_services.html" },
+  "CA37-186": { id: "CA37-186", name: "County of San Diego - HIV and STI Testing At Home", description: "No-cost at-home HIV and sexually transmitted infection (STI) testing kits.", category: "healthcare", icon: "heart", link: "https://takemehome.org/" },
   "CA37-187": { id: "CA37-187", name: "County of San Diego - Chlamydia and Gonorrhea Test Kids", description: "No-cost at-home chlamydia and gonorrhea testing kits.", category: "healthcare", icon: "heart", link: "https://sandiego.dontthinkknow.org/" },
   "CA37-188": { id: "CA37-188", name: "County of San Diego - Mobile Crisis Response Team (MCRT)", description: "No-cost 24/7 mobile crisis support to stabilize people experiencing a mental health or substance use crisis, and connection to local care and support services.\n1-888-724-7240", category: "mental healthcare", icon: "heart", link: "https://www.sandiegocounty.gov/mcrt/" },
-  "CA37-189": { id: "CA37-189", name: "San Diego Access & Crisis Lin", description: "No-cost, confidential, 24/7 crisis support for suicide prevention, mental health and substance use crisis and support services.\n1-888-724-7240", category: "mental healthcare", icon: "heart", link: "https://www.sandiegocounty.gov/content/sdc/hhsa/programs/bhs/ACL.html" },
+  "CA37-189": { id: "CA37-189", name: "San Diego Access & Crisis Line", description: "No-cost, confidential, 24/7 crisis support for suicide prevention, mental health and substance use crisis and support services.\n1-888-724-7240", category: "mental healthcare", icon: "heart", link: "https://www.sandiegocounty.gov/content/sdc/hhsa/programs/bhs/ACL.html" },
   "CA37-190": { id: "CA37-190", name: "San Diego County - Crisis Stabilization Units (CSU)", description: "Immediate, 24/7, mental health and treatment services for people experiencing a psychiatric emergency, with 7 locations in San Diego County.\n1-888-724-7240", category: "mental healthcare", icon: "heart", link: "https://www.sandiegocounty.gov/content/sdc/hhsa/programs/bhs/csu.html" },
   "CA37-191": { id: "CA37-191", name: "San Diego County - Outpatient Behavioral Health Centers for Adults", description: "No-cost and low-cost mental health and behavioral health outpatient treatment, rehabilitation, and recovery services for adults.", category: "mental healthcare", icon: "heart", link: "https://www.sandiegocounty.gov/content/sdc/hhsa/programs/bhs/Outpatient_behavioral_health_centers.html" },
   "CA37-192": { id: "CA37-192", name: "San Diego County - Behavioral Health Services for Children, Youth, and Families", description: "No-cost and low-cost mental health and behavioral health outpatient treatment, rehabilitation, and recovery services for children, youth, and families.", category: "mental healthcare", icon: "heart", link: "https://www.sandiegocounty.gov/content/sdc/hhsa/programs/bhs/mental_health_services_children/service_directories.html" },
   "CA37-193": { id: "CA37-193", name: "San Diego City - Safe Parking Program", description: "No-cost overnight parking in designated locations, with access to restrooms and handwashing facilities, and resources for housing, job training, and financial education.\nEligibility:  must complete a safety screening (people listed as a sex offender are not eligible).", category: "housing", icon: "home", link: "https://www.sandiego.gov/homelessness-strategies-and-solutions/services/safe-parking-program" },
   "CA37-194": { id: "CA37-194", name: "San Diego County - Clean Cars 4 All", description: "Up to $12,000 towards the purchase of a plug-in hybrid or all electric vehicle or up to $7,500 for a pre-paid transit card and/or e-bike.\nSome eligible households may also receive up to $2,000 for at home charging station.", category: "transportation", icon: "spark", link: "https://www.sdcc4a.org/Clean_Cars/Home" },
+  "CA37-195": { id: "CA37-195", name: "San Diego County Assessor/ Recorder/ County Clerk - Senior & Family Transfer Property Tax Savings", description: "Qualifying homeowners age 55 and older can transfer Proposition 13 assessed value from their current principal residence to a replacement residence.", category: "taxes", icon: "file", link: "https://www.sdarcc.gov/seniorexclusion/" },
+  "CA37-196": { id: "CA37-196", name: "San Diego County Assessor/ Recorder/ County Clerk - Parent/Child or Grandparent/Grandchild Transfer", description: "Qualifying beneficiaries (child or grandchild) may receive the Proposition 13 assessed value of a transferred principal residence.", category: "taxes", icon: "file", link: "https://www.sdarcc.gov/parentchildexclusion/" },
+  "CA37-197": { id: "CA37-197", name: "San Diego County Assessor/ Recorder/ County Clerk - Free Real Estate Fraud Alert Service", description: "No-cost electronic notification of a document recorded that transfer title to your property.", category: "legal", icon: "file", link: "https://www.sdarcc.gov/owneralert/" },
+  "CA37-198": { id: "CA37-198", name: "San Diego County Family Justice Centers - One Safe Place", description: "Comprehensive services for anyone experiencing family violence, elder abuse, child abuse, hate crimes, human trafficking, or other crimes.", category: "legal", icon: "file", link: "https://ospsandiegocounty.gov/" },
+  "CA37-199": { id: "CA37-199", name: "San Diego Family Justice Center - Your Safe Place", description: "Comprehensive, confidential services for anyone experiencing domestic violence, family violence, older and dependent adult abuse, strangulation, sexual assault, sex trafficking, or gun violence.", category: "legal", icon: "file", link: "https://www.sandiego.gov/sdfjc" },
+  "CA37-200": { id: "CA37-200", name: "San Diego Volunteer Lawyers - Vision for Justice Collaborative", description: "Legal assistance for immigrants and refugees who are victims of crimes, such as domestic violence retraining orders, divorce, child custody, and child support.", category: "legal", icon: "file", link: "https://sdvlpoi.legalserver.org/modules/matter/extern_intake.php?pid=137&h=e2940f&state_uuid=1b720308-def8-11ed-908c-0accc02c6c46&f=382&d_id=4" },
+  "CA37-201": { id: "CA37-201", name: "San Diego Volunteer Lawyers - Shriver Custody Legal Services", description: "Child custody assistance for qualifying households.", category: "legal", icon: "file", link: "https://sdvlpoi.legalserver.org/modules/matter/extern_intake.php?pid=139&h=75987f&state_uuid=a726bf22-dd38-11ed-a763-0accc02c6c46&f=384&d_id=6" },
+  "CA37-202": { id: "CA37-202", name: "San Diego Volunteer Lawyers - Representation at a Domestic Violence Restraining Order Hearing", description: "Pro bono (no-cost) representation for qualifying petitioners in a Temporary Domestic Violence Restraining Order (DVRO) case.\nCall (619) 235-5656, dial 2.", category: "legal", icon: "file", link: "https://sdvlpoi.legalserver.org/modules/matter/extern_intake.php?pid=134&h=7287ea&state_uuid=78399184-8fc9-11f1-9c1e-0accc02c6c46&f=378&d_id=3" },
+  "CA37-203": { id: "CA37-203", name: "San Diego Volunteer Lawyers - Restraining Order Clinics", description: "Assistance filing a restraining order for domestic violence, elder abuse, or civil harassment.", category: "legal", icon: "file", link: "https://sdvlp.org/restraining-order-clinics/" },
+  "CA37-204": { id: "CA37-204", name: "San Diego Volunteer Lawyers - HIV/ AIDS Legal Services", description: "Legal assistance for qualifying people who are HIV positive with public benefits, health insurance disputes, disability discrimination, estate planning, housing, and other HIV- and health-related issues.", category: "legal", icon: "file", link: "https://sdvlp.org/hiv-aids-law/" },
+  "CA37-205": { id: "CA37-205", name: "San Diego Volunteer Lawyers - Microbusiness and Low-Income Entrepreneurs", description: "Legal services for microbusinesses and low-income entrepreneurs to help to form business entities, review and draft business contracts, lease agreements, trademark, copyrights, and patents, employment issues, insurance, and permitting.", category: "legal", icon: "file", link: "https://sdvlpoi.legalserver.org/modules/matter/extern_intake.php?pid=141&h=00ee21&state_uuid=89aa74d4-dd4c-11ed-9a96-0accc02c6c46&f=386&d_id=8" },
+  "CA37-206": { id: "CA37-206", name: "San Diego Volunteer Lawyers - Nonprofit Organizations", description: "Legal services for nonprofit organizations to help form nonprofits/ tax exemption, corporate governance, contracts, lease agreements, employment, insurance, and real estate/ land use issues.", category: "legal", icon: "file", link: "https://sdvlpoi.legalserver.org/modules/matter/extern_intake.php?pid=141&h=00ee21&state_uuid=89aa74d4-dd4c-11ed-9a96-0accc02c6c46&f=386&d_id=8" },
+  "CA37-207": { id: "CA37-207", name: "San Diego Volunteer Lawyers - Unlawful Detainer Clinic", description: "Legal information for people facing residential eviction (unlawful detainer) and filling out related court documents.", category: "legal", icon: "file", link: "https://sdvlp.org/landlord-tenant/" },
+  "CA37-208": { id: "CA37-208", name: "San Diego Volunteer Lawyers - Tenants' Rights Program - Remote Eviction Notice Legal Clinic", description: "Remote legal assistance to qualifying households facing housing-related legal issues.", category: "legal", icon: "file", link: "https://sdvlpoi.legalserver.org/modules/matter/extern_intake.php?pid=144&h=eebca4&state_uuid=03d350b6-8fcc-11f1-9c1e-0accc02c6c46&f=390&d_id=10" },
+  "CA37-209": { id: "CA37-209", name: "San Diego Volunteer Lawyers - Guardianship Program", description: "Assists relatives and non-relative caretakers obtain legal guardianship of children, object to guardianship, request termination of guardianship, visitation orders, requests to move outside of California, and address defects in guardianship-related filings.", category: "legal", icon: "file", link: "https://sdvlp.org/guardianship-help/" },
+  "CA37-210": { id: "CA37-210", name: "San Diego Volunteer Lawyers - Guardianship Clinic", description: "Clinics held every Tuesday and Thursday to assist people with guardianship-related legal matters.", category: "legal", icon: "file", link: "https://sdvlp.org/children-and-foster-youth/" },
+  "CA37-211": { id: "CA37-211", name: "San Diego Volunteer Lawyers - Special Immigrant Juvenile Status for Minors", description: "Assistants for children who have been abused, neglected, or abandoned by a parent, and who are eligible for legal permanent residency.\nCall (619) 235-5656, dial 4.", category: "legal", icon: "file", link: "https://sdvlp.org/children-and-foster-youth/" },
+  "CA37-212": { id: "CA37-212", name: "San Diego Volunteer Lawyers - Education Rights Program", description: "Assistance for foster youth and children receiving voluntary Child and Family Well-Being (CFWB) services with legal issues such as unmet special education needs, school enrollment, school disciplinary proceedings.", category: "legal", icon: "file", link: "https://sdvlp.org/children-and-foster-youth/" },
+  "CA37-213": { id: "CA37-213", name: "San Diego Volunteer Lawyers - Record Relief for Survivors (Vacatur)", description: "Assistance for survivors of human trafficking, intimate partner violence, and sexual violence, to erase nonviolent offenses from their criminal records that directly resulted from their victimization.", category: "legal", icon: "file", link: "https://sdvlp.org/record-relief-for-survivors/" },
+  "CA37-214": { id: "CA37-214", name: "Legal Aid Society of San Diego - Civil Appeals", description: "Self-help workshop to help people navigate the California Court of Appeal process.", category: "legal", icon: "file", link: "https://www.lassd.org/civil-appeals/" },
+  "CA37-215": { id: "CA37-215", name: "Legal Aid Society of San Diego - Conservatorship Clinic", description: "Assistance with applying for and objecting to conservatorships, including information regarding alternatives to conservatorships.", category: "legal", icon: "file", link: "https://www.lassd.org/conservatorship-clinic/" },
+  "CA37-216": { id: "CA37-216", name: "Legal Aid Society of San Diego - Mental Health & Substance Abuse Patients' Rights", description: "Advocate for patients receiving non-residential and outpatient behavioral health, mental health, and substance abuse disorder services.", category: "legal", icon: "file", link: "https://www.lassd.org/mental-health-and-substance-abuse-patients-rights/" },
+  "CA37-217": { id: "CA37-217", name: "Legal Aid Society of San Diego - Consumer Protection & Bankruptcy", description: "Assistance for qualifying individuals who have disputes with business, including buying a car and making payments, repossession, auto repairs, identity theft, student loans, harassment and lawsuits by debt collectors, credit reporting issues, medical debt, solar power scams, problems with buying from a door-to-door salesman, foreclosure or home loan problems, loan modifications, contract negotiations, bankruptcy, and other related problems with a business.", category: "legal", icon: "file", link: "https://www.lassd.org/consumer-protection-and-bankruptcy/" },
+  "CA37-218": { id: "CA37-218", name: "Legal Aid Society of San Diego - Name and Gender Marker Changes Clinic", description: "Assistance completing paperwork to legally change name or gender marker.", category: "legal", icon: "file", link: "https://www.lassd.org/name-and-gender-marker-changes/" },
+  "CA37-219": { id: "CA37-219", name: "Legal Aid Society of San Diego - Education Rights", description: "Assistance for students with disabilities for representation and advocacy regarding Individualized Education Programs (IEPs) or 504 services, supports, and accommodations; obtaining publicly-funded Independent Educational Evaluations (IEES); suspension and expulsion issues; due process hearings and mediation; California Department of Education Compliance complaints; and Office of Civil Rights (OCR) complaints.", category: "legal", icon: "file", link: "https://www.lassd.org/education-rights/" },
+  "CA37-220": { id: "CA37-220", name: "Legal Aid Society of San Diego - Public Benefits", description: "Assistance receiving or defending eligibility for General Relief, CalWorks, Welfare-to-Work, CalFresh (SNAP), CAPI, KinGap, Foster Care, and Adoptive Assistance.", category: "legal", icon: "file", link: "https://www.lassd.org/public-assistance/" },
+  "CA37-221": { id: "CA37-221", name: "Legal Aid Society of San Diego - Emergency Resources", description: "Guides to emergency resources for CalFresh flood-impacted recipients, flood-damaged cars, student loan repayment, and housing resources.", category: "legal", icon: "file", link: "https://www.lassd.org/emergency-resources/" },
+  "CA37-222": { id: "CA37-222", name: "Legal Aid Society of San Diego - Restraining Orders, Domestic Violence Restraining Order Clinic, & Civil Harassment and Elder Abuse Restraining Order Clinic", description: "Assistance to obtain restraining orders related to domestic violence, elder abuse, or other serious harassment.", category: "legal", icon: "file", link: "https://www.lassd.org/restraining-orders/" },
+  "CA37-223": { id: "CA37-223", name: "Legal Aid Society of San Diego - Family Law", description: "Assistance for eligible individuals who have disputes over child custody, are survivors of intimate partner violence, dissolution (divorce), parentage issues, and court-ordered visitation frustrated by the other parent.", category: "legal", icon: "file", link: "https://www.lassd.org/family-law/" },
+  "CA37-224": { id: "CA37-224", name: "Legal Aid Society of San Diego - Social Security Benefits (SSI) and Social Security Disability Insurance (SSDI)", description: "No-cost assistance for children and adults who are disabled (including people who have a mental or behavioral health condition) to file applications and reconsiderations, advocate during hearings, file appeals to the council and federal district court, and continuing disability reviews.", category: "legal", icon: "file", link: "https://www.lassd.org/ssi-benefits/" },
+  "CA37-225": { id: "CA37-225", name: "Legal Aid Society of San Diego - Health Care and Coverage", description: "Assistance to understand healthcare options, review coverage and unaffordable share of costs, appeals of denial or delayed services and medical equipment, appeal discontinued or terminated services, dispute inappropriate and illegal billing, and escalate concerns and complaints.", category: "legal", icon: "file", link: "https://www.lassd.org/health-care-and-coverage/" },
+  "CA37-226": { id: "CA37-226", name: "Legal Aid Society of San Diego - Taxpayer Rights and Education & Tax Walk-In Clinic", description: "Assistance with certain types of federal and California tax issues, including audits, missing refunds or payments, and tax debt payment plans.", category: "legal", icon: "file", link: "https://www.lassd.org/taxpayer-rights-and-education/" },
+  "CA37-227": { id: "CA37-227", name: "Legal Aid Society of San Diego - Housing Discrimination", description: "Assistance to people who faced discrimination on the basis of race, color, religion, sex, sexual orientation, marital status, national origin, ancestry, familial status, source of income, disability, medical condition, or age, which prevented or frustrated the person's ability to buy, rent, or lease housing.", category: "legal", icon: "file", link: "https://www.lassd.org/housing-discrimination/" },
+  "CA37-228": { id: "CA37-228", name: "Legal Aid Society of San Diego - Immigration", description: "Assistance to qualifying individuals to obtain lawful status, apply for citizenship, and defend against deportation.", category: "legal", icon: "file", link: "https://www.lassd.org/immigration/" },
+  "CA37-229": { id: "CA37-229", name: "Legal Aid Society of San Diego - Community Assistance, Recovery and Empowerment (CARE) Act Clinic", description: "Assistance for people with certain untreated severe mental illness to receive voluntary treatment and supportive services.", category: "legal", icon: "file", link: "https://www.lassd.org/care-act-program/" },
+  "CA37-230": { id: "CA37-230", name: "Legal Aid Society of San Diego - Supplemental Security Income (SSI) for Children", description: "Assistance for qualifying children and their legal guardians with the initial application, reconsideration appeals, administrative hearings and reviews, and certain court appeals.", category: "legal", icon: "file", link: "https://www.lassd.org/ssi-for-children/" },
+  "CA37-231": { id: "CA37-231", name: "Legal Aid Society of San Diego - Housing Justice Collaborative", description: "Tenants rights, housing resources, and legal help for people being evicted.", category: "legal", icon: "file", link: "https://housingjusticecollaborative.org/" },
+  "CA37-232": { id: "CA37-232", name: "Legal Aid Society of San Diego - Housing Resources", description: "Resources for people experiencing foreclosure, eviction, housing discrimination; or need help as a renter or with public housing or Section 8 housing.", category: "legal", icon: "file", link: "https://www.lassd.org/resources/" },
+  "CA37-233": { id: "CA37-233", name: "Legal Aid Society of San Diego - Bankruptcy Self-Help Center", description: "Assistance with bankruptcy processes.", category: "legal", icon: "file", link: "https://www.lassd.org/bankruptcy-self-help-center/" },
   "US-001": { id: "US-001", name: "Supplemental Security Income (SSI)", description: "Income for people who have \"limited income,\" \"limited resources,\" and meet one of the following criteria: aged 65 and older, blind, or disabled.  Please note that there is a complicated equation for calculating \"limited income\" and \"limited resources.\"\n\nWashington D.C. and the following states have higher than the national income limits:  Arkansas, California, Delaware, Georgia, Hawaii, Iowa, Kansas, Louisiana, Maryland, Michigan, Mississippi, Nevada, New Jersey, New York, Ohio, Pennsylvania, Rhode Island, South Dakota, Tennessee, Utah, and Vermont.  The higher maximum income for these areas is not readily available, consider applying and see if you qualify.", category: "income", icon: "dollar", link: "https://www.ssa.gov/benefits/ssi/#anchor3" },
   "US-002": { id: "US-002", name: "Social Security Disability Insurance (SSDI)", description: "Income for people who have accrued enough Social Security credits and are either permanently or temporarily disabled.", category: "income", icon: "dollar", link: "https://www.ssa.gov/benefits/disability/" },
   "US-003": { id: "US-003", name: "Federal Lifeline", description: "Low- and no-cost, phone and/or internet, mobile and/or at-home service.  Can be used with or separate from the state LifeLine.\n\nQualify using income-based eligibility or enrollment in any of the following programs:  \nSupplemental Nutrition Assistance Program (SNAP)\nMedicaid\nSupplemental Security Income (SSI)\nFederal Public Housing Assistance (FPHA) including Housing Choice Voucher (HCV) Program (Section 8 Voucher); Project-based Rental Assistance (PBRA/2020/811); Public Housing; Affordable Housing Programs for American Indians, Alaska Natives, or Native Hawaiians\nTribal Head Start\nBIA General Assistance\nTribal TANF\nFood Distribution Program on Indian Reservations\nVeterans and Survivors Pension Benefit Program", category: "utility", icon: "spark", link: "https://www.lifelinesupport.org/" },
@@ -410,7 +453,7 @@ const PROGRAMS = {
   "US-018": { id: "US-018", name: "Library of Congress", description: "In-person and online access to collection, events, exhibitions, and more.", category: "education", icon: "spark", link: "https://www.loc.gov/" },
   "US-019": { id: "US-019", name: "Smithsonian", description: "In-person and online access to collection, events, and publication.", category: "entertainment", icon: "spark", link: "https://www.si.edu/" },
   "US-020": { id: "US-020", name: "NASA - Virtual Guest Program", description: "Access to space launch and mission resources and opportunities, collect a stamp after each event.\nExplore NASA's website for other resources and activities.", category: "entertainment", icon: "spark", link: "https://www.nasa.gov/nasa-virtual-guest-program/" },
-  "US-021": { id: "US-021", name: "America the Beautiful (federal lands) -  Volunteer Pass", description: "No-cost annual pass for federal recreational site volunteers with at least 250 volunteer hours.", category: "entertainment", icon: "spark", link: "https://store.usgs.gov/faq##Volunteer-Pass" },
+  "US-021": { id: "US-021", name: "America the Beautiful (federal lands) - Volunteer Pass", description: "No-cost annual pass for federal recreational site volunteers with at least 250 volunteer hours.", category: "entertainment", icon: "spark", link: "https://store.usgs.gov/faq##Volunteer-Pass" },
   "US-022": { id: "US-022", name: "Blue Star Museums", description: "No-cost admission to participating museums for active-duty military personnel and their families, including National Guard and Reserve.", category: "entertainment", icon: "spark", link: "https://www.arts.gov/initiatives/blue-star-museums" },
   "US-023": { id: "US-023", name: "Museums - Free or Reduced Admission", description: "Low- or no-cost admission to participating museums, aquariums, science centers, and botanical gardens for individuals who participate in the following programs:\nSupplemental Nutrition Assistance Program (SNAP)/ CalFresh", category: "entertainment", icon: "spark", link: "https://museums4all.org/#!" },
   "US-024": { id: "US-024", name: "IRS Volunteer Income Tax Assistance (VITA) program", description: "No-cost tax help for qualifying taxpayers.", category: "taxes", icon: "file", link: "https://freetaxassistance.for.irs.gov/s/sitelocator" },
@@ -719,6 +762,15 @@ const PROGRAM_CRITERIA = {
     5: [{ incomeLimit: 22200 }],
     6: [{ incomeLimit: 25476 }],
     7: [{ incomeLimit: 28740 }]
+  },
+  "CA-037.R2": {
+    1: [{ incomeLimit: 9240 }],
+    2: [{ incomeLimit: 11844 }],
+    3: [{ incomeLimit: 14976 }],
+    4: [{ incomeLimit: 17976 }],
+    5: [{ incomeLimit: 21096 }],
+    6: [{ incomeLimit: 24216 }],
+    7: [{ incomeLimit: 27288 }]
   },
   "CA-038": {
     1: [{ incomeLimit: 39980 }],
@@ -1072,6 +1124,17 @@ const PROGRAM_CRITERIA = {
   "CA-195": {},
   "CA-196": {},
   "CA-197": {},
+  "CA-198": {
+    1: [{ incomeLimit: 35910 }],
+    2: [{ incomeLimit: 48690 }],
+    3: [{ incomeLimit: 61470 }],
+    4: [{ incomeLimit: 74250 }],
+    5: [{ incomeLimit: 87030 }],
+    6: [{ incomeLimit: 99810 }],
+    7: [{ incomeLimit: 112590 }],
+  },
+  "CA-199": {},
+  "CA-200": {},
   "CA37-001": {
     1: [{ incomeLimit: 7176 }],
     2: [{ incomeLimit: 9828 }]
@@ -1715,6 +1778,45 @@ const PROGRAM_CRITERIA = {
     6: [{ incomeLimit: 129450 }],
     7: [{ incomeLimit: 145950 }]
   },
+  "CA37-195": {},
+  "CA37-196": {},
+  "CA37-197": {},
+  "CA37-198": {},
+  "CA37-199": {},
+  "CA37-200": {},
+  "CA37-201": {},
+  "CA37-202": {},
+  "CA37-203": {},
+  "CA37-204": {},
+  "CA37-205": {},
+  "CA37-206": {},
+  "CA37-207": {},
+  "CA37-208": {},
+  "CA37-209": {},
+  "CA37-210": {},
+  "CA37-211": {},
+  "CA37-212": {},
+  "CA37-213": {},
+  "CA37-214": {},
+  "CA37-215": {},
+  "CA37-216": {},
+  "CA37-217": {},
+  "CA37-218": {},
+  "CA37-219": {},
+  "CA37-220": {},
+  "CA37-221": {},
+  "CA37-222": {},
+  "CA37-223": {},
+  "CA37-224": {},
+  "CA37-225": {},
+  "CA37-226": {},
+  "CA37-227": {},
+  "CA37-228": {},
+  "CA37-229": {},
+  "CA37-230": {},
+  "CA37-231": {},
+  "CA37-232": {},
+  "CA37-233": {},
   "US-001": {
     1: [{ incomeLimit: 37044 }],
     1: [{ incomeLimit: 37044 }],
@@ -4997,6 +5099,33 @@ const ELIGIBILITY = {
         {
           "disaster survivor": true
         }
+      ],
+      "CA-037.R2": [
+        {"household_size": 1, "income_minimum": 0, "income_limit": 9240},
+        {"household_size": 2, "income_minimum": 0, "income_limit": 11844},
+        {"household_size": 3, "income_minimum": 0, "income_limit": 14976},
+        {"household_size": 4, "income_minimum": 0, "income_limit": 17976},
+        {"household_size": 5, "income_minimum": 0, "income_limit": 21096},
+        {"household_size": 6, "income_minimum": 0, "income_limit": 24216},
+        {"household_size": 7, "income_minimum": 0, "income_limit": 27288}
+      ],
+      "CA-198": [
+        {"household_size": 1, "income_minimum": 0, "income_limit": 35910},
+        {"household_size": 2, "income_minimum": 0, "income_limit": 48690},
+        {"household_size": 3, "income_minimum": 0, "income_limit": 61470},
+        {"household_size": 4, "income_minimum": 0, "income_limit": 74250},
+        {"household_size": 5, "income_minimum": 0, "income_limit": 87030},
+        {"household_size": 6, "income_minimum": 0, "income_limit": 99810},
+        {"household_size": 7, "income_minimum": 0, "income_limit": 112590}
+      ],
+      "CA-199": [
+        {"veteran_military": true}
+      ],
+      "CA-200": [
+        {"age_max": 18},
+        {"age_min": 18, "age_max": 21, "student": true},
+        {"age_min": 18, "age_max": 21, "disabled": true},
+        {"age_min": 18, "age_max": 21, "part_time": true}
       ],
       "CA37-001": [
         {
@@ -8642,6 +8771,147 @@ const ELIGIBILITY = {
           "income_minimum": 0,
           "income_limit": 145950
         }
+      ],
+      "CA37-195": [
+        {"age_min": 55, "homeowner": true}
+      ],
+      "CA37-196": [
+        {"homeowner": true}
+      ],
+      "CA37-197": [
+        {"homeowner": true}
+      ],
+      "CA37-198": [
+        {"refugee": true},
+        {"domestic_violence": true},
+        {"legal": true}
+      ],
+      "CA37-199": [
+        {"domestic_violence": true},
+        {"legal": true},
+        {"refugee": true}
+      ],
+      "CA37-200": [
+        {"refugee": true, "domestic_violence": true},
+        {"refugee": true, "legal": true}
+      ],
+      "CA37-201": [
+        {"household_size": 1, "income_minimum": 0, "income_limit": 31920},
+        {"household_size": 2, "income_minimum": 0, "income_limit": 43280},
+        {"household_size": 3, "income_minimum": 0, "income_limit": 54640},
+        {"household_size": 4, "income_minimum": 0, "income_limit": 66000},
+        {"household_size": 5, "income_minimum": 0, "income_limit": 77360},
+        {"household_size": 6, "income_minimum": 0, "income_limit": 88720},
+        {"household_size": 7, "income_minimum": 0, "income_limit": 100080}
+      ],
+      "CA37-202": [
+        {"domestic_violence": true}
+      ],
+      "CA37-203": [
+        {"domestic_violence": true},
+        {"legal": true}
+      ],
+      "CA37-204": [
+        {"disabled": true},
+        {"legal": true}
+      ],
+      "CA37-205": [
+        {"business": true}
+      ],
+      "CA37-206": [
+        {"business": true}
+      ],
+      "CA37-207": [
+        {"legal": true}
+      ],
+      "CA37-208": [
+        {"legal": true}
+      ],
+      "CA37-209": [
+        {"legal": true}
+      ],
+      "CA37-210": [
+        {"legal": true}
+      ],
+      "CA37-211": [
+        {"age_min": 0, "age_max": 21, "refugee": true},
+        {"legal": true}
+      ],
+      "CA37-212": [
+        {"foster_care": true},
+        {"disabled": true},
+        {"legal": true}
+      ],
+      "CA37-213": [
+        {"domestic_violence": true},
+        {"legal": true},
+        {"re_entry": true}
+      ],
+      "CA37-214": [
+        {"legal": true}
+      ],
+      "CA37-215": [
+        {"legal": true}
+      ],
+      "CA37-216": [
+        {"legal": true}
+      ],
+      "CA37-217": [
+        {"legal": true}
+      ],
+      "CA37-218": [
+        {"legal": true}
+      ],
+      "CA37-219": [
+        {"disabled": true, "legal": true, "student": true}
+      ],
+      "CA37-220": [
+        {"legal": true},
+        {"foster_care": true}
+      ],
+      "CA37-221": [
+        {"disaster_survivor": true}
+      ],
+      "CA37-222": [
+        {"domestic_violence": true},
+        {"legal": true}
+      ],
+      "CA37-223": [
+        {"domestic_violence": true},
+        {"legal": true}
+      ],
+      "CA37-224": [
+        {"disabled": true, "legal": true}
+      ],
+      "CA37-225": [
+        {"legal": true},
+        {"disabled": true}
+      ],
+      "CA37-226": [
+        {"legal": true}
+      ],
+      "CA37-227": [
+        {"legal": true}
+      ],
+      "CA37-228": [
+        {"refugee": true},
+        {"legal": true}
+      ],
+      "CA37-229": [
+        {"age_min": 18, "disabled": true},
+        {"age_min": 18, "legal": true}
+      ],
+      "CA37-230": [
+        {"age_min": 22, "disabled": true, "legal": true}
+      ],
+      "CA37-231": [
+        {"legal": true}
+      ],
+      "CA37-232": [
+        {"legal": true}
+      ],
+      "CA37-233": [
+        {"legal": true}
       ],
       "US-001": [
         {
