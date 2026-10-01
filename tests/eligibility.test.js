@@ -42,6 +42,7 @@ runInContext(
 exports.PROGRAM_CRITERIA=PROGRAM_CRITERIA;
 exports.ELIGIBILITY=ELIGIBILITY;
 exports.AGE_RANGE_MAP=AGE_RANGE_MAP;
+exports.INCOME_UPPER=INCOME_UPPER;
 exports.ageQualifies=ageQualifies;
 exports.buildProfile=buildProfile;
 exports.checkPath=checkPath;
@@ -50,7 +51,7 @@ exports.getProgramTier=getProgramTier;`,
 );
 
 const {
-  PROGRAMS, PROGRAM_CRITERIA, ELIGIBILITY, AGE_RANGE_MAP,
+  PROGRAMS, PROGRAM_CRITERIA, ELIGIBILITY, AGE_RANGE_MAP, INCOME_UPPER,
   ageQualifies, buildProfile, checkPath, getProgramTier,
 } = ctx.exports;
 
@@ -369,4 +370,65 @@ describe('getProgramTier — Unemployment Benefits (CA-002)', () => {
     const p = profile();
     assert.equal(getProgramTier('CA-002', p), null);
   });
+});
+
+// ---------------------------------------------------------------------------
+// INCOME_UPPER — every quiz income option maps to the correct numeric bound
+//
+// This prevents the label/option offset bug where selecting "Under $20,000"
+// stored the next option ("$20,000–$40,000") and displayed $40,000.
+// ---------------------------------------------------------------------------
+describe('INCOME_UPPER — complete income option coverage', () => {
+  const EXPECTED = {
+    'No income':          0,
+    'Under $20,000':      20000,
+    '$20,000–$40,000':    40000,
+    '$40,000–$60,000':    60000,
+    '$60,000–$80,000':    80000,
+    '$80,000–$120,000':   120000,
+    '$120,000–$180,000':  180000,
+    'Over $180,000':      Infinity,
+  };
+
+  for (const [option, expectedValue] of Object.entries(EXPECTED)) {
+    test(`"${option}" → ${expectedValue === Infinity ? 'Infinity' : expectedValue}`, () => {
+      assert.equal(INCOME_UPPER[option], expectedValue,
+        `INCOME_UPPER["${option}"] should be ${expectedValue} but got ${INCOME_UPPER[option]}`);
+    });
+  }
+
+  test('INCOME_UPPER has no extra keys beyond the 8 quiz options', () => {
+    const known = new Set(Object.keys(EXPECTED));
+    const extra = Object.keys(INCOME_UPPER).filter(k => !known.has(k));
+    assert.deepEqual(extra, [], `Unexpected keys in INCOME_UPPER: ${extra.join(', ')}`);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// buildProfile — income mapping (all 8 quiz options)
+//
+// Guards against the specific regression: user selects "Under $20,000" but
+// profile.income comes back as 40000 due to a label/option index mismatch.
+// ---------------------------------------------------------------------------
+describe('buildProfile — income mapping for every quiz option', () => {
+  const base = { household_size: '1 person', employment: [], special_status: [], age: [], enrolled_programs: [] };
+
+  const cases = [
+    ['No income',         0],
+    ['Under $20,000',     20000],
+    ['$20,000–$40,000',   40000],
+    ['$40,000–$60,000',   60000],
+    ['$60,000–$80,000',   80000],
+    ['$80,000–$120,000',  120000],
+    ['$120,000–$180,000', 180000],
+    ['Over $180,000',     Infinity],
+  ];
+
+  for (const [option, expected] of cases) {
+    test(`annual_income "${option}" → profile.income ${expected === Infinity ? 'Infinity' : expected}`, () => {
+      const p = buildProfile({ ...base, annual_income: option });
+      assert.equal(p.income, expected,
+        `Selecting "${option}" should set profile.income to ${expected}, got ${p.income}`);
+    });
+  }
 });
