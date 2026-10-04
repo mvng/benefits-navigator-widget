@@ -188,6 +188,13 @@
       .results-grid { grid-template-columns: 1fr; }
       .program-card { padding: 16px; }
     }
+    .quiz-modal-backdrop { position: fixed; inset: 0; background: rgba(28,26,23,0.5); backdrop-filter: blur(3px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 24px; animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .quiz-modal { background: var(--cream); border-radius: 24px; width: 100%; max-width: 580px; max-height: 88vh; overflow-y: auto; box-shadow: 0 24px 80px rgba(28,26,23,0.25); }
+    @media (max-width: 640px) {
+      .quiz-modal-backdrop { align-items: flex-end; padding: 0; }
+      .quiz-modal { border-radius: 20px 20px 0 0; max-height: 94vh; max-width: 100%; }
+    }
     @media print {
       .nav, .filter-buttons, .btn-primary, .btn-secondary, .btn-ghost, .disclaimer-box, .no-print { display: none !important; }
       .program-card { break-inside: avoid; border: 1px solid #ccc; box-shadow: none; margin-bottom: 12px; }
@@ -11211,6 +11218,11 @@
         window.addEventListener('beforeunload', handler);
         return () => window.removeEventListener('beforeunload', handler);
       }, [step]);
+      React.useEffect(() => {
+        const handler = (e) => { if (e.key === 'Escape') { track('quiz_abandon', { step: step + 1, trigger: 'escape' }); setView("landing"); } };
+        window.addEventListener('keydown', handler);
+        return () => window.removeEventListener('keydown', handler);
+      }, [step]);
       const handleOptionClick = (opt) => {
         if (isMultiSelect) setSelectedMultiple(prev => prev.includes(opt) ? prev.filter(item => item !== opt) : [...prev, opt]);
         else setSelected(opt);
@@ -11234,15 +11246,15 @@
         else { setSelected(prevAnswer || null); setSelectedMultiple([]); }
       };
       return (
-        <div id="main-content" style={{ minHeight: "calc(100vh - 64px)", background: "var(--cream)", display: "flex", flexDirection: "column", alignItems: "center", padding: "40px 24px" }}>
-          <div style={{ width: "100%", maxWidth: 560, marginBottom: 40 }}>
+        <div id="main-content" style={{ padding: "32px 32px 24px" }}>
+          <div style={{ marginBottom: 28 }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
               <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text-muted)" }}>{t('quiz_step')} {step + 1} {t('quiz_of')} {quizStepDefs.length}</span>
               <span style={{ fontSize: 13, color: "var(--text-muted)" }}>{Math.round(progress)}{t('quiz_pct')}</span>
             </div>
             <div className="progress-track"><div className="progress-fill" style={{ width: `${progress}%` }} /></div>
           </div>
-          <div className="animate-fadeUp" style={{ width: "100%", maxWidth: 560 }}>
+          <div className="animate-fadeUp">
             <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 26, fontWeight: 500, lineHeight: 1.25, marginBottom: 8, letterSpacing: "-0.02em" }}>{currentT.title}</h2>
             <p style={{ color: "var(--text-secondary)", fontSize: 14, marginBottom: 16, lineHeight: 1.6 }}>{currentT.subtitle}</p>
             <div className="info-box" style={{ marginBottom: 24 }}>{currentT.explanation}</div>
@@ -11265,7 +11277,7 @@
               </button>
             </div>
           </div>
-          <div style={{ marginTop: 40, maxWidth: 560, width: "100%", textAlign: "center" }}>
+          <div style={{ marginTop: 24, textAlign: "center" }}>
             <p style={{ fontSize: 12, color: "var(--text-muted)" }}>{t('quiz_confidential')}</p>
           </div>
         </div>
@@ -11727,8 +11739,14 @@
         <LangContext.Provider value={lang}>
           <div>
             <Nav view={view} setView={setView} quizStep={quizStep} lang={lang} setLang={setLang} />
-            {view === "landing" && <LandingPage setView={setView} goToDirectory={goToDirectory} />}
-            {view === "quiz" && <Quiz setView={setView} setAnswers={setAnswers} onStepChange={setQuizStep} />}
+            {(view === "landing" || view === "quiz") && <LandingPage setView={setView} goToDirectory={goToDirectory} />}
+            {view === "quiz" && (
+              <div className="quiz-modal-backdrop" onClick={() => { track('quiz_abandon', { step: quizStep + 1, trigger: 'backdrop' }); setView("landing"); }}>
+                <div className="quiz-modal" onClick={e => e.stopPropagation()}>
+                  <Quiz setView={setView} setAnswers={setAnswers} onStepChange={setQuizStep} />
+                </div>
+              </div>
+            )}
             {view === "results" && answers && <Results answers={answers} setView={setView} />}
             {view === "directory" && <Directory key={directoryCategory} setView={setView} initialCategory={directoryCategory} />}
             {view === "about" && <AboutUs setView={setView} />}
